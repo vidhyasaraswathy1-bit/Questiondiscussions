@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Math Problem Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .step-reveal {
+            animation: fadeInDown 0.4s ease-out forwards;
+        }
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 sm:p-8">
+
+<div class="max-w-4xl mx-auto">
+    <header class="text-center mb-10">
+        <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-3">Interactive Step-by-Step Solutions</h1>
+        <p class="text-slate-600 text-lg">Circles, Angles, and Arithmetic Sequences</p>
+    </header>
+
+    <div id="app-container" class="space-y-8">
+        <!-- Cards will be injected here by JavaScript -->
+    </div>
+</div>
+
+<script>
+    const questionsData = [
+        // --- IMAGE 1: CIRCLES AND ANGLES ---
+        {
+            category: "Circles and Angles",
+            title: "Set A, Q22: Tangents and Isosceles Triangles",
+            question: "A, B, C, P are points on the circle in the picture, with <strong>AC = BC</strong>, and BT is the tangent at B. Diagram shows &angle;APB = 70&deg;. Calculate the angles below: <br> (i) &angle;ACB <br> (ii) &angle;CBT",
+            steps: [
+                "<strong>Step 1:</strong> Angles subtended by the same arc (arc AB) at the circumference are equal. Therefore, &angle;ACB = &angle;APB.",
+                "<strong>Step 2:</strong> Since we are given &angle;APB = 70&deg;, we find <strong>(i) &angle;ACB = 70&deg;</strong>.",
+                "<strong>Step 3:</strong> Triangle ABC is inscribed in the circle. We are given AC = BC, which makes it an isosceles triangle.",
+                "<strong>Step 4:</strong> The base angles of this isosceles triangle must be equal: &angle;CAB = &angle;CBA. Since the sum of angles in a triangle is 180&deg;, &angle;CAB = (180&deg; - 70&deg;) / 2 = 55&deg;.",
+                "<strong>Step 5:</strong> According to the Alternate Segment Theorem, the angle between the tangent BT and chord BC is equal to the angle in the alternate segment (&angle;CAB).",
+                "<strong>Step 6:</strong> Therefore, <strong>(ii) &angle;CBT = &angle;CAB = 55&deg;</strong>."
+            ]
+        },
+        {
+            category: "Circles and Angles",
+            title: "Set C, Q7: True/False Quadrilateral Properties",
+            question: "Read the statements about the quadrilateral ABCD where diagonals intersect (&angle;DAC = 30&deg;, &angle;ADB = 50&deg;, &angle;ACD = 40&deg;, &angle;ABD = 50&deg;):<br>(i) C is inside the circle passing through A, B, D.<br>(ii) A is outside the circle passing through B, C, D.<br>(iii) B is on the circle passing through A, D, C.<br>(iv) D is outside the circle passing through A, B, C.",
+            steps: [
+                "<strong>Step 1:</strong> To determine a point's position relative to a circle passing through three other points, we compare the angles subtended by a common chord.",
+                "<strong>Step 2:</strong> Consider the circle passing through A, B, and D. The chord AD subtends &angle;ABD = 50&deg; at point B on the circle.",
+                "<strong>Step 3:</strong> The same chord AD subtends &angle;ACD = 40&deg; at point C.",
+                "<strong>Step 4:</strong> Since the angle at C (40&deg;) is less than the angle on the circle at B (50&deg;), point C must lie further away, meaning it is <strong>outside</strong> the circle passing through A, B, and D. Thus, statement (i) is <strong>False</strong>.",
+                "<strong>Step 5:</strong> Now consider the circle passing through A, C, and D. The chord AD subtends &angle;ACD = 40&deg; at point C on the circle.",
+                "<strong>Step 6:</strong> The same chord AD subtends &angle;ABD = 50&deg; at point B. Since the angle at B (50&deg;) is greater than the angle on the circle at C (40&deg;), point B must lie <strong>inside</strong> the circle passing through A, C, and D. Thus, statement (iii) is <strong>False</strong>."
+            ]
+        },
+        {
+            category: "Circles and Angles",
+            title: "Set C, Q22.A: Central Angles and Fractions",
+            question: "(i) A, B, C are points on the circle centred at O. The central angle &angle;AOB is marked 100&deg;. How much is &angle;ACB?<br>(ii) When the corner of a bent wire is placed at the centre of a circle, 1/6th of the circle was included. If this corner is placed at some point on the circle, what fraction of the circle would be included within it?",
+            steps: [
+                "<strong>Step 1:</strong> For part (i), a fundamental circle theorem states that the angle subtended by an arc at the centre is double the angle subtended by it at any remaining part of the circle.",
+                "<strong>Step 2:</strong> Therefore, &angle;ACB = &frac12; &times; &angle;AOB = 100&deg; / 2 = <strong>50&deg;</strong>.",
+                "<strong>Step 3:</strong> For part (ii), a full circle is 360&deg;. If 1/6th of the circle is included when the wire's corner is at the centre, the wire's bend angle is 360&deg; / 6 = 60&deg;.",
+                "<strong>Step 4:</strong> If this 60&deg; wire corner is placed exactly on the circumference of the circle, it acts as an inscribed angle.",
+                "<strong>Step 5:</strong> The central angle subtended by the same arc would be double the inscribed angle: 2 &times; 60&deg; = 120&deg;.",
+                "<strong>Step 6:</strong> The fraction of the circle included by a 120&deg; central angle is 120&deg; / 360&deg; = <strong>1/3</strong>."
+            ]
+        },
+
+        // --- IMAGE 2: ARITHMETIC SEQUENCES ---
+        {
+            category: "Arithmetic Sequences",
+            title: "Set A, Q1: Identifying sequence terms",
+            question: "Which of the numbers below is a term of the arithmetic sequence 2, 5, 8, ...?<br> A. 22 &nbsp;&nbsp; B. 32 &nbsp;&nbsp; C. 42 &nbsp;&nbsp; D. 52",
+            steps: [
+                "<strong>Step 1:</strong> Identify the components of the sequence: The first term <em>a = 2</em>, and the common difference <em>d = 5 - 2 = 3</em>.",
+                "<strong>Step 2:</strong> The general formula for the n-th term is: <em>x<sub>n</sub> = a + (n-1)d</em>.",
+                "<strong>Step 3:</strong> Substitute the knowns: <em>x<sub>n</sub> = 2 + (n-1)3 = 3n - 1</em>.",
+                "<strong>Step 4:</strong> Rearrange the formula to solve for 3n: <em>3n = x<sub>n</sub> + 1</em>. This means if we add 1 to a valid term, the result must be a multiple of 3.",
+                "<strong>Step 5:</strong> Test the options: A) 22+1=23 (No), B) 32+1=33 (Yes, 33 is 3&times;11), C) 42+1=43 (No), D) 52+1=53 (No).",
+                "<strong>Step 6:</strong> Therefore, the correct answer is <strong>B. 32</strong> (it is the 11th term)."
+            ]
+        },
+        {
+            category: "Arithmetic Sequences",
+            title: "Set A, Q10: Finding difference and zero position",
+            question: "The 5th term of an arithmetic sequence is 70 and the 9th term is 50.<br>(i) In this sequence by how much does each term decrease, when position increases by one?<br>(ii) At what position does the term 0 occur?",
+            steps: [
+                "<strong>Step 1:</strong> For part (i), let the common difference be <em>d</em>. The difference in positions between the 9th and 5th terms is 4 steps (4d).",
+                "<strong>Step 2:</strong> Set up the equation: <em>x<sub>9</sub> - x<sub>5</sub> = 4d &rarr; 50 - 70 = 4d</em>.",
+                "<strong>Step 3:</strong> <em>-20 = 4d</em>, solving for d gives <em>d = -5</em>. <strong>(i) Each term decreases by 5.</strong>",
+                "<strong>Step 4:</strong> For part (ii), use the general term formula originating from the 5th term: <em>x<sub>n</sub> = x<sub>5</sub> + (n-5)d</em>.",
+                "<strong>Step 5:</strong> We want to find the position <em>n</em> when <em>x<sub>n</sub> = 0</em>. Substitute the values: <em>0 = 70 + (n-5)(-5)</em>.",
+                "<strong>Step 6:</strong> Solve the equation: <em>5(n-5) = 70 &rarr; n-5 = 14 &rarr; n = 19</em>. <strong>(ii) Term 0 occurs at the 19th position.</strong>"
+            ]
+        },
+        {
+            category: "Arithmetic Sequences",
+            title: "Set B, Q1: Difference of two terms",
+            question: "Which of the numbers below can be the difference of two terms of the arithmetic sequence 10, 16, 22,...?<br> A. 40 &nbsp;&nbsp; B. 51 &nbsp;&nbsp; C. 48 &nbsp;&nbsp; D. 28",
+            steps: [
+                "<strong>Step 1:</strong> Find the common difference <em>d</em> of the sequence: <em>d = 16 - 10 = 6</em>.",
+                "<strong>Step 2:</strong> A key property of arithmetic sequences is that the difference between ANY two terms must be a multiple of the common difference.",
+                "<strong>Step 3:</strong> Therefore, we need to find which option is a multiple of 6 (i.e., divisible by 6 without a remainder).",
+                "<strong>Step 4:</strong> Test the options: 40/6 (No), 51/6 (No), 48/6 = 8 (Yes), 28/6 (No).",
+                "<strong>Step 5:</strong> The correct answer is <strong>C. 48</strong>."
+            ]
+        },
+        {
+            category: "Arithmetic Sequences",
+            title: "Set B, Q9: Single odd number possibility",
+            question: "In an arithmetic sequence of natural numbers, can a single term be an odd number? Why?",
+            steps: [
+                "<strong>Step 1:</strong> Let the common difference of the sequence be '<em>d</em>'. This difference '<em>d</em>' must be either an even number or an odd number.",
+                "<strong>Step 2:</strong> <strong>Case 1 (d is even):</strong> Adding an even number to any term preserves its parity (odd stays odd, even stays even). The sequence will consist entirely of odd numbers or entirely of even numbers.",
+                "<strong>Step 3:</strong> <strong>Case 2 (d is odd):</strong> Adding an odd number changes the parity. An even number becomes odd, and an odd number becomes even. The sequence will strictly alternate: even, odd, even, odd...",
+                "<strong>Step 4:</strong> In both possible scenarios, if an odd number exists in the sequence at all, it will appear infinitely many times.",
+                "<strong>Step 5:</strong> <strong>Conclusion:</strong> No, an arithmetic sequence cannot have exactly <em>one</em> single odd term."
+            ]
+        },
+        {
+            category: "Arithmetic Sequences",
+            title: "Set B, Q10.A: Finding distant terms and sums",
+            question: "The 5th term of an arithmetic sequence is 10 and the 11th term is 30.<br>(i) What is the 23rd term of this sequence?<br>(ii) Calculate the sum of the first 27 terms.",
+            steps: [
+                "<strong>Step 1:</strong> Find the common difference <em>d</em>. The gap between the 11th and 5th term is 6 steps: <em>x<sub>11</sub> - x<sub>5</sub> = 6d</em>.",
+                "<strong>Step 2:</strong> <em>30 - 10 = 6d &rarr; 20 = 6d &rarr; d = 20/6 = 10/3</em>.",
+                "<strong>Step 3:</strong> For part (i), find the 23rd term by jumping from the 11th term: <em>x<sub>23</sub> = x<sub>11</sub> + (23-11)d = x<sub>11</sub> + 12d</em>.",
+                "<strong>Step 4:</strong> Substitute: <em>x<sub>23</sub> = 30 + 12(10/3) = 30 + 40 = </em><strong>70</strong>.",
+                "<strong>Step 5:</strong> For part (ii), the sum of an odd number of terms is equal to the number of terms multiplied by the middle term. For 27 terms, the middle is the (27+1)/2 = 14th term.",
+                "<strong>Step 6:</strong> Find the 14th term: <em>x<sub>14</sub> = x<sub>11</sub> + 3d = 30 + 3(10/3) = 30 + 10 = 40</em>.",
+                "<strong>Step 7:</strong> Calculate the sum: <em>S<sub>27</sub> = 27 &times; x<sub>14</sub> = 27 &times; 40 = </em><strong>1080</strong>."
+            ]
+        },
+        {
+            category: "Arithmetic Sequences",
+            title: "Set B, Q10.B: Sum of symmetric terms",
+            question: "The sum of the 7th term and 15th term of an arithmetic sequence is 50.<br>(i) What is the 11th term?<br>(ii) If the common difference is 3, what is the 13th term?<br>(iii) What is the sum of the first 25 terms?",
+            steps: [
+                "<strong>Step 1:</strong> For part (i), notice that the 11th term is exactly halfway between the 7th and 15th terms.",
+                "<strong>Step 2:</strong> Because of sequence symmetry, the middle term is the average of equidistant terms. <em>x<sub>11</sub> = (x<sub>7</sub> + x<sub>15</sub>) / 2 = 50 / 2 = </em><strong>25</strong>.",
+                "<strong>Step 3:</strong> For part (ii), we are given <em>d = 3</em>. Find the 13th term by jumping from the 11th term: <em>x<sub>13</sub> = x<sub>11</sub> + 2d</em>.",
+                "<strong>Step 4:</strong> Substitute values: <em>x<sub>13</sub> = 25 + 2(3) = 25 + 6 = </em><strong>31</strong>.",
+                "<strong>Step 5:</strong> For part (iii), the sum of the first 25 terms (<em>S<sub>25</sub></em>) equals 25 multiplied by its middle term. The middle of 25 terms is the (25+1)/2 = 13th term.",
+                "<strong>Step 6:</strong> Using the 13th term calculated above: <em>S<sub>25</sub> = 25 &times; x<sub>13</sub> = 25 &times; 31 = </em><strong>775</strong>."
+            ]
+        },
+        {
+            category: "Arithmetic Sequences",
+            title: "Set C, Q1: Skipping terms",
+            question: "The 8th term of an arithmetic sequence is 25 and the 12th term is 30. What is the 16th term of this sequence?<br> A. 55 &nbsp;&nbsp; B. 35 &nbsp;&nbsp; C. 20 &nbsp;&nbsp; D. 27.5",
+            steps: [
+                "<strong>Step 1:</strong> Notice that the positions of the terms 8, 12, and 16 are equally spaced (they increase by 4 positions each time).",
+                "<strong>Step 2:</strong> This means these specific terms (<em>x<sub>8</sub>, x<sub>12</sub>, x<sub>16</sub></em>) form a smaller arithmetic sequence of their own.",
+                "<strong>Step 3:</strong> Find the 'jump' value between the given terms: <em>x<sub>12</sub> - x<sub>8</sub> = 30 - 25 = 5</em>.",
+                "<strong>Step 4:</strong> The jump from the 12th to the 16th term must be identical: <em>x<sub>16</sub> - x<sub>12</sub> = 5</em>.",
+                "<strong>Step 5:</strong> <em>x<sub>16</sub> = x<sub>12</sub> + 5 = 30 + 5 = 35</em>.",
+                "<strong>Step 6:</strong> Therefore, the correct answer is <strong>B. 35</strong>."
+            ]
+        },
+        {
+            category: "Arithmetic Sequences",
+            title: "Set C, Q10.A: Equidistant term pairs",
+            question: "The sum of the 2nd and 18th terms of an arithmetic sequence is 40.<br>(i) What is the sum of the 7th and 13th terms?<br>(ii) What is the 10th term?",
+            steps: [
+                "<strong>Step 1:</strong> A fundamental property of arithmetic sequences is that the sum of pairs of terms with the same index sum is constant.",
+                "<strong>Step 2:</strong> The sum of the indices for the first pair is 2 + 18 = 20.",
+                "<strong>Step 3:</strong> The sum of the indices for the second pair (part i) is 7 + 13 = 20.",
+                "<strong>Step 4:</strong> Since the index sums match, their term sums must be identical. <strong>(i) The sum of the 7th and 13th terms is 40.</strong>",
+                "<strong>Step 5:</strong> For part (ii), the 10th term is exactly in the middle of the 2nd and 18th terms (since (2+18)/2 = 10).",
+                "<strong>Step 6:</strong> Therefore, <em>x<sub>10</sub></em> is the average of those two terms: <em>x<sub>10</sub> = (x<sub>2</sub> + x<sub>18</sub>) / 2 = 40 / 2 = </em><strong>20</strong>."
+            ]
+        },
+        {
+            category: "Arithmetic Sequences",
+            title: "Set C, Q10.B: Three consecutive terms",
+            question: "The sum of the 4th, 5th and 6th terms of an arithmetic sequence is 90.<br>(i) What is the 5th term?<br>(ii) What is the sum of the first 9 terms?<br>(iii) If the common difference is 5, then what is its first term?",
+            steps: [
+                "<strong>Step 1:</strong> The 4th, 5th, and 6th terms are symmetric around the 5th term. We can mathematically represent them as <em>(x<sub>5</sub> - d)</em>, <em>x<sub>5</sub></em>, and <em>(x<sub>5</sub> + d)</em>.",
+                "<strong>Step 2:</strong> When we sum them, the <em>d</em> and <em>-d</em> cancel out: <em>(x<sub>5</sub> - d) + x<sub>5</sub> + (x<sub>5</sub> + d) = 3(x<sub>5</sub>)</em>.",
+                "<strong>Step 3:</strong> We are given the sum is 90. Therefore, <em>3(x<sub>5</sub>) = 90 &rarr; </em><strong>(i) The 5th term is 30.</strong>",
+                "<strong>Step 4:</strong> For part (ii), the sum of the first 9 terms (<em>S<sub>9</sub></em>) equals 9 times the middle term (which is the 5th term).",
+                "<strong>Step 5:</strong> <em>S<sub>9</sub> = 9 &times; x<sub>5</sub> = 9 &times; 30 = </em><strong>270</strong>.",
+                "<strong>Step 6:</strong> For part (iii), use the formula for the 5th term based on the first term: <em>x<sub>5</sub> = x<sub>1</sub> + 4d</em>.",
+                "<strong>Step 7:</strong> Substitute the known values (<em>x<sub>5</sub> = 30, d = 5</em>): <em>30 = x<sub>1</sub> + 4(5)</em>.",
+                "<strong>Step 8:</strong> <em>30 = x<sub>1</sub> + 20 &rarr; x<sub>1</sub> = 10</em>. <strong>(iii) The first term is 10.</strong>"
+            ]
+        }
+    ];
+
+    const container = document.getElementById('app-container');
+
+    questionsData.forEach((data, index) => {
+        // Create Card wrapper
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all hover:shadow-md';
+
+        // Card Header (Category & Title)
+        const header = document.createElement('div');
+        header.className = `p-5 border-b border-gray-100 ${data.category === 'Circles and Angles' ? 'bg-indigo-50' : 'bg-emerald-50'}`;
+        
+        const categoryBadge = document.createElement('span');
+        categoryBadge.className = `text-xs font-bold uppercase tracking-wider ${data.category === 'Circles and Angles' ? 'text-indigo-600' : 'text-emerald-600'}`;
+        categoryBadge.innerText = data.category;
+        
+        const title = document.createElement('h2');
+        title.className = 'text-xl font-bold text-gray-800 mt-1';
+        title.innerText = data.title;
+        
+        header.appendChild(categoryBadge);
+        header.appendChild(title);
+        card.appendChild(header);
+
+        // Card Body (Question & Steps)
+        const body = document.createElement('div');
+        body.className = 'p-6';
+
+        const questionText = document.createElement('div');
+        questionText.className = 'text-gray-700 bg-gray-50 rounded-lg p-4 border border-gray-100 text-[1.05rem] leading-relaxed mb-6';
+        questionText.innerHTML = data.question;
+        body.appendChild(questionText);
+
+        const stepsContainer = document.createElement('div');
+        stepsContainer.className = 'space-y-3 mb-6';
+        body.appendChild(stepsContainer);
+
+        // Interaction Footer
+        const footer = document.createElement('div');
+        footer.className = 'flex items-center justify-between border-t border-gray-100 pt-5 mt-2';
+        
+        const statusText = document.createElement('span');
+        statusText.className = 'text-sm font-medium text-gray-400';
+        statusText.innerText = `0 / ${data.steps.length} Steps Revealed`;
+        
+        const btnGroup = document.createElement('div');
+        btnGroup.className = 'flex space-x-3';
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed';
+        nextBtn.innerText = 'Show Next Step';
+
+        const allBtn = document.createElement('button');
+        allBtn.className = 'px-5 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 active:bg-gray-300 transition-colors hidden sm:block disabled:opacity-50 disabled:cursor-not-allowed';
+        allBtn.innerText = 'Show All';
+
+        btnGroup.appendChild(allBtn);
+        btnGroup.appendChild(nextBtn);
+        footer.appendChild(statusText);
+        footer.appendChild(btnGroup);
+        body.appendChild(footer);
+        card.appendChild(body);
+        container.appendChild(card);
+
+        // Logic for revealing steps
+        let currentStep = 0;
+
+        const renderStep = (stepIndex) => {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'step-reveal p-4 rounded-lg bg-blue-50 border-l-4 border-blue-500 text-gray-800';
+            stepDiv.innerHTML = data.steps[stepIndex];
+            stepsContainer.appendChild(stepDiv);
+            currentStep++;
+            statusText.innerText = `${currentStep} / ${data.steps.length} Steps Revealed`;
+            
+            if (currentStep === data.steps.length) {
+                nextBtn.innerText = 'Completed';
+                nextBtn.disabled = true;
+                allBtn.disabled = true;
+            }
+        };
+
+        nextBtn.onclick = () => {
+            if (currentStep < data.steps.length) {
+                renderStep(currentStep);
+            }
+        };
+
+        allBtn.onclick = () => {
+            while (currentStep < data.steps.length) {
+                renderStep(currentStep);
+            }
+        };
+    });
+</script>
+</body>
+</html>
