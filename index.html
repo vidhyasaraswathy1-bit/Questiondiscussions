@@ -3,299 +3,515 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Math Problem Solutions</title>
+    <title>ICSE Class IV - Mathematics CBT Exam</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-        .step-reveal {
-            animation: fadeInDown 0.4s ease-out forwards;
-        }
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; user-select: none; }
+        
+        /* Question Palette Colors */
+        .status-not-visited { background-color: #e5e7eb; color: #374151; border: 1px solid #d1d5db; }
+        .status-not-answered { background-color: #ef4444; color: white; border: 1px solid #dc2626; }
+        .status-answered { background-color: #22c55e; color: white; border: 1px solid #16a34a; }
+        .status-review { background-color: #a855f7; color: white; border: 1px solid #9333ea; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+
+        .option-label:hover { background-color: #f3f4f6; }
+        .option-label input:checked + span { font-weight: bold; color: #1d4ed8; }
+        
+        .math-text { font-size: 1.1rem; }
     </style>
 </head>
-<body class="text-gray-800 p-4 sm:p-8">
+<body class="h-screen flex flex-col overflow-hidden">
 
-<div class="max-w-4xl mx-auto">
-    <header class="text-center mb-10">
-        <h1 class="text-3xl md:text-4xl font-bold text-slate-800 mb-3">Interactive Step-by-Step Solutions</h1>
-        <p class="text-slate-600 text-lg">Circles, Angles, and Arithmetic Sequences</p>
+    <!-- Header -->
+    <header class="bg-blue-800 text-white shadow-md z-10 flex-shrink-0">
+        <div class="px-6 py-3 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">INDIAN SCHOOL DARSAIT - CBT PORTAL</h1>
+                <p class="text-xs text-blue-200">Annual Examination Revision - March 2026 | Class IV Mathematics</p>
+            </div>
+            <div id="header-timer-container" class="hidden flex items-center bg-blue-900 px-4 py-2 rounded-md border border-blue-700 shadow-inner">
+                <svg class="w-5 h-5 mr-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="text-sm text-blue-200 mr-2">Time Left:</span>
+                <span id="timer" class="text-xl font-mono font-bold tracking-wider text-yellow-400">60:00</span>
+            </div>
+        </div>
     </header>
 
-    <div id="app-container" class="space-y-8">
-        <!-- Cards will be injected here by JavaScript -->
+    <!-- SCREEN 1: INSTRUCTIONS -->
+    <div id="screen-instructions" class="flex-1 overflow-y-auto p-6 bg-white">
+        <div class="max-w-4xl mx-auto border border-gray-300 rounded-lg shadow-sm">
+            <div class="bg-gray-100 p-4 border-b border-gray-300 flex items-center gap-4">
+                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-800 font-bold text-xl border-2 border-blue-300">
+                    S
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800">Mock Candidate</h2>
+                    <p class="text-sm text-gray-600">Subject: Mathematics (Class IV)</p>
+                </div>
+            </div>
+            <div class="p-8">
+                <h3 class="text-xl font-bold mb-4 text-center underline decoration-2 decoration-blue-500">General Instructions</h3>
+                <p class="text-sm text-gray-700 mb-4"><strong>Please read the following instructions carefully before starting the exam:</strong></p>
+                
+                <ul class="list-disc pl-6 space-y-2 text-sm text-gray-700 mb-6">
+                    <li>Total duration of the examination is <strong>60 Minutes</strong>.</li>
+                    <li>The clock will be set at the server. The countdown timer in the top right corner will display the remaining time available for you to complete the examination. When the timer reaches zero, the examination will end by itself.</li>
+                    <li>The Question Palette displayed on the right side of screen will show the status of each question using one of the following symbols:</li>
+                </ul>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-md flex items-center justify-center font-bold status-not-visited">1</div><span class="text-sm">You have not visited the question yet.</span></div>
+                    <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-md flex items-center justify-center font-bold status-not-answered">2</div><span class="text-sm">You have not answered the question.</span></div>
+                    <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-md flex items-center justify-center font-bold status-answered">3</div><span class="text-sm">You have answered the question.</span></div>
+                    <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-md flex items-center justify-center font-bold status-review">4</div><span class="text-sm">You have marked the question for review.</span></div>
+                </div>
+
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                    <h4 class="font-bold text-yellow-800 mb-1">Navigating & Answering:</h4>
+                    <p class="text-sm text-yellow-800">To answer a question, select the option or type your answer in the box provided. Click on <strong>"Save & Next"</strong> to save your answer and move to the next question. You can use <strong>"Mark for Review"</strong> if you wish to look at the question again later.</p>
+                </div>
+
+                <hr class="my-6">
+
+                <div class="flex items-start gap-3 mb-6">
+                    <input type="checkbox" id="agree-checkbox" class="mt-1 w-5 h-5 cursor-pointer accent-blue-600" onchange="toggleStartButton()">
+                    <label for="agree-checkbox" class="text-sm text-gray-800 cursor-pointer font-medium">
+                        I have read and understood the instructions. All computer hardware allotted to me are in proper working condition. I agree that I am not carrying any prohibited gadgets or materials.
+                    </label>
+                </div>
+
+                <div class="text-center">
+                    <button id="btn-start" disabled class="bg-gray-400 text-white font-bold py-3 px-10 rounded shadow transition-all duration-200 cursor-not-allowed" onclick="startExam()">
+                        I am ready to begin
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-    const questionsData = [
-        // --- IMAGE 1: CIRCLES AND ANGLES ---
-        {
-            category: "Circles and Angles",
-            title: "Set A, Q22: Tangents and Isosceles Triangles",
-            question: "A, B, C, P are points on the circle in the picture, with <strong>AC = BC</strong>, and BT is the tangent at B. Diagram shows &angle;APB = 70&deg;. Calculate the angles below: <br> (i) &angle;ACB <br> (ii) &angle;CBT",
-            steps: [
-                "<strong>Step 1:</strong> Angles subtended by the same arc (arc AB) at the circumference are equal. Therefore, &angle;ACB = &angle;APB.",
-                "<strong>Step 2:</strong> Since we are given &angle;APB = 70&deg;, we find <strong>(i) &angle;ACB = 70&deg;</strong>.",
-                "<strong>Step 3:</strong> Triangle ABC is inscribed in the circle. We are given AC = BC, which makes it an isosceles triangle.",
-                "<strong>Step 4:</strong> The base angles of this isosceles triangle must be equal: &angle;CAB = &angle;CBA. Since the sum of angles in a triangle is 180&deg;, &angle;CAB = (180&deg; - 70&deg;) / 2 = 55&deg;.",
-                "<strong>Step 5:</strong> According to the Alternate Segment Theorem, the angle between the tangent BT and chord BC is equal to the angle in the alternate segment (&angle;CAB).",
-                "<strong>Step 6:</strong> Therefore, <strong>(ii) &angle;CBT = &angle;CAB = 55&deg;</strong>."
-            ]
-        },
-        {
-            category: "Circles and Angles",
-            title: "Set C, Q7: True/False Quadrilateral Properties",
-            question: "Read the statements about the quadrilateral ABCD where diagonals intersect (&angle;DAC = 30&deg;, &angle;ADB = 50&deg;, &angle;ACD = 40&deg;, &angle;ABD = 50&deg;):<br>(i) C is inside the circle passing through A, B, D.<br>(ii) A is outside the circle passing through B, C, D.<br>(iii) B is on the circle passing through A, D, C.<br>(iv) D is outside the circle passing through A, B, C.",
-            steps: [
-                "<strong>Step 1:</strong> To determine a point's position relative to a circle passing through three other points, we compare the angles subtended by a common chord.",
-                "<strong>Step 2:</strong> Consider the circle passing through A, B, and D. The chord AD subtends &angle;ABD = 50&deg; at point B on the circle.",
-                "<strong>Step 3:</strong> The same chord AD subtends &angle;ACD = 40&deg; at point C.",
-                "<strong>Step 4:</strong> Since the angle at C (40&deg;) is less than the angle on the circle at B (50&deg;), point C must lie further away, meaning it is <strong>outside</strong> the circle passing through A, B, and D. Thus, statement (i) is <strong>False</strong>.",
-                "<strong>Step 5:</strong> Now consider the circle passing through A, C, and D. The chord AD subtends &angle;ACD = 40&deg; at point C on the circle.",
-                "<strong>Step 6:</strong> The same chord AD subtends &angle;ABD = 50&deg; at point B. Since the angle at B (50&deg;) is greater than the angle on the circle at C (40&deg;), point B must lie <strong>inside</strong> the circle passing through A, C, and D. Thus, statement (iii) is <strong>False</strong>."
-            ]
-        },
-        {
-            category: "Circles and Angles",
-            title: "Set C, Q22.A: Central Angles and Fractions",
-            question: "(i) A, B, C are points on the circle centred at O. The central angle &angle;AOB is marked 100&deg;. How much is &angle;ACB?<br>(ii) When the corner of a bent wire is placed at the centre of a circle, 1/6th of the circle was included. If this corner is placed at some point on the circle, what fraction of the circle would be included within it?",
-            steps: [
-                "<strong>Step 1:</strong> For part (i), a fundamental circle theorem states that the angle subtended by an arc at the centre is double the angle subtended by it at any remaining part of the circle.",
-                "<strong>Step 2:</strong> Therefore, &angle;ACB = &frac12; &times; &angle;AOB = 100&deg; / 2 = <strong>50&deg;</strong>.",
-                "<strong>Step 3:</strong> For part (ii), a full circle is 360&deg;. If 1/6th of the circle is included when the wire's corner is at the centre, the wire's bend angle is 360&deg; / 6 = 60&deg;.",
-                "<strong>Step 4:</strong> If this 60&deg; wire corner is placed exactly on the circumference of the circle, it acts as an inscribed angle.",
-                "<strong>Step 5:</strong> The central angle subtended by the same arc would be double the inscribed angle: 2 &times; 60&deg; = 120&deg;.",
-                "<strong>Step 6:</strong> The fraction of the circle included by a 120&deg; central angle is 120&deg; / 360&deg; = <strong>1/3</strong>."
-            ]
-        },
-
-        // --- IMAGE 2: ARITHMETIC SEQUENCES ---
-        {
-            category: "Arithmetic Sequences",
-            title: "Set A, Q1: Identifying sequence terms",
-            question: "Which of the numbers below is a term of the arithmetic sequence 2, 5, 8, ...?<br> A. 22 &nbsp;&nbsp; B. 32 &nbsp;&nbsp; C. 42 &nbsp;&nbsp; D. 52",
-            steps: [
-                "<strong>Step 1:</strong> Identify the components of the sequence: The first term <em>a = 2</em>, and the common difference <em>d = 5 - 2 = 3</em>.",
-                "<strong>Step 2:</strong> The general formula for the n-th term is: <em>x<sub>n</sub> = a + (n-1)d</em>.",
-                "<strong>Step 3:</strong> Substitute the knowns: <em>x<sub>n</sub> = 2 + (n-1)3 = 3n - 1</em>.",
-                "<strong>Step 4:</strong> Rearrange the formula to solve for 3n: <em>3n = x<sub>n</sub> + 1</em>. This means if we add 1 to a valid term, the result must be a multiple of 3.",
-                "<strong>Step 5:</strong> Test the options: A) 22+1=23 (No), B) 32+1=33 (Yes, 33 is 3&times;11), C) 42+1=43 (No), D) 52+1=53 (No).",
-                "<strong>Step 6:</strong> Therefore, the correct answer is <strong>B. 32</strong> (it is the 11th term)."
-            ]
-        },
-        {
-            category: "Arithmetic Sequences",
-            title: "Set A, Q10: Finding difference and zero position",
-            question: "The 5th term of an arithmetic sequence is 70 and the 9th term is 50.<br>(i) In this sequence by how much does each term decrease, when position increases by one?<br>(ii) At what position does the term 0 occur?",
-            steps: [
-                "<strong>Step 1:</strong> For part (i), let the common difference be <em>d</em>. The difference in positions between the 9th and 5th terms is 4 steps (4d).",
-                "<strong>Step 2:</strong> Set up the equation: <em>x<sub>9</sub> - x<sub>5</sub> = 4d &rarr; 50 - 70 = 4d</em>.",
-                "<strong>Step 3:</strong> <em>-20 = 4d</em>, solving for d gives <em>d = -5</em>. <strong>(i) Each term decreases by 5.</strong>",
-                "<strong>Step 4:</strong> For part (ii), use the general term formula originating from the 5th term: <em>x<sub>n</sub> = x<sub>5</sub> + (n-5)d</em>.",
-                "<strong>Step 5:</strong> We want to find the position <em>n</em> when <em>x<sub>n</sub> = 0</em>. Substitute the values: <em>0 = 70 + (n-5)(-5)</em>.",
-                "<strong>Step 6:</strong> Solve the equation: <em>5(n-5) = 70 &rarr; n-5 = 14 &rarr; n = 19</em>. <strong>(ii) Term 0 occurs at the 19th position.</strong>"
-            ]
-        },
-        {
-            category: "Arithmetic Sequences",
-            title: "Set B, Q1: Difference of two terms",
-            question: "Which of the numbers below can be the difference of two terms of the arithmetic sequence 10, 16, 22,...?<br> A. 40 &nbsp;&nbsp; B. 51 &nbsp;&nbsp; C. 48 &nbsp;&nbsp; D. 28",
-            steps: [
-                "<strong>Step 1:</strong> Find the common difference <em>d</em> of the sequence: <em>d = 16 - 10 = 6</em>.",
-                "<strong>Step 2:</strong> A key property of arithmetic sequences is that the difference between ANY two terms must be a multiple of the common difference.",
-                "<strong>Step 3:</strong> Therefore, we need to find which option is a multiple of 6 (i.e., divisible by 6 without a remainder).",
-                "<strong>Step 4:</strong> Test the options: 40/6 (No), 51/6 (No), 48/6 = 8 (Yes), 28/6 (No).",
-                "<strong>Step 5:</strong> The correct answer is <strong>C. 48</strong>."
-            ]
-        },
-        {
-            category: "Arithmetic Sequences",
-            title: "Set B, Q9: Single odd number possibility",
-            question: "In an arithmetic sequence of natural numbers, can a single term be an odd number? Why?",
-            steps: [
-                "<strong>Step 1:</strong> Let the common difference of the sequence be '<em>d</em>'. This difference '<em>d</em>' must be either an even number or an odd number.",
-                "<strong>Step 2:</strong> <strong>Case 1 (d is even):</strong> Adding an even number to any term preserves its parity (odd stays odd, even stays even). The sequence will consist entirely of odd numbers or entirely of even numbers.",
-                "<strong>Step 3:</strong> <strong>Case 2 (d is odd):</strong> Adding an odd number changes the parity. An even number becomes odd, and an odd number becomes even. The sequence will strictly alternate: even, odd, even, odd...",
-                "<strong>Step 4:</strong> In both possible scenarios, if an odd number exists in the sequence at all, it will appear infinitely many times.",
-                "<strong>Step 5:</strong> <strong>Conclusion:</strong> No, an arithmetic sequence cannot have exactly <em>one</em> single odd term."
-            ]
-        },
-        {
-            category: "Arithmetic Sequences",
-            title: "Set B, Q10.A: Finding distant terms and sums",
-            question: "The 5th term of an arithmetic sequence is 10 and the 11th term is 30.<br>(i) What is the 23rd term of this sequence?<br>(ii) Calculate the sum of the first 27 terms.",
-            steps: [
-                "<strong>Step 1:</strong> Find the common difference <em>d</em>. The gap between the 11th and 5th term is 6 steps: <em>x<sub>11</sub> - x<sub>5</sub> = 6d</em>.",
-                "<strong>Step 2:</strong> <em>30 - 10 = 6d &rarr; 20 = 6d &rarr; d = 20/6 = 10/3</em>.",
-                "<strong>Step 3:</strong> For part (i), find the 23rd term by jumping from the 11th term: <em>x<sub>23</sub> = x<sub>11</sub> + (23-11)d = x<sub>11</sub> + 12d</em>.",
-                "<strong>Step 4:</strong> Substitute: <em>x<sub>23</sub> = 30 + 12(10/3) = 30 + 40 = </em><strong>70</strong>.",
-                "<strong>Step 5:</strong> For part (ii), the sum of an odd number of terms is equal to the number of terms multiplied by the middle term. For 27 terms, the middle is the (27+1)/2 = 14th term.",
-                "<strong>Step 6:</strong> Find the 14th term: <em>x<sub>14</sub> = x<sub>11</sub> + 3d = 30 + 3(10/3) = 30 + 10 = 40</em>.",
-                "<strong>Step 7:</strong> Calculate the sum: <em>S<sub>27</sub> = 27 &times; x<sub>14</sub> = 27 &times; 40 = </em><strong>1080</strong>."
-            ]
-        },
-        {
-            category: "Arithmetic Sequences",
-            title: "Set B, Q10.B: Sum of symmetric terms",
-            question: "The sum of the 7th term and 15th term of an arithmetic sequence is 50.<br>(i) What is the 11th term?<br>(ii) If the common difference is 3, what is the 13th term?<br>(iii) What is the sum of the first 25 terms?",
-            steps: [
-                "<strong>Step 1:</strong> For part (i), notice that the 11th term is exactly halfway between the 7th and 15th terms.",
-                "<strong>Step 2:</strong> Because of sequence symmetry, the middle term is the average of equidistant terms. <em>x<sub>11</sub> = (x<sub>7</sub> + x<sub>15</sub>) / 2 = 50 / 2 = </em><strong>25</strong>.",
-                "<strong>Step 3:</strong> For part (ii), we are given <em>d = 3</em>. Find the 13th term by jumping from the 11th term: <em>x<sub>13</sub> = x<sub>11</sub> + 2d</em>.",
-                "<strong>Step 4:</strong> Substitute values: <em>x<sub>13</sub> = 25 + 2(3) = 25 + 6 = </em><strong>31</strong>.",
-                "<strong>Step 5:</strong> For part (iii), the sum of the first 25 terms (<em>S<sub>25</sub></em>) equals 25 multiplied by its middle term. The middle of 25 terms is the (25+1)/2 = 13th term.",
-                "<strong>Step 6:</strong> Using the 13th term calculated above: <em>S<sub>25</sub> = 25 &times; x<sub>13</sub> = 25 &times; 31 = </em><strong>775</strong>."
-            ]
-        },
-        {
-            category: "Arithmetic Sequences",
-            title: "Set C, Q1: Skipping terms",
-            question: "The 8th term of an arithmetic sequence is 25 and the 12th term is 30. What is the 16th term of this sequence?<br> A. 55 &nbsp;&nbsp; B. 35 &nbsp;&nbsp; C. 20 &nbsp;&nbsp; D. 27.5",
-            steps: [
-                "<strong>Step 1:</strong> Notice that the positions of the terms 8, 12, and 16 are equally spaced (they increase by 4 positions each time).",
-                "<strong>Step 2:</strong> This means these specific terms (<em>x<sub>8</sub>, x<sub>12</sub>, x<sub>16</sub></em>) form a smaller arithmetic sequence of their own.",
-                "<strong>Step 3:</strong> Find the 'jump' value between the given terms: <em>x<sub>12</sub> - x<sub>8</sub> = 30 - 25 = 5</em>.",
-                "<strong>Step 4:</strong> The jump from the 12th to the 16th term must be identical: <em>x<sub>16</sub> - x<sub>12</sub> = 5</em>.",
-                "<strong>Step 5:</strong> <em>x<sub>16</sub> = x<sub>12</sub> + 5 = 30 + 5 = 35</em>.",
-                "<strong>Step 6:</strong> Therefore, the correct answer is <strong>B. 35</strong>."
-            ]
-        },
-        {
-            category: "Arithmetic Sequences",
-            title: "Set C, Q10.A: Equidistant term pairs",
-            question: "The sum of the 2nd and 18th terms of an arithmetic sequence is 40.<br>(i) What is the sum of the 7th and 13th terms?<br>(ii) What is the 10th term?",
-            steps: [
-                "<strong>Step 1:</strong> A fundamental property of arithmetic sequences is that the sum of pairs of terms with the same index sum is constant.",
-                "<strong>Step 2:</strong> The sum of the indices for the first pair is 2 + 18 = 20.",
-                "<strong>Step 3:</strong> The sum of the indices for the second pair (part i) is 7 + 13 = 20.",
-                "<strong>Step 4:</strong> Since the index sums match, their term sums must be identical. <strong>(i) The sum of the 7th and 13th terms is 40.</strong>",
-                "<strong>Step 5:</strong> For part (ii), the 10th term is exactly in the middle of the 2nd and 18th terms (since (2+18)/2 = 10).",
-                "<strong>Step 6:</strong> Therefore, <em>x<sub>10</sub></em> is the average of those two terms: <em>x<sub>10</sub> = (x<sub>2</sub> + x<sub>18</sub>) / 2 = 40 / 2 = </em><strong>20</strong>."
-            ]
-        },
-        {
-            category: "Arithmetic Sequences",
-            title: "Set C, Q10.B: Three consecutive terms",
-            question: "The sum of the 4th, 5th and 6th terms of an arithmetic sequence is 90.<br>(i) What is the 5th term?<br>(ii) What is the sum of the first 9 terms?<br>(iii) If the common difference is 5, then what is its first term?",
-            steps: [
-                "<strong>Step 1:</strong> The 4th, 5th, and 6th terms are symmetric around the 5th term. We can mathematically represent them as <em>(x<sub>5</sub> - d)</em>, <em>x<sub>5</sub></em>, and <em>(x<sub>5</sub> + d)</em>.",
-                "<strong>Step 2:</strong> When we sum them, the <em>d</em> and <em>-d</em> cancel out: <em>(x<sub>5</sub> - d) + x<sub>5</sub> + (x<sub>5</sub> + d) = 3(x<sub>5</sub>)</em>.",
-                "<strong>Step 3:</strong> We are given the sum is 90. Therefore, <em>3(x<sub>5</sub>) = 90 &rarr; </em><strong>(i) The 5th term is 30.</strong>",
-                "<strong>Step 4:</strong> For part (ii), the sum of the first 9 terms (<em>S<sub>9</sub></em>) equals 9 times the middle term (which is the 5th term).",
-                "<strong>Step 5:</strong> <em>S<sub>9</sub> = 9 &times; x<sub>5</sub> = 9 &times; 30 = </em><strong>270</strong>.",
-                "<strong>Step 6:</strong> For part (iii), use the formula for the 5th term based on the first term: <em>x<sub>5</sub> = x<sub>1</sub> + 4d</em>.",
-                "<strong>Step 7:</strong> Substitute the known values (<em>x<sub>5</sub> = 30, d = 5</em>): <em>30 = x<sub>1</sub> + 4(5)</em>.",
-                "<strong>Step 8:</strong> <em>30 = x<sub>1</sub> + 20 &rarr; x<sub>1</sub> = 10</em>. <strong>(iii) The first term is 10.</strong>"
-            ]
-        }
-    ];
-
-    const container = document.getElementById('app-container');
-
-    questionsData.forEach((data, index) => {
-        // Create Card wrapper
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transition-all hover:shadow-md';
-
-        // Card Header (Category & Title)
-        const header = document.createElement('div');
-        header.className = `p-5 border-b border-gray-100 ${data.category === 'Circles and Angles' ? 'bg-indigo-50' : 'bg-emerald-50'}`;
+    <!-- SCREEN 2: EXAM INTERFACE -->
+    <div id="screen-exam" class="hidden flex-1 flex overflow-hidden">
         
-        const categoryBadge = document.createElement('span');
-        categoryBadge.className = `text-xs font-bold uppercase tracking-wider ${data.category === 'Circles and Angles' ? 'text-indigo-600' : 'text-emerald-600'}`;
-        categoryBadge.innerText = data.category;
-        
-        const title = document.createElement('h2');
-        title.className = 'text-xl font-bold text-gray-800 mt-1';
-        title.innerText = data.title;
-        
-        header.appendChild(categoryBadge);
-        header.appendChild(title);
-        card.appendChild(header);
+        <!-- Left Panel: Question Area -->
+        <div class="flex-1 flex flex-col bg-white border-r border-gray-300">
+            <!-- Section Header -->
+            <div class="bg-blue-50 px-6 py-2 border-b border-gray-300 flex justify-between items-center shadow-sm z-10">
+                <span id="section-title" class="font-bold text-blue-800 uppercase tracking-wide">Section Name</span>
+                <span class="bg-white px-3 py-1 rounded text-sm font-bold border border-blue-200 text-blue-700">Marks: +1, -0</span>
+            </div>
 
-        // Card Body (Question & Steps)
-        const body = document.createElement('div');
-        body.className = 'p-6';
+            <!-- Question Content -->
+            <div class="flex-1 overflow-y-auto p-8">
+                <div class="flex gap-4">
+                    <div class="font-bold text-lg">Q<span id="q-number">1</span>.</div>
+                    <div class="flex-1">
+                        <div id="q-text" class="text-lg text-gray-800 mb-6 math-text leading-relaxed font-medium">Question text goes here.</div>
+                        <div id="q-options" class="space-y-3">
+                            <!-- Options or Textbox injected here via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        const questionText = document.createElement('div');
-        questionText.className = 'text-gray-700 bg-gray-50 rounded-lg p-4 border border-gray-100 text-[1.05rem] leading-relaxed mb-6';
-        questionText.innerHTML = data.question;
-        body.appendChild(questionText);
+            <!-- Action Footer -->
+            <div class="bg-gray-100 p-4 border-t border-gray-300 flex justify-between items-center flex-shrink-0">
+                <div class="flex gap-3">
+                    <button class="bg-white border border-gray-400 text-gray-700 hover:bg-gray-50 font-semibold py-2 px-4 rounded text-sm shadow-sm transition-colors" onclick="markForReview()">Mark for Review & Next</button>
+                    <button class="bg-white border border-gray-400 text-gray-700 hover:bg-gray-50 font-semibold py-2 px-4 rounded text-sm shadow-sm transition-colors" onclick="clearResponse()">Clear Response</button>
+                </div>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded shadow text-sm transition-colors" onclick="saveAndNext()">Save & Next</button>
+            </div>
+        </div>
 
-        const stepsContainer = document.createElement('div');
-        stepsContainer.className = 'space-y-3 mb-6';
-        body.appendChild(stepsContainer);
-
-        // Interaction Footer
-        const footer = document.createElement('div');
-        footer.className = 'flex items-center justify-between border-t border-gray-100 pt-5 mt-2';
-        
-        const statusText = document.createElement('span');
-        statusText.className = 'text-sm font-medium text-gray-400';
-        statusText.innerText = `0 / ${data.steps.length} Steps Revealed`;
-        
-        const btnGroup = document.createElement('div');
-        btnGroup.className = 'flex space-x-3';
-
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed';
-        nextBtn.innerText = 'Show Next Step';
-
-        const allBtn = document.createElement('button');
-        allBtn.className = 'px-5 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 active:bg-gray-300 transition-colors hidden sm:block disabled:opacity-50 disabled:cursor-not-allowed';
-        allBtn.innerText = 'Show All';
-
-        btnGroup.appendChild(allBtn);
-        btnGroup.appendChild(nextBtn);
-        footer.appendChild(statusText);
-        footer.appendChild(btnGroup);
-        body.appendChild(footer);
-        card.appendChild(body);
-        container.appendChild(card);
-
-        // Logic for revealing steps
-        let currentStep = 0;
-
-        const renderStep = (stepIndex) => {
-            const stepDiv = document.createElement('div');
-            stepDiv.className = 'step-reveal p-4 rounded-lg bg-blue-50 border-l-4 border-blue-500 text-gray-800';
-            stepDiv.innerHTML = data.steps[stepIndex];
-            stepsContainer.appendChild(stepDiv);
-            currentStep++;
-            statusText.innerText = `${currentStep} / ${data.steps.length} Steps Revealed`;
+        <!-- Right Panel: Question Palette -->
+        <div class="w-72 bg-gray-50 flex flex-col flex-shrink-0">
+            <div class="p-4 border-b border-gray-300 bg-white flex items-center gap-3">
+                 <div class="w-10 h-10 bg-blue-100 rounded flex items-center justify-center text-blue-800 font-bold border border-blue-300">S</div>
+                 <div class="text-sm font-bold text-gray-700">Mock Candidate</div>
+            </div>
             
-            if (currentStep === data.steps.length) {
-                nextBtn.innerText = 'Completed';
-                nextBtn.disabled = true;
-                allBtn.disabled = true;
-            }
+            <div class="p-4 border-b border-gray-300 text-xs flex flex-wrap gap-2 bg-white">
+                <div class="flex items-center gap-1 w-full mb-1"><div class="w-4 h-4 rounded-sm status-answered"></div> Answered</div>
+                <div class="flex items-center gap-1 w-full mb-1"><div class="w-4 h-4 rounded-sm status-not-answered"></div> Not Answered</div>
+                <div class="flex items-center gap-1 w-full mb-1"><div class="w-4 h-4 rounded-sm status-not-visited"></div> Not Visited</div>
+                <div class="flex items-center gap-1 w-full"><div class="w-4 h-4 rounded-sm status-review"></div> Marked for Review</div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4">
+                <h4 class="font-bold text-gray-700 mb-3 text-sm">Question Palette:</h4>
+                <div id="palette-grid" class="grid grid-cols-4 gap-2">
+                    <!-- Palette buttons injected via JS -->
+                </div>
+            </div>
+
+            <div class="p-4 bg-gray-200 border-t border-gray-300 flex-shrink-0">
+                <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded shadow-md transition-colors" onclick="confirmSubmit()">Submit Test</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 3: RESULTS -->
+    <div id="screen-results" class="hidden flex-1 overflow-y-auto p-6 bg-gray-50">
+        <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+            <div class="bg-blue-800 text-white p-8 text-center">
+                <h2 class="text-3xl font-bold mb-2">Test Submitted Successfully</h2>
+                <p class="text-blue-200">Here is your detailed performance report.</p>
+            </div>
+            
+            <div class="p-8">
+                <div class="flex justify-center mb-8">
+                    <div class="text-center bg-blue-50 border border-blue-200 rounded-2xl p-6 shadow-sm w-64">
+                        <p class="text-gray-500 font-semibold mb-1 uppercase tracking-wide text-sm">Total Score</p>
+                        <p class="text-5xl font-bold text-blue-700"><span id="final-score">0</span><span class="text-2xl text-gray-400 font-normal"> / 35</span></p>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold border-b pb-2 mb-6 text-gray-800">Detailed Question Review</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-700 text-sm uppercase tracking-wider">
+                                <th class="p-3 border-b border-gray-300 font-semibold rounded-tl-lg">Q.No</th>
+                                <th class="p-3 border-b border-gray-300 font-semibold">Question Status</th>
+                                <th class="p-3 border-b border-gray-300 font-semibold">Your Answer</th>
+                                <th class="p-3 border-b border-gray-300 font-semibold">Correct Answer</th>
+                            </tr>
+                        </thead>
+                        <tbody id="result-tbody" class="text-sm">
+                            <!-- Rows injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-sm w-full shadow-2xl">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Submit Examination?</h3>
+            <p class="text-gray-600 mb-6 text-sm">Are you sure you want to submit? You will not be able to change your answers after submission.</p>
+            <div class="flex justify-end gap-3">
+                <button class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 font-medium" onclick="document.getElementById('confirm-modal').classList.add('hidden')">Cancel</button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium" onclick="finishExam()">Yes, Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA: 35 Questions covering 1 hour workload for Class 4 ---
+        const questions = [
+            // Q. I Choose the correct answer
+            { type: 'mcq', section: 'Choose the correct answer', text: 'The equivalent fraction for \\(\\frac{14}{21}\\) is:', options: ['\\(\\frac{2}{3}\\)', '\\(\\frac{2}{7}\\)', '\\(\\frac{3}{6}\\)', '\\(\\frac{3}{4}\\)'], answer: 0, strAnswer: '\\(\\frac{2}{3}\\)' },
+            { type: 'mcq', section: 'Choose the correct answer', text: '235 is divisible by:', options: ['5', '2', '3', '9'], answer: 0, strAnswer: '5' },
+            { type: 'mcq', section: 'Choose the correct answer', text: 'A decimal number with 2 in the ones place, 7 in the hundredths place, and 5 in the tenths place is:', options: ['2.75', '2.57', '7.52', '5.27'], answer: 1, strAnswer: '2.57' },
+            { type: 'mcq', section: 'Choose the correct answer', text: 'Find the missing denominator: \\(\\frac{2}{4} = \\frac{16}{\\Box}\\)', options: ['24', '32', '36', '48'], answer: 1, strAnswer: '32' },
+            { type: 'mcq', section: 'Choose the correct answer', text: 'A quadrilateral has ________ sides.', options: ['3', '4', '5', '6'], answer: 1, strAnswer: '4' },
+            { type: 'mcq', section: 'Choose the correct answer', text: 'Nina needs \\(\\frac{3}{8}\\) kg of sugar for a cake and \\(\\frac{5}{8}\\) kg for a pudding. How much sugar is needed in total?', options: ['\\(\\frac{7}{8}\\) kg', '1 kg', '\\(\\frac{2}{8}\\) kg', '\\(\\frac{8}{16}\\) kg'], answer: 1, strAnswer: '1 kg' },
+            { type: 'mcq', section: 'Choose the correct answer', text: 'The number divisible by both 2 and 5 is:', options: ['10', '25', '32', '45'], answer: 0, strAnswer: '10' },
+            { type: 'mcq', section: 'Choose the correct answer', text: 'The place value of 6 in 4.56 is:', options: ['6', '6 hundredths', '0.6', '600'], answer: 1, strAnswer: '6 hundredths' },
+            { type: 'mcq', section: 'Choose the correct answer', text: 'The 5th multiple of 6 is:', options: ['20', '30', '35', '45'], answer: 1, strAnswer: '30' },
+            { type: 'mcq', section: 'Choose the correct answer', text: '_________ is a factor of every number.', options: ['0', '2', '1', '10'], answer: 2, strAnswer: '1' },
+            
+            // Q. II Fill in the blanks
+            { type: 'text', section: 'Fill in the blanks', text: 'If the numerator is smaller than the denominator, it is a _________ fraction.', answer: ['proper'], strAnswer: 'proper' },
+            { type: 'text', section: 'Fill in the blanks', text: 'The fractional form of 0.64 is _________ (Write in standard fraction format, e.g., 64/100).', answer: ['64/100', '16/25'], strAnswer: '64/100' },
+            { type: 'text', section: 'Fill in the blanks', text: 'If one side of a square shaped photograph is 7 cm, the length of the frame required is _________ cm.', answer: ['28'], strAnswer: '28' },
+            { type: 'text', section: 'Fill in the blanks', text: 'A circle has _________ number of radius.', answer: ['infinite', 'many', 'unlimited', 'uncountable', 'countless'], strAnswer: 'infinite / unlimited' },
+            { type: 'text', section: 'Fill in the blanks', text: '\\(\\frac{1}{6}\\) of 54 = _________', answer: ['9'], strAnswer: '9' },
+            { type: 'text', section: 'Fill in the blanks', text: 'The decimal number for \\(24\\frac{5}{10}\\) is _________', answer: ['24.5', '24.50'], strAnswer: '24.5' },
+            { type: 'text', section: 'Fill in the blanks', text: 'The two factors of 13 are 1 and _________', answer: ['13'], strAnswer: '13' },
+            { type: 'text', section: 'Fill in the blanks', text: '\\(\\frac{1}{2}\\) of one hour in minutes is _________ minutes.', answer: ['30'], strAnswer: '30' },
+            { type: 'text', section: 'Fill in the blanks', text: 'Compare using <, > or = : \\(\\frac{19}{23} \\_\\_\\_ \\frac{12}{23}\\)', answer: ['>', 'greater than', 'greater'], strAnswer: '>' },
+            { type: 'text', section: 'Fill in the blanks', text: 'Area of a shape made of 12 unit squares is _________ sq. units.', answer: ['12'], strAnswer: '12' },
+
+            // Q. III True or False
+            { type: 'mcq', section: 'True or False', text: '\\(\\frac{4}{15}\\), \\(\\frac{8}{15}\\) and \\(\\frac{12}{15}\\) are like fractions.', options: ['True', 'False'], answer: 0, strAnswer: 'True' },
+            { type: 'mcq', section: 'True or False', text: 'Polygons are open curves.', options: ['True', 'False'], answer: 1, strAnswer: 'False' },
+            { type: 'mcq', section: 'True or False', text: 'In the decimal number 31.26, 2 is in the tenths place.', options: ['True', 'False'], answer: 0, strAnswer: 'True' },
+            { type: 'mcq', section: 'True or False', text: 'A number has a limited number of multiples.', options: ['True', 'False'], answer: 1, strAnswer: 'False' },
+            { type: 'mcq', section: 'True or False', text: '\\(\\frac{95}{100}\\) is equal to 0.95', options: ['True', 'False'], answer: 0, strAnswer: 'True' },
+            { type: 'mcq', section: 'True or False', text: 'To find the length of the wire required to fence a garden, we need to find its area.', options: ['True', 'False'], answer: 1, strAnswer: 'False' },
+
+            // Q. IV Do as directed
+            { type: 'text', section: 'Do as directed', text: 'Find \\(\\frac{1}{10}\\) of 50 =', answer: ['5'], strAnswer: '5' },
+            { type: 'mcq', section: 'Do as directed', text: 'Is 848 divisible by 9?', options: ['Yes', 'No'], answer: 1, strAnswer: 'No' },
+            { type: 'text', section: 'Do as directed', text: 'Express \\(\\frac{1}{100}\\) as a decimal.', answer: ['0.01'], strAnswer: '0.01' },
+            { type: 'text', section: 'Do as directed', text: 'Express 4.07 as a fraction (Use format like 407/100).', answer: ['407/100'], strAnswer: '407/100' },
+            { type: 'text', section: 'Do as directed', text: 'Write the next decimal number in the pattern: 4.97, 4.98, _________', answer: ['4.99'], strAnswer: '4.99' },
+            { type: 'text', section: 'Do as directed', text: 'Riya has \\(\\frac{3}{4}\\) m of ribbon. She cuts off \\(\\frac{1}{4}\\) m. What is the length of ribbon left? (Write fraction as a/b)', answer: ['2/4', '1/2'], strAnswer: '2/4 or 1/2' },
+            { type: 'text', section: 'Do as directed', text: 'Find the perimeter of a quadrilateral with sides 10cm, 6cm, 5cm, and 2cm. (Enter number only)', answer: ['23'], strAnswer: '23' },
+            
+            // Pictograph data adapted to text
+            { type: 'text', section: 'Data Handling', text: 'Data of dice rolls: 1 appeared 2 times, 2 appeared 5 times, 3 appeared 1 time, 4 appeared 4 times, 5 appeared 6 times, 6 appeared 2 times. <br><br> Which number appeared the maximum number of times?', answer: ['5'], strAnswer: '5' },
+            { type: 'text', section: 'Data Handling', text: 'Based on the dice rolls (1: 2x, 2: 5x, 3: 1x, 4: 4x, 5: 6x, 6: 2x), how many times does a number appear which is MORE than 4?', answer: ['8'], strAnswer: '8 (since 5 appeared 6 times and 6 appeared 2 times)' }
+        ];
+
+        // --- STATE MANAGEMENT ---
+        let currentQuestion = 0;
+        let totalTime = 60 * 60; // 60 minutes
+        let timerInterval;
+        
+        // Status tracking arrays
+        let answers = new Array(questions.length).fill(null);
+        let status = new Array(questions.length).fill('not-visited'); // not-visited, not-answered, answered, review
+
+        // --- DOM ELEMENTS ---
+        const ui = {
+            screens: {
+                instructions: document.getElementById('screen-instructions'),
+                exam: document.getElementById('screen-exam'),
+                results: document.getElementById('screen-results')
+            },
+            checkbox: document.getElementById('agree-checkbox'),
+            btnStart: document.getElementById('btn-start'),
+            timer: document.getElementById('timer'),
+            timerContainer: document.getElementById('header-timer-container'),
+            qNumber: document.getElementById('q-number'),
+            qText: document.getElementById('q-text'),
+            qOptions: document.getElementById('q-options'),
+            sectionTitle: document.getElementById('section-title'),
+            paletteGrid: document.getElementById('palette-grid'),
+            modal: document.getElementById('confirm-modal')
         };
 
-        nextBtn.onclick = () => {
-            if (currentStep < data.steps.length) {
-                renderStep(currentStep);
-            }
-        };
+        // --- FUNCTIONS ---
 
-        allBtn.onclick = () => {
-            while (currentStep < data.steps.length) {
-                renderStep(currentStep);
+        function toggleStartButton() {
+            if (ui.checkbox.checked) {
+                ui.btnStart.disabled = false;
+                ui.btnStart.classList.replace('bg-gray-400', 'bg-blue-600');
+                ui.btnStart.classList.replace('cursor-not-allowed', 'hover:bg-blue-700');
+            } else {
+                ui.btnStart.disabled = true;
+                ui.btnStart.classList.replace('bg-blue-600', 'bg-gray-400');
+                ui.btnStart.classList.replace('hover:bg-blue-700', 'cursor-not-allowed');
             }
-        };
-    });
-</script>
+        }
+
+        function startTimer() {
+            ui.timerContainer.classList.remove('hidden');
+            timerInterval = setInterval(() => {
+                totalTime--;
+                const m = Math.floor(totalTime / 60).toString().padStart(2, '0');
+                const s = (totalTime % 60).toString().padStart(2, '0');
+                ui.timer.innerText = `${m}:${s}`;
+
+                if(totalTime <= 300) { // 5 minutes warning
+                    ui.timer.classList.replace('text-yellow-400', 'text-red-400');
+                    ui.timer.classList.add('animate-pulse');
+                }
+
+                if(totalTime <= 0) {
+                    clearInterval(timerInterval);
+                    finishExam();
+                }
+            }, 1000);
+        }
+
+        function startExam() {
+            ui.screens.instructions.classList.add('hidden');
+            ui.screens.exam.classList.remove('hidden');
+            status[0] = 'not-answered'; // first question is now visited but not answered
+            buildPalette();
+            renderQuestion(0);
+            startTimer();
+        }
+
+        function buildPalette() {
+            ui.paletteGrid.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i + 1;
+                btn.className = `w-12 h-10 rounded font-bold transition-all ${getPaletteClass(status[i])} hover:opacity-80`;
+                // Add border if it's the current question
+                if (i === currentQuestion) {
+                    btn.classList.add('ring-2', 'ring-offset-1', 'ring-blue-800');
+                }
+                btn.onclick = () => jumpToQuestion(i);
+                ui.paletteGrid.appendChild(btn);
+            }
+        }
+
+        function getPaletteClass(s) {
+            switch(s) {
+                case 'not-visited': return 'status-not-visited';
+                case 'not-answered': return 'status-not-answered';
+                case 'answered': return 'status-answered';
+                case 'review': return 'status-review';
+                default: return 'status-not-visited';
+            }
+        }
+
+        function renderQuestion(index) {
+            currentQuestion = index;
+            const q = questions[index];
+            
+            ui.sectionTitle.innerText = q.section;
+            ui.qNumber.innerText = index + 1;
+            ui.qText.innerHTML = q.text;
+            ui.qOptions.innerHTML = '';
+
+            if (q.type === 'mcq') {
+                q.options.forEach((opt, idx) => {
+                    const isChecked = answers[index] === idx ? 'checked' : '';
+                    const html = `
+                        <label class="flex items-center gap-3 p-3 border border-gray-300 rounded-lg cursor-pointer option-label transition-colors">
+                            <input type="radio" name="q_opt" value="${idx}" class="w-4 h-4 text-blue-600 accent-blue-600" ${isChecked} onchange="captureAnswer()">
+                            <span class="text-gray-700 text-lg math-text">${opt}</span>
+                        </label>
+                    `;
+                    ui.qOptions.innerHTML += html;
+                });
+            } else if (q.type === 'text') {
+                const val = answers[index] || '';
+                ui.qOptions.innerHTML = `
+                    <div class="mt-4">
+                        <input type="text" id="q_text_input" value="${val}" placeholder="Type your answer here..." class="w-full max-w-sm border-2 border-gray-300 rounded-lg px-4 py-3 text-lg focus:outline-none focus:border-blue-600 transition-colors" onkeyup="captureAnswer()">
+                    </div>
+                `;
+            }
+
+            // Typeset MathJax dynamically
+            if (window.MathJax) {
+                MathJax.typesetPromise([ui.qText, ui.qOptions]).catch((err) => console.log(err.message));
+            }
+
+            buildPalette(); // refresh palette highlighting
+        }
+
+        function captureAnswer() {
+            const q = questions[currentQuestion];
+            if (q.type === 'mcq') {
+                const selected = document.querySelector('input[name="q_opt"]:checked');
+                if (selected) answers[currentQuestion] = parseInt(selected.value);
+            } else if (q.type === 'text') {
+                const input = document.getElementById('q_text_input');
+                if (input) {
+                    const val = input.value.trim();
+                    answers[currentQuestion] = val === '' ? null : val;
+                }
+            }
+            
+            // Auto update status if answered, unless it's marked for review
+            if (status[currentQuestion] !== 'review') {
+                status[currentQuestion] = answers[currentQuestion] !== null ? 'answered' : 'not-answered';
+            }
+            buildPalette();
+        }
+
+        function saveAndNext() {
+            captureAnswer();
+            // Force status to answered or not-answered, clearing 'review' flag
+            status[currentQuestion] = answers[currentQuestion] !== null ? 'answered' : 'not-answered';
+            
+            moveToNext();
+        }
+
+        function markForReview() {
+            captureAnswer();
+            status[currentQuestion] = 'review';
+            moveToNext();
+        }
+
+        function clearResponse() {
+            answers[currentQuestion] = null;
+            status[currentQuestion] = 'not-answered';
+            renderQuestion(currentQuestion);
+        }
+
+        function moveToNext() {
+            if (currentQuestion < questions.length - 1) {
+                const nextQ = currentQuestion + 1;
+                // If next was not visited, mark it not-answered
+                if (status[nextQ] === 'not-visited') status[nextQ] = 'not-answered';
+                renderQuestion(nextQ);
+            } else {
+                buildPalette();
+                // Alert end of questions
+                alert("You have reached the end of the question paper. Please review your answers or submit.");
+            }
+        }
+
+        function jumpToQuestion(index) {
+            captureAnswer(); // save current before jumping
+            if (status[index] === 'not-visited') status[index] = 'not-answered';
+            renderQuestion(index);
+        }
+
+        function confirmSubmit() {
+            captureAnswer(); // Save current state
+            ui.modal.classList.remove('hidden');
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+            ui.modal.classList.add('hidden');
+            ui.screens.exam.classList.add('hidden');
+            ui.screens.results.classList.remove('hidden');
+            ui.timerContainer.classList.add('hidden');
+
+            evaluateTest();
+        }
+
+        function evaluateTest() {
+            let score = 0;
+            const tbody = document.getElementById('result-tbody');
+            tbody.innerHTML = '';
+
+            questions.forEach((q, i) => {
+                const userAns = answers[i];
+                let isCorrect = false;
+                let displayUserAns = '-';
+
+                if (q.type === 'mcq') {
+                    if (userAns !== null) {
+                        isCorrect = userAns === q.answer;
+                        displayUserAns = q.options[userAns];
+                    }
+                } else if (q.type === 'text') {
+                    if (userAns !== null) {
+                        displayUserAns = userAns;
+                        // Check if user answer matches any accepted string (case insensitive)
+                        isCorrect = q.answer.some(a => a.toLowerCase() === userAns.toLowerCase());
+                    }
+                }
+
+                if (isCorrect) score++;
+
+                let statusBadge = '';
+                if (userAns === null) {
+                    statusBadge = '<span class="px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs font-bold">Unattempted</span>';
+                } else if (isCorrect) {
+                    statusBadge = '<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Correct</span>';
+                } else {
+                    statusBadge = '<span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold">Incorrect</span>';
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-200 hover:bg-gray-50";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-gray-700">${i + 1}</td>
+                    <td class="p-3">${statusBadge}</td>
+                    <td class="p-3 text-gray-800 math-text">${displayUserAns}</td>
+                    <td class="p-3 text-green-700 font-bold math-text">${q.strAnswer}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('final-score').innerText = score;
+            if (window.MathJax) {
+                MathJax.typesetPromise([tbody]).catch((err) => console.log(err.message));
+            }
+        }
+    </script>
 </body>
 </html>
