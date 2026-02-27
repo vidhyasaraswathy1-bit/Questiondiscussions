@@ -26,6 +26,9 @@
         .option-label input:checked + span { font-weight: bold; color: #1d4ed8; }
         
         .math-text { font-size: 1.1rem; }
+        
+        .pictograph-table th, .pictograph-table td { padding: 12px; border: 1px solid #d1d5db; }
+        .pictograph-table th { background-color: #f3f4f6; font-weight: bold; }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
@@ -111,7 +114,7 @@
             <!-- Question Content -->
             <div class="flex-1 overflow-y-auto p-8">
                 <div class="flex gap-4">
-                    <div class="font-bold text-lg">Q<span id="q-number">1</span>.</div>
+                    <div class="font-bold text-lg text-gray-500 w-10">Q<span id="q-number">1</span>.</div>
                     <div class="flex-1">
                         <div id="q-text" class="text-lg text-gray-800 mb-6 math-text leading-relaxed font-medium">Question text goes here.</div>
                         <div id="q-options" class="space-y-3">
@@ -170,7 +173,7 @@
                 <div class="flex justify-center mb-8">
                     <div class="text-center bg-blue-50 border border-blue-200 rounded-2xl p-6 shadow-sm w-64">
                         <p class="text-gray-500 font-semibold mb-1 uppercase tracking-wide text-sm">Total Score</p>
-                        <p class="text-5xl font-bold text-blue-700"><span id="final-score">0</span><span class="text-2xl text-gray-400 font-normal"> / 35</span></p>
+                        <p class="text-5xl font-bold text-blue-700"><span id="final-score">0</span><span class="text-2xl text-gray-400 font-normal"> / <span id="total-qs-label">45</span></span></p>
                     </div>
                 </div>
 
@@ -179,8 +182,8 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-gray-100 text-gray-700 text-sm uppercase tracking-wider">
-                                <th class="p-3 border-b border-gray-300 font-semibold rounded-tl-lg">Q.No</th>
-                                <th class="p-3 border-b border-gray-300 font-semibold">Question Status</th>
+                                <th class="p-3 border-b border-gray-300 font-semibold rounded-tl-lg w-16">Q.No</th>
+                                <th class="p-3 border-b border-gray-300 font-semibold w-32">Status</th>
                                 <th class="p-3 border-b border-gray-300 font-semibold">Your Answer</th>
                                 <th class="p-3 border-b border-gray-300 font-semibold">Correct Answer</th>
                             </tr>
@@ -206,63 +209,202 @@
         </div>
     </div>
 
+    <!-- Fullscreen Enforcement Overlay -->
+    <div id="fullscreen-warning" class="hidden fixed inset-0 bg-black bg-opacity-95 z-[100] flex flex-col items-center justify-center text-white p-6 text-center">
+        <svg class="w-20 h-20 text-red-500 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        <h2 class="text-4xl font-bold mb-4">Exam Paused</h2>
+        <p class="text-xl mb-8 text-gray-300 max-w-lg">You have exited fullscreen mode. This is not allowed during the examination. Please return to fullscreen to resume your test.</p>
+        <button onclick="returnToFullscreen()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded shadow-lg text-xl transition-all">Return to Fullscreen</button>
+    </div>
+
     <script>
-        // --- DATA: 35 Questions covering 1 hour workload for Class 4 ---
+        // --- SECURITY / ANTI-CHEAT ---
+        let examActive = false;
+
+        // Disable Right-Click
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable Inspect Element & View Source keyboard shortcuts + Escape key attempt
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || 
+               (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+               (e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
+               e.key === 'Escape') {
+                e.preventDefault();
+            }
+        });
+
+        // Enforce Fullscreen
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            if (examActive) {
+                const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+                if (!isFullscreen) {
+                    // Block screen if they exit fullscreen during an active exam
+                    document.getElementById('fullscreen-warning').classList.remove('hidden');
+                } else {
+                    document.getElementById('fullscreen-warning').classList.add('hidden');
+                }
+            }
+        }
+
+        function returnToFullscreen() {
+            const docElm = document.documentElement;
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen().catch(err => console.log(err));
+            } else if (docElm.webkitRequestFullscreen) {
+                docElm.webkitRequestFullscreen();
+            } else if (docElm.msRequestFullscreen) {
+                docElm.msRequestFullscreen();
+            }
+        }
+
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(err => console.log(err));
+            } else if (document.webkitExitFullscreen) { 
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { 
+                document.msExitFullscreen();
+            }
+        }
+
+        // Data Handling - Pictograph HTML
+        const dicePictographHTML = `
+            <div class='bg-blue-50 p-4 rounded-lg my-4 border border-blue-200'>
+                <h4 class='font-bold mb-3 text-blue-900'>Dice Rolling Data (Key: 1 🎲 = 2 times)</h4>
+                <table class='w-full text-left bg-white pictograph-table'>
+                    <tr><th>Number on Dice</th><th>Number of times appeared</th></tr>
+                    <tr><td class='font-bold text-center'>1</td><td class='text-2xl'>🎲🎲</td></tr>
+                    <tr><td class='font-bold text-center'>2</td><td class='text-2xl'>🎲🎲🎲🎲🎲</td></tr>
+                    <tr><td class='font-bold text-center'>3</td><td class='text-2xl'>🎲</td></tr>
+                    <tr><td class='font-bold text-center'>4</td><td class='text-2xl'>🎲🎲🎲🎲</td></tr>
+                    <tr><td class='font-bold text-center'>5</td><td class='text-2xl'>🎲🎲🎲🎲🎲🎲</td></tr>
+                    <tr><td class='font-bold text-center'>6</td><td class='text-2xl'>🎲🎲</td></tr>
+                </table>
+            </div>
+        `;
+
+        // Data Handling - Bar Graph HTML
+        const booksBarGraphHTML = `
+            <div class='bg-green-50 p-6 rounded-lg my-4 border border-green-200 shadow-sm'>
+                <h4 class='font-bold mb-5 text-green-900 text-center'>Bar Graph: Number of Books Read in a Month</h4>
+                <div class='space-y-4 max-w-md mx-auto relative'>
+                    <div class='flex items-center'>
+                        <div class='w-16 font-bold text-gray-700 text-right pr-4'>Ali</div>
+                        <div class='bg-blue-500 h-8 rounded-r-md flex items-center shadow' style='width: 40%;'></div>
+                        <div class='ml-3 text-sm font-bold text-gray-800'>4</div>
+                    </div>
+                    <div class='flex items-center'>
+                        <div class='w-16 font-bold text-gray-700 text-right pr-4'>Ben</div>
+                        <div class='bg-red-500 h-8 rounded-r-md flex items-center shadow' style='width: 60%;'></div>
+                        <div class='ml-3 text-sm font-bold text-gray-800'>6</div>
+                    </div>
+                    <div class='flex items-center'>
+                        <div class='w-16 font-bold text-gray-700 text-right pr-4'>Cara</div>
+                        <div class='bg-yellow-500 h-8 rounded-r-md flex items-center shadow' style='width: 30%;'></div>
+                        <div class='ml-3 text-sm font-bold text-gray-800'>3</div>
+                    </div>
+                    <div class='flex items-center'>
+                        <div class='w-16 font-bold text-gray-700 text-right pr-4'>Dan</div>
+                        <div class='bg-purple-500 h-8 rounded-r-md flex items-center shadow' style='width: 80%;'></div>
+                        <div class='ml-3 text-sm font-bold text-gray-800'>8</div>
+                    </div>
+                    <!-- Axis Line -->
+                    <div class='absolute left-16 top-0 bottom-0 w-1 bg-gray-400 -z-10'></div>
+                </div>
+                <p class='text-xs font-semibold mt-6 text-gray-600 text-center'>X-axis (Horizontal): Number of Books (1 unit = 1 book)</p>
+            </div>
+        `;
+
+        // Shape HTML for Q20
+        const shapeQ20HTML = `
+            <div class='my-3'>
+                <p class='text-sm text-gray-600 mb-2'>Each small square is 1 sq. unit.</p>
+                <div class='inline-grid grid-cols-4 border-2 border-blue-800'>
+                    <div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div>
+                    <div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div>
+                    <div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div>
+                </div>
+            </div>
+        `;
+
+        // --- DATA: 45 Questions (Incorporating all requested variations and new chapters) ---
         const questions = [
-            // Q. I Choose the correct answer
-            { type: 'mcq', section: 'Choose the correct answer', text: 'The equivalent fraction for \\(\\frac{14}{21}\\) is:', options: ['\\(\\frac{2}{3}\\)', '\\(\\frac{2}{7}\\)', '\\(\\frac{3}{6}\\)', '\\(\\frac{3}{4}\\)'], answer: 0, strAnswer: '\\(\\frac{2}{3}\\)' },
-            { type: 'mcq', section: 'Choose the correct answer', text: '235 is divisible by:', options: ['5', '2', '3', '9'], answer: 0, strAnswer: '5' },
-            { type: 'mcq', section: 'Choose the correct answer', text: 'A decimal number with 2 in the ones place, 7 in the hundredths place, and 5 in the tenths place is:', options: ['2.75', '2.57', '7.52', '5.27'], answer: 1, strAnswer: '2.57' },
-            { type: 'mcq', section: 'Choose the correct answer', text: 'Find the missing denominator: \\(\\frac{2}{4} = \\frac{16}{\\Box}\\)', options: ['24', '32', '36', '48'], answer: 1, strAnswer: '32' },
-            { type: 'mcq', section: 'Choose the correct answer', text: 'A quadrilateral has ________ sides.', options: ['3', '4', '5', '6'], answer: 1, strAnswer: '4' },
-            { type: 'mcq', section: 'Choose the correct answer', text: 'Nina needs \\(\\frac{3}{8}\\) kg of sugar for a cake and \\(\\frac{5}{8}\\) kg for a pudding. How much sugar is needed in total?', options: ['\\(\\frac{7}{8}\\) kg', '1 kg', '\\(\\frac{2}{8}\\) kg', '\\(\\frac{8}{16}\\) kg'], answer: 1, strAnswer: '1 kg' },
-            { type: 'mcq', section: 'Choose the correct answer', text: 'The number divisible by both 2 and 5 is:', options: ['10', '25', '32', '45'], answer: 0, strAnswer: '10' },
-            { type: 'mcq', section: 'Choose the correct answer', text: 'The place value of 6 in 4.56 is:', options: ['6', '6 hundredths', '0.6', '600'], answer: 1, strAnswer: '6 hundredths' },
-            { type: 'mcq', section: 'Choose the correct answer', text: 'The 5th multiple of 6 is:', options: ['20', '30', '35', '45'], answer: 1, strAnswer: '30' },
-            { type: 'mcq', section: 'Choose the correct answer', text: '_________ is a factor of every number.', options: ['0', '2', '1', '10'], answer: 2, strAnswer: '1' },
+            // Q. I Choose the correct answer (Variations)
+            { type: 'mcq', section: 'Choose the correct answer', text: 'The equivalent fraction for \\(\\frac{15}{25}\\) is:', options: ['\\(\\frac{3}{5}\\)', '\\(\\frac{2}{5}\\)', '\\(\\frac{4}{5}\\)', '\\(\\frac{1}{5}\\)'], answer: 0, strAnswer: '\\(\\frac{3}{5}\\)' }, // Updated Q1
+            { type: 'mcq', section: 'Choose the correct answer', text: '144 is divisible by:', options: ['5', '2', '7', '11'], answer: 1, strAnswer: '2' }, // New Q2
+            { type: 'mcq', section: 'Choose the correct answer', text: 'A decimal number with 4 in the ones place, 8 in the tenths place, and 3 in the hundredths place is:', options: ['4.38', '3.84', '4.83', '8.43'], answer: 2, strAnswer: '4.83' }, // New Q3
+            { type: 'mcq', section: 'Choose the correct answer', text: 'Find the missing denominator: \\(\\frac{3}{5} = \\frac{12}{\\Box}\\)', options: ['15', '18', '20', '25'], answer: 2, strAnswer: '20' }, // New Q4
+            { type: 'mcq', section: 'Choose the correct answer', text: 'A pentagon is a polygon which has ________ sides.', options: ['4', '5', '6', '7'], answer: 1, strAnswer: '5' }, // New Q5
+            { type: 'mcq', section: 'Choose the correct answer', text: 'Rahul drank \\(\\frac{2}{6}\\) liters of water and later drank \\(\\frac{3}{6}\\) liters. How much water did he drink in total?', options: ['\\(\\frac{1}{6}\\) liters', '\\(\\frac{4}{6}\\) liters', '\\(\\frac{6}{6}\\) liters', '\\(\\frac{5}{6}\\) liters'], answer: 3, strAnswer: '\\(\\frac{5}{6}\\) liters' }, // Updated Q6
+            { type: 'mcq', section: 'Choose the correct answer', text: 'A number divisible by both 5 and 10 is:', options: ['15', '25', '40', '55'], answer: 2, strAnswer: '40' }, // New Q7
+            { type: 'mcq', section: 'Choose the correct answer', text: 'The place value of 3 in 7.38 is:', options: ['3 ones', '3 tenths', '3 hundredths', '30'], answer: 1, strAnswer: '3 tenths' }, // New Q8
+            { type: 'mcq', section: 'Choose the correct answer', text: 'The 4th multiple of 8 is:', options: ['12', '24', '32', '40'], answer: 2, strAnswer: '32' }, // New Q9
+            { type: 'mcq', section: 'Choose the correct answer', text: 'The smallest factor of 24 is:', options: ['0', '1', '2', '24'], answer: 1, strAnswer: '1' }, // New Q10
             
-            // Q. II Fill in the blanks
-            { type: 'text', section: 'Fill in the blanks', text: 'If the numerator is smaller than the denominator, it is a _________ fraction.', answer: ['proper'], strAnswer: 'proper' },
-            { type: 'text', section: 'Fill in the blanks', text: 'The fractional form of 0.64 is _________ (Write in standard fraction format, e.g., 64/100).', answer: ['64/100', '16/25'], strAnswer: '64/100' },
-            { type: 'text', section: 'Fill in the blanks', text: 'If one side of a square shaped photograph is 7 cm, the length of the frame required is _________ cm.', answer: ['28'], strAnswer: '28' },
-            { type: 'text', section: 'Fill in the blanks', text: 'A circle has _________ number of radius.', answer: ['infinite', 'many', 'unlimited', 'uncountable', 'countless'], strAnswer: 'infinite / unlimited' },
-            { type: 'text', section: 'Fill in the blanks', text: '\\(\\frac{1}{6}\\) of 54 = _________', answer: ['9'], strAnswer: '9' },
-            { type: 'text', section: 'Fill in the blanks', text: 'The decimal number for \\(24\\frac{5}{10}\\) is _________', answer: ['24.5', '24.50'], strAnswer: '24.5' },
-            { type: 'text', section: 'Fill in the blanks', text: 'The two factors of 13 are 1 and _________', answer: ['13'], strAnswer: '13' },
-            { type: 'text', section: 'Fill in the blanks', text: '\\(\\frac{1}{2}\\) of one hour in minutes is _________ minutes.', answer: ['30'], strAnswer: '30' },
-            { type: 'text', section: 'Fill in the blanks', text: 'Compare using <, > or = : \\(\\frac{19}{23} \\_\\_\\_ \\frac{12}{23}\\)', answer: ['>', 'greater than', 'greater'], strAnswer: '>' },
-            { type: 'text', section: 'Fill in the blanks', text: 'Area of a shape made of 12 unit squares is _________ sq. units.', answer: ['12'], strAnswer: '12' },
+            // Q. II Fill in the blanks (Variations)
+            { type: 'text', section: 'Fill in the blanks', text: 'If the numerator is greater than the denominator, it is an _________ fraction.', answer: ['improper'], strAnswer: 'improper' }, // New Q11
+            { type: 'text', section: 'Fill in the blanks', text: 'The fractional form of 0.75 is _________ (Write in standard fraction format, e.g., 25/100).', answer: ['75/100', '3/4'], strAnswer: '75/100' }, // Updated Q12
+            { type: 'text', section: 'Fill in the blanks', text: 'If one side of a square park is 12 m, the total length of the boundary required to fence it is _________ m.', answer: ['48'], strAnswer: '48' }, // Updated Q13
+            { type: 'text', section: 'Fill in the blanks', text: 'The distance from the center to any point on the boundary of a circle is called its _________.', answer: ['radius'], strAnswer: 'radius' }, // New Q14
+            { type: 'text', section: 'Fill in the blanks', text: '\\(\\frac{1}{8}\\) of 64 = _________', answer: ['8'], strAnswer: '8' }, // New Q15
+            { type: 'text', section: 'Fill in the blanks', text: 'The decimal number for \\(15\\frac{8}{100}\\) is _________', answer: ['15.08'], strAnswer: '15.08' }, // New Q16
+            { type: 'text', section: 'Fill in the blanks', text: 'The two factors of 17 are 1 and _________', answer: ['17'], strAnswer: '17' }, // New Q17
+            { type: 'text', section: 'Fill in the blanks', text: '\\(\\frac{1}{4}\\) of one hour in minutes is _________ minutes.', answer: ['15'], strAnswer: '15' }, // Updated Q18
+            { type: 'text', section: 'Fill in the blanks', text: 'Compare using <, > or = : \\(\\frac{7}{15} \\_\\_\\_ \\frac{11}{15}\\)', answer: ['<', 'less than', 'less'], strAnswer: '<' }, // New Q19
+            { type: 'text', section: 'Fill in the blanks', text: `Find the area of the given shape: ${shapeQ20HTML} Area = _________ sq. units.`, answer: ['12'], strAnswer: '12' }, // Updated Q20
 
-            // Q. III True or False
-            { type: 'mcq', section: 'True or False', text: '\\(\\frac{4}{15}\\), \\(\\frac{8}{15}\\) and \\(\\frac{12}{15}\\) are like fractions.', options: ['True', 'False'], answer: 0, strAnswer: 'True' },
-            { type: 'mcq', section: 'True or False', text: 'Polygons are open curves.', options: ['True', 'False'], answer: 1, strAnswer: 'False' },
-            { type: 'mcq', section: 'True or False', text: 'In the decimal number 31.26, 2 is in the tenths place.', options: ['True', 'False'], answer: 0, strAnswer: 'True' },
-            { type: 'mcq', section: 'True or False', text: 'A number has a limited number of multiples.', options: ['True', 'False'], answer: 1, strAnswer: 'False' },
-            { type: 'mcq', section: 'True or False', text: '\\(\\frac{95}{100}\\) is equal to 0.95', options: ['True', 'False'], answer: 0, strAnswer: 'True' },
-            { type: 'mcq', section: 'True or False', text: 'To find the length of the wire required to fence a garden, we need to find its area.', options: ['True', 'False'], answer: 1, strAnswer: 'False' },
+            // Q. III True or False (Variations)
+            { type: 'mcq', section: 'True or False', text: '\\(\\frac{2}{7}\\), \\(\\frac{3}{7}\\), and \\(\\frac{5}{7}\\) are unlike fractions.', options: ['True', 'False'], answer: 1, strAnswer: 'False' }, // New Q21
+            { type: 'mcq', section: 'True or False', text: 'A triangle is a polygon with 3 line segments.', options: ['True', 'False'], answer: 0, strAnswer: 'True' }, // New Q22
+            { type: 'mcq', section: 'True or False', text: 'In the decimal number 45.89, 9 is in the tenths place.', options: ['True', 'False'], answer: 1, strAnswer: 'False' }, // New Q23
+            { type: 'mcq', section: 'True or False', text: 'The greatest factor of any number is the number itself.', options: ['True', 'False'], answer: 0, strAnswer: 'True' }, // New Q24
+            { type: 'mcq', section: 'True or False', text: '\\(\\frac{7}{100}\\) is equal to 0.7', options: ['True', 'False'], answer: 1, strAnswer: 'False' }, // New Q25
+            { type: 'mcq', section: 'True or False', text: 'To find the length of the wire required to fence a garden, we need to find its area.', options: ['True', 'False'], answer: 1, strAnswer: 'False' }, // Updated Q26
 
-            // Q. IV Do as directed
-            { type: 'text', section: 'Do as directed', text: 'Find \\(\\frac{1}{10}\\) of 50 =', answer: ['5'], strAnswer: '5' },
-            { type: 'mcq', section: 'Do as directed', text: 'Is 848 divisible by 9?', options: ['Yes', 'No'], answer: 1, strAnswer: 'No' },
-            { type: 'text', section: 'Do as directed', text: 'Express \\(\\frac{1}{100}\\) as a decimal.', answer: ['0.01'], strAnswer: '0.01' },
-            { type: 'text', section: 'Do as directed', text: 'Express 4.07 as a fraction (Use format like 407/100).', answer: ['407/100'], strAnswer: '407/100' },
-            { type: 'text', section: 'Do as directed', text: 'Write the next decimal number in the pattern: 4.97, 4.98, _________', answer: ['4.99'], strAnswer: '4.99' },
-            { type: 'text', section: 'Do as directed', text: 'Riya has \\(\\frac{3}{4}\\) m of ribbon. She cuts off \\(\\frac{1}{4}\\) m. What is the length of ribbon left? (Write fraction as a/b)', answer: ['2/4', '1/2'], strAnswer: '2/4 or 1/2' },
-            { type: 'text', section: 'Do as directed', text: 'Find the perimeter of a quadrilateral with sides 10cm, 6cm, 5cm, and 2cm. (Enter number only)', answer: ['23'], strAnswer: '23' },
+            // Q. IV Do as directed (Variations)
+            { type: 'text', section: 'Do as directed', text: 'Find \\(\\frac{1}{5}\\) of 45 =', answer: ['9'], strAnswer: '9' }, // New Q27
+            { type: 'mcq', section: 'Do as directed', text: 'Is 315 divisible by 5?', options: ['Yes', 'No'], answer: 0, strAnswer: 'Yes' }, // New Q28
+            { type: 'text', section: 'Do as directed', text: 'Express \\(\\frac{9}{100}\\) as a decimal.', answer: ['0.09'], strAnswer: '0.09' }, // New Q29
+            { type: 'text', section: 'Do as directed', text: 'Express 8.03 as a fraction (Use format like 405/100).', answer: ['803/100'], strAnswer: '803/100' }, // Updated Q30
+            { type: 'text', section: 'Do as directed', text: 'Write the next decimal number in the pattern: 2.45, 2.46, _________', answer: ['2.47'], strAnswer: '2.47' }, // New Q31
+            { type: 'text', section: 'Do as directed', text: 'Amit has \\(\\frac{7}{8}\\) of a pizza. He eats \\(\\frac{2}{8}\\). What fraction of the pizza is left? (Write fraction as a/b)', answer: ['5/8'], strAnswer: '5/8' }, // New Q32
+            { type: 'text', section: 'Do as directed', text: 'Find the perimeter of a triangle with sides measuring 8cm, 7cm, and 5cm. (Enter number only)', answer: ['20'], strAnswer: '20' }, // New Q33
             
-            // Pictograph data adapted to text
-            { type: 'text', section: 'Data Handling', text: 'Data of dice rolls: 1 appeared 2 times, 2 appeared 5 times, 3 appeared 1 time, 4 appeared 4 times, 5 appeared 6 times, 6 appeared 2 times. <br><br> Which number appeared the maximum number of times?', answer: ['5'], strAnswer: '5' },
-            { type: 'text', section: 'Data Handling', text: 'Based on the dice rolls (1: 2x, 2: 5x, 3: 1x, 4: 4x, 5: 6x, 6: 2x), how many times does a number appear which is MORE than 4?', answer: ['8'], strAnswer: '8 (since 5 appeared 6 times and 6 appeared 2 times)' }
+            // NEW GEOMETRY QUESTIONS
+            { type: 'text', section: 'Geometry', text: 'A closed figure made of straight lines is called a _________.', answer: ['polygon'], strAnswer: 'polygon' }, // Updated Q34
+            { type: 'mcq', section: 'Geometry', text: 'The diameter of a circle is _________ its radius.', options: ['half of', 'double', 'equal to', 'one-third of'], answer: 1, strAnswer: 'double' },
+            { type: 'text', section: 'Geometry', text: 'If the radius of a circle is 4 cm, what is the length of its diameter? (Enter number only)', answer: ['8'], strAnswer: '8' },
+            { type: 'mcq', section: 'Geometry', text: 'Which of the following shapes is NOT considered a polygon?', options: ['Square', 'Triangle', 'Circle', 'Rectangle'], answer: 2, strAnswer: 'Circle' },
+
+            // DATA HANDLING - PICTOGRAPH
+            { type: 'mcq', section: 'Data Handling - Pictograph', text: `${dicePictographHTML} <br> <strong>Q: Based on the pictograph above, which number appeared the maximum number of times?</strong>`, options: ['Number 2', 'Number 4', 'Number 5', 'Number 6'], answer: 2, strAnswer: 'Number 5' },
+            { type: 'text', section: 'Data Handling - Pictograph', text: `${dicePictographHTML} <br> <strong>Q: According to the pictograph, how many times did the number '4' appear?</strong> (Enter a number)`, answer: ['8'], strAnswer: '8' },
+            { type: 'mcq', section: 'Data Handling - Pictograph', text: `${dicePictographHTML} <br> <strong>Q: Which two numbers appeared the exact same number of times?</strong>`, options: ['1 and 6', '2 and 5', '3 and 4', '1 and 3'], answer: 0, strAnswer: '1 and 6' },
+            { type: 'text', section: 'Data Handling - Pictograph', text: `${dicePictographHTML} <br> <strong>Q: How many total times was the dice rolled altogether?</strong> (Calculate the total across all numbers)`, answer: ['40'], strAnswer: '40' },
+            
+            // NEW DATA HANDLING - BAR GRAPH
+            { type: 'mcq', section: 'Data Handling - Bar Graph', text: `${booksBarGraphHTML} <br> <strong>Q: According to the Bar Graph, who read the maximum number of books?</strong>`, options: ['Ali', 'Ben', 'Cara', 'Dan'], answer: 3, strAnswer: 'Dan' },
+            { type: 'text', section: 'Data Handling - Bar Graph', text: `${booksBarGraphHTML} <br> <strong>Q: How many books did Ben and Cara read altogether?</strong> (Enter a number)`, answer: ['9'], strAnswer: '9 (Ben: 6 + Cara: 3)' },
+            { type: 'text', section: 'Data Handling - Bar Graph', text: `${booksBarGraphHTML} <br> <strong>Q: How many more books did Dan read compared to Ali?</strong> (Enter a number)`, answer: ['4'], strAnswer: '4 (Dan: 8 - Ali: 4)' },
+            { type: 'text', section: 'Data Handling - Bar Graph', text: `${booksBarGraphHTML} <br> <strong>Q: What is the total number of books read by all four students?</strong>`, answer: ['21'], strAnswer: '21' }
         ];
+
+        // Ensure the dynamic total reflects correctly
+        document.getElementById('total-qs-label').innerText = questions.length;
 
         // --- STATE MANAGEMENT ---
         let currentQuestion = 0;
         let totalTime = 60 * 60; // 60 minutes
         let timerInterval;
         
-        // Status tracking arrays
         let answers = new Array(questions.length).fill(null);
-        let status = new Array(questions.length).fill('not-visited'); // not-visited, not-answered, answered, review
+        let status = new Array(questions.length).fill('not-visited'); 
 
         // --- DOM ELEMENTS ---
         const ui = {
@@ -284,7 +426,6 @@
         };
 
         // --- FUNCTIONS ---
-
         function toggleStartButton() {
             if (ui.checkbox.checked) {
                 ui.btnStart.disabled = false;
@@ -318,9 +459,12 @@
         }
 
         function startExam() {
+            examActive = true;
+            returnToFullscreen();
+
             ui.screens.instructions.classList.add('hidden');
             ui.screens.exam.classList.remove('hidden');
-            status[0] = 'not-answered'; // first question is now visited but not answered
+            status[0] = 'not-answered'; 
             buildPalette();
             renderQuestion(0);
             startTimer();
@@ -332,7 +476,6 @@
                 const btn = document.createElement('button');
                 btn.innerText = i + 1;
                 btn.className = `w-12 h-10 rounded font-bold transition-all ${getPaletteClass(status[i])} hover:opacity-80`;
-                // Add border if it's the current question
                 if (i === currentQuestion) {
                     btn.classList.add('ring-2', 'ring-offset-1', 'ring-blue-800');
                 }
@@ -380,12 +523,11 @@
                 `;
             }
 
-            // Typeset MathJax dynamically
             if (window.MathJax) {
                 MathJax.typesetPromise([ui.qText, ui.qOptions]).catch((err) => console.log(err.message));
             }
 
-            buildPalette(); // refresh palette highlighting
+            buildPalette(); 
         }
 
         function captureAnswer() {
@@ -401,7 +543,6 @@
                 }
             }
             
-            // Auto update status if answered, unless it's marked for review
             if (status[currentQuestion] !== 'review') {
                 status[currentQuestion] = answers[currentQuestion] !== null ? 'answered' : 'not-answered';
             }
@@ -410,9 +551,7 @@
 
         function saveAndNext() {
             captureAnswer();
-            // Force status to answered or not-answered, clearing 'review' flag
             status[currentQuestion] = answers[currentQuestion] !== null ? 'answered' : 'not-answered';
-            
             moveToNext();
         }
 
@@ -431,34 +570,34 @@
         function moveToNext() {
             if (currentQuestion < questions.length - 1) {
                 const nextQ = currentQuestion + 1;
-                // If next was not visited, mark it not-answered
                 if (status[nextQ] === 'not-visited') status[nextQ] = 'not-answered';
                 renderQuestion(nextQ);
             } else {
                 buildPalette();
-                // Alert end of questions
                 alert("You have reached the end of the question paper. Please review your answers or submit.");
             }
         }
 
         function jumpToQuestion(index) {
-            captureAnswer(); // save current before jumping
+            captureAnswer();
             if (status[index] === 'not-visited') status[index] = 'not-answered';
             renderQuestion(index);
         }
 
         function confirmSubmit() {
-            captureAnswer(); // Save current state
+            captureAnswer(); 
             ui.modal.classList.remove('hidden');
         }
 
         function finishExam() {
+            examActive = false; // Turn off enforcement so we don't trigger the warning overlay
+            exitFullscreen(); // Automatically exit full screen
+            
             clearInterval(timerInterval);
             ui.modal.classList.add('hidden');
             ui.screens.exam.classList.add('hidden');
             ui.screens.results.classList.remove('hidden');
             ui.timerContainer.classList.add('hidden');
-
             evaluateTest();
         }
 
@@ -480,7 +619,6 @@
                 } else if (q.type === 'text') {
                     if (userAns !== null) {
                         displayUserAns = userAns;
-                        // Check if user answer matches any accepted string (case insensitive)
                         isCorrect = q.answer.some(a => a.toLowerCase() === userAns.toLowerCase());
                     }
                 }
