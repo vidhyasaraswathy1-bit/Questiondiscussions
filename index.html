@@ -3,653 +3,599 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICSE Class IV - Mathematics CBT Exam</title>
+    <title>CBSE Grade 7 - Algebraic Expressions Test</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; user-select: none; }
-        
-        /* Question Palette Colors */
-        .status-not-visited { background-color: #e5e7eb; color: #374151; border: 1px solid #d1d5db; }
-        .status-not-answered { background-color: #ef4444; color: white; border: 1px solid #dc2626; }
-        .status-answered { background-color: #22c55e; color: white; border: 1px solid #16a34a; }
-        .status-review { background-color: #a855f7; color: white; border: 1px solid #9333ea; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        /* Security & Anti-Cheat Styles */
+        body {
+            user-select: none; /* Prevent text selection */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            background-color: #f3f4f6;
+        }
 
-        .option-label:hover { background-color: #f3f4f6; }
-        .option-label input:checked + span { font-weight: bold; color: #1d4ed8; }
-        
-        .math-text { font-size: 1.1rem; }
-        
-        .pictograph-table th, .pictograph-table td { padding: 12px; border: 1px solid #d1d5db; }
-        .pictograph-table th { background-color: #f3f4f6; font-weight: bold; }
+        /* Hide scrollbar for a cleaner fullscreen app */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+
+        /* Custom Radio Button Styles */
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+        .option-label:hover {
+            border-color: #93c5fd;
+            background-color: #eff6ff;
+        }
+        input[type="radio"]:checked + .option-label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        input[type="radio"] {
+            display: none;
+        }
+        .option-text {
+            margin-left: 12px;
+            font-size: 1.1rem;
+            color: #1f2937;
+            font-weight: 500;
+        }
+        .option-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        input[type="radio"]:checked + .option-label .option-circle {
+            border-color: #3b82f6;
+        }
+        input[type="radio"]:checked + .option-label .option-circle::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+        }
+
+        /* Question Palette specific classes */
+        .palette-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .status-unvisited { background: #e5e7eb; color: #374151; }
+        .status-visited { background: #fee2e2; color: #991b1b; } /* Not Answered */
+        .status-answered { background: #dcfce3; color: #166534; }
+        .status-active { border-color: #2563eb; transform: scale(1.1); }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden">
+<body class="text-gray-800 font-sans h-screen flex flex-col overflow-hidden">
 
-    <!-- Header -->
-    <header class="bg-blue-800 text-white shadow-md z-10 flex-shrink-0">
-        <div class="px-6 py-3 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold tracking-wide">INDIAN SCHOOL DARSAIT - CBT PORTAL</h1>
-                <p class="text-xs text-blue-200">Annual Examination Revision - March 2026 | Class IV Mathematics</p>
-            </div>
-            <div id="header-timer-container" class="hidden flex items-center bg-blue-900 px-4 py-2 rounded-md border border-blue-700 shadow-inner">
-                <svg class="w-5 h-5 mr-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="text-sm text-blue-200 mr-2">Time Left:</span>
-                <span id="timer" class="text-xl font-mono font-bold tracking-wider text-yellow-400">60:00</span>
-            </div>
-        </div>
-    </header>
+    <!-- 1. INSTRUCTIONS PAGE -->
+    <div id="instructions-page" class="flex-1 flex flex-col bg-white overflow-y-auto">
+        <header class="bg-blue-700 text-white p-4 shadow-md flex justify-between items-center">
+            <h1 class="text-2xl font-bold">CBSE Grade 7 - Mathematics Test</h1>
+            <span class="font-semibold bg-blue-800 px-3 py-1 rounded">Subject: Algebraic Expressions</span>
+        </header>
 
-    <!-- SCREEN 1: INSTRUCTIONS -->
-    <div id="screen-instructions" class="flex-1 overflow-y-auto p-6 bg-white">
-        <div class="max-w-4xl mx-auto border border-gray-300 rounded-lg shadow-sm">
-            <div class="bg-gray-100 p-4 border-b border-gray-300 flex items-center gap-4">
-                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-800 font-bold text-xl border-2 border-blue-300">
-                    S
-                </div>
-                <div>
-                    <h2 class="text-lg font-bold text-gray-800">Mock Candidate</h2>
-                    <p class="text-sm text-gray-600">Subject: Mathematics (Class IV)</p>
-                </div>
-            </div>
-            <div class="p-8">
-                <h3 class="text-xl font-bold mb-4 text-center underline decoration-2 decoration-blue-500">General Instructions</h3>
-                <p class="text-sm text-gray-700 mb-4"><strong>Please read the following instructions carefully before starting the exam:</strong></p>
-                
-                <ul class="list-disc pl-6 space-y-2 text-sm text-gray-700 mb-6">
-                    <li>Total duration of the examination is <strong>60 Minutes</strong>.</li>
-                    <li>The clock will be set at the server. The countdown timer in the top right corner will display the remaining time available for you to complete the examination. When the timer reaches zero, the examination will end by itself.</li>
-                    <li>The Question Palette displayed on the right side of screen will show the status of each question using one of the following symbols:</li>
+        <main class="max-w-4xl mx-auto w-full p-8 mt-6 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
+            <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">General Instructions for the Candidate</h2>
+            
+            <div class="space-y-4 text-lg text-gray-700">
+                <p>Please read the following instructions carefully before starting the exam:</p>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li><strong>Total Duration:</strong> 30 Minutes (1800 seconds).</li>
+                    <li><strong>Total Questions:</strong> 10 Multiple Choice Questions.</li>
+                    <li><strong>Marking Scheme:</strong> +1 mark for each correct answer. No negative marking.</li>
+                    <li>The clock has been set on the server and the countdown timer at the top right corner of your screen will display the time remaining for you to complete the exam. When the clock runs out, the exam ends by default.</li>
+                    <li>The question palette at the right of screen shows one of the following statuses of each of the questions numbered:
+                        <div class="flex gap-4 mt-3 text-sm font-semibold">
+                            <span class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-gray-200 border"></div> Not Visited</span>
+                            <span class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-red-100 text-red-800 border"></div> Not Answered</span>
+                            <span class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-green-100 text-green-800 border"></div> Answered</span>
+                        </div>
+                    </li>
                 </ul>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                    <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-md flex items-center justify-center font-bold status-not-visited">1</div><span class="text-sm">You have not visited the question yet.</span></div>
-                    <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-md flex items-center justify-center font-bold status-not-answered">2</div><span class="text-sm">You have not answered the question.</span></div>
-                    <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-md flex items-center justify-center font-bold status-answered">3</div><span class="text-sm">You have answered the question.</span></div>
-                    <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-md flex items-center justify-center font-bold status-review">4</div><span class="text-sm">You have marked the question for review.</span></div>
-                </div>
-
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-                    <h4 class="font-bold text-yellow-800 mb-1">Navigating & Answering:</h4>
-                    <p class="text-sm text-yellow-800">To answer a question, select the option or type your answer in the box provided. Click on <strong>"Save & Next"</strong> to save your answer and move to the next question. You can use <strong>"Mark for Review"</strong> if you wish to look at the question again later.</p>
-                </div>
-
-                <hr class="my-6">
-
-                <div class="flex items-start gap-3 mb-6">
-                    <input type="checkbox" id="agree-checkbox" class="mt-1 w-5 h-5 cursor-pointer accent-blue-600" onchange="toggleStartButton()">
-                    <label for="agree-checkbox" class="text-sm text-gray-800 cursor-pointer font-medium">
-                        I have read and understood the instructions. All computer hardware allotted to me are in proper working condition. I agree that I am not carrying any prohibited gadgets or materials.
-                    </label>
-                </div>
-
-                <div class="text-center">
-                    <button id="btn-start" disabled class="bg-gray-400 text-white font-bold py-3 px-10 rounded shadow transition-all duration-200 cursor-not-allowed" onclick="startExam()">
-                        I am ready to begin
-                    </button>
+                <div class="mt-6 p-4 bg-red-50 border-l-4 border-red-500 rounded text-red-900">
+                    <h3 class="font-bold text-lg mb-2">Security & Anti-Cheat Rules (STRICT)</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>The test will open in <strong>Full-Screen Mode</strong>.</li>
+                        <li>Do not press the <code>ESC</code> key or try to exit full-screen mode. Doing so will freeze the test.</li>
+                        <li>Right-clicking, taking screenshots, and inspecting code are strictly prohibited and disabled.</li>
+                        <li>Do not switch tabs or windows.</li>
+                    </ul>
                 </div>
             </div>
-        </div>
+
+            <div class="mt-8 flex justify-center border-t border-gray-300 pt-6">
+                <button id="start-btn" onclick="startExam()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg shadow-lg text-xl transition transform hover:scale-105">
+                    I am ready to begin
+                </button>
+            </div>
+        </main>
     </div>
 
-    <!-- SCREEN 2: EXAM INTERFACE -->
-    <div id="screen-exam" class="hidden flex-1 flex overflow-hidden">
-        
-        <!-- Left Panel: Question Area -->
-        <div class="flex-1 flex flex-col bg-white border-r border-gray-300">
-            <!-- Section Header -->
-            <div class="bg-blue-50 px-6 py-2 border-b border-gray-300 flex justify-between items-center shadow-sm z-10">
-                <span id="section-title" class="font-bold text-blue-800 uppercase tracking-wide">Section Name</span>
-                <span class="bg-white px-3 py-1 rounded text-sm font-bold border border-blue-200 text-blue-700">Marks: +1, -0</span>
+    <!-- 2. EXAM INTERFACE -->
+    <div id="exam-page" class="hidden flex-1 flex flex-col bg-gray-100 h-full">
+        <!-- Header -->
+        <header class="bg-white shadow px-6 py-3 flex justify-between items-center border-b border-gray-200 shrink-0">
+            <h1 class="text-xl font-bold text-blue-700">Algebraic Expressions Test</h1>
+            <div class="flex items-center gap-4">
+                <div class="bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-gray-600 font-semibold">Time Left:</span>
+                    <span id="timer" class="text-xl font-bold text-red-600 tracking-wider">30:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded font-bold shadow transition">Submit Test</button>
             </div>
+        </header>
 
-            <!-- Question Content -->
-            <div class="flex-1 overflow-y-auto p-8">
-                <div class="flex gap-4">
-                    <div class="font-bold text-lg text-gray-500 w-10">Q<span id="q-number">1</span>.</div>
-                    <div class="flex-1">
-                        <div id="q-text" class="text-lg text-gray-800 mb-6 math-text leading-relaxed font-medium">Question text goes here.</div>
-                        <div id="q-options" class="space-y-3">
-                            <!-- Options or Textbox injected here via JS -->
-                        </div>
+        <!-- Main Content (Question + Palette) -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Question Area -->
+            <div class="flex-1 p-8 overflow-y-auto">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 h-full flex flex-col">
+                    
+                    <div class="flex justify-between items-center mb-6 border-b pb-4">
+                        <h2 class="text-2xl font-bold text-gray-800" id="question-number">Question 1</h2>
+                        <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded text-sm font-semibold">+1 Marks</span>
+                    </div>
+
+                    <div id="question-text" class="text-xl text-gray-800 font-medium mb-8 leading-relaxed">
+                        <!-- Question text injected here -->
+                    </div>
+
+                    <div id="options-container" class="flex flex-col flex-1">
+                        <!-- Options injected here -->
+                    </div>
+
+                    <div class="flex justify-between mt-8 pt-6 border-t border-gray-200">
+                        <button onclick="prevQuestion()" id="prev-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded shadow disabled:opacity-50 disabled:cursor-not-allowed transition">
+                            Previous
+                        </button>
+                        <button onclick="clearResponse()" class="text-red-600 hover:bg-red-50 border border-red-200 font-semibold py-2 px-6 rounded transition">
+                            Clear Response
+                        </button>
+                        <button onclick="nextQuestion()" id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow transition">
+                            Save & Next
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Action Footer -->
-            <div class="bg-gray-100 p-4 border-t border-gray-300 flex justify-between items-center flex-shrink-0">
-                <div class="flex gap-3">
-                    <button class="bg-white border border-gray-400 text-gray-700 hover:bg-gray-50 font-semibold py-2 px-4 rounded text-sm shadow-sm transition-colors" onclick="markForReview()">Mark for Review & Next</button>
-                    <button class="bg-white border border-gray-400 text-gray-700 hover:bg-gray-50 font-semibold py-2 px-4 rounded text-sm shadow-sm transition-colors" onclick="clearResponse()">Clear Response</button>
-                </div>
-                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded shadow text-sm transition-colors" onclick="saveAndNext()">Save & Next</button>
-            </div>
-        </div>
-
-        <!-- Right Panel: Question Palette -->
-        <div class="w-72 bg-gray-50 flex flex-col flex-shrink-0">
-            <div class="p-4 border-b border-gray-300 bg-white flex items-center gap-3">
-                 <div class="w-10 h-10 bg-blue-100 rounded flex items-center justify-center text-blue-800 font-bold border border-blue-300">S</div>
-                 <div class="text-sm font-bold text-gray-700">Mock Candidate</div>
-            </div>
-            
-            <div class="p-4 border-b border-gray-300 text-xs flex flex-wrap gap-2 bg-white">
-                <div class="flex items-center gap-1 w-full mb-1"><div class="w-4 h-4 rounded-sm status-answered"></div> Answered</div>
-                <div class="flex items-center gap-1 w-full mb-1"><div class="w-4 h-4 rounded-sm status-not-answered"></div> Not Answered</div>
-                <div class="flex items-center gap-1 w-full mb-1"><div class="w-4 h-4 rounded-sm status-not-visited"></div> Not Visited</div>
-                <div class="flex items-center gap-1 w-full"><div class="w-4 h-4 rounded-sm status-review"></div> Marked for Review</div>
-            </div>
-
-            <div class="flex-1 overflow-y-auto p-4">
-                <h4 class="font-bold text-gray-700 mb-3 text-sm">Question Palette:</h4>
-                <div id="palette-grid" class="grid grid-cols-4 gap-2">
-                    <!-- Palette buttons injected via JS -->
-                </div>
-            </div>
-
-            <div class="p-4 bg-gray-200 border-t border-gray-300 flex-shrink-0">
-                <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded shadow-md transition-colors" onclick="confirmSubmit()">Submit Test</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- SCREEN 3: RESULTS -->
-    <div id="screen-results" class="hidden flex-1 overflow-y-auto p-6 bg-gray-50">
-        <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-            <div class="bg-blue-800 text-white p-8 text-center">
-                <h2 class="text-3xl font-bold mb-2">Test Submitted Successfully</h2>
-                <p class="text-blue-200">Here is your detailed performance report.</p>
-            </div>
-            
-            <div class="p-8">
-                <div class="flex justify-center mb-8">
-                    <div class="text-center bg-blue-50 border border-blue-200 rounded-2xl p-6 shadow-sm w-64">
-                        <p class="text-gray-500 font-semibold mb-1 uppercase tracking-wide text-sm">Total Score</p>
-                        <p class="text-5xl font-bold text-blue-700"><span id="final-score">0</span><span class="text-2xl text-gray-400 font-normal"> / <span id="total-qs-label">45</span></span></p>
+            <!-- Question Palette -->
+            <div class="w-80 bg-white shadow-l border-l border-gray-200 p-6 flex flex-col shrink-0">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-500 text-xl border-2 border-white shadow">S</div>
+                    <div>
+                        <div class="font-bold text-gray-800">Student</div>
+                        <div class="text-sm text-gray-500">CBSE Class 7</div>
                     </div>
                 </div>
 
-                <h3 class="text-xl font-bold border-b pb-2 mb-6 text-gray-800">Detailed Question Review</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-gray-100 text-gray-700 text-sm uppercase tracking-wider">
-                                <th class="p-3 border-b border-gray-300 font-semibold rounded-tl-lg w-16">Q.No</th>
-                                <th class="p-3 border-b border-gray-300 font-semibold w-32">Status</th>
-                                <th class="p-3 border-b border-gray-300 font-semibold">Your Answer</th>
-                                <th class="p-3 border-b border-gray-300 font-semibold">Correct Answer</th>
-                            </tr>
-                        </thead>
-                        <tbody id="result-tbody" class="text-sm">
-                            <!-- Rows injected via JS -->
-                        </tbody>
-                    </table>
+                <div class="grid grid-cols-2 gap-2 text-xs font-semibold mb-6 border-y border-gray-200 py-4">
+                    <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-dcfce3 bg-green-200"></div> <span id="count-answered">0</span> Answered</div>
+                    <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-fee2e2 bg-red-200"></div> <span id="count-not-answered">0</span> Not Answered</div>
+                    <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-e5e7eb bg-gray-200"></div> <span id="count-not-visited">10</span> Not Visited</div>
+                </div>
+
+                <h3 class="font-bold text-gray-700 mb-4">Question Palette</h3>
+                <div id="palette-grid" class="flex flex-wrap gap-3">
+                    <!-- Palette buttons injected here -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Confirm Modal -->
-    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
-        <div class="bg-white rounded-lg p-6 max-w-sm w-full shadow-2xl">
-            <h3 class="text-lg font-bold text-gray-800 mb-2">Submit Examination?</h3>
-            <p class="text-gray-600 mb-6 text-sm">Are you sure you want to submit? You will not be able to change your answers after submission.</p>
-            <div class="flex justify-end gap-3">
-                <button class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 font-medium" onclick="document.getElementById('confirm-modal').classList.add('hidden')">Cancel</button>
-                <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-medium" onclick="finishExam()">Yes, Submit</button>
+    <!-- 3. RESULT PAGE -->
+    <div id="result-page" class="hidden flex-1 bg-gray-50 overflow-y-auto p-8">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+            <div class="text-center mb-10 border-b pb-8">
+                <h1 class="text-4xl font-extrabold text-blue-700 mb-4">Exam Completed Successfully</h1>
+                <p class="text-xl text-gray-600">Here is your performance summary.</p>
+                <div class="mt-6 inline-block bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <div class="text-5xl font-black text-blue-600" id="final-score">8 / 10</div>
+                    <div class="text-gray-500 font-semibold mt-2 uppercase tracking-wide">Total Score</div>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Detailed Review</h2>
+            <div id="review-container" class="space-y-6">
+                <!-- Review elements injected here -->
             </div>
         </div>
     </div>
 
-    <!-- Fullscreen Enforcement Overlay -->
-    <div id="fullscreen-warning" class="hidden fixed inset-0 bg-black bg-opacity-95 z-[100] flex flex-col items-center justify-center text-white p-6 text-center">
-        <svg class="w-20 h-20 text-red-500 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-        <h2 class="text-4xl font-bold mb-4">Exam Paused</h2>
-        <p class="text-xl mb-8 text-gray-300 max-w-lg">You have exited fullscreen mode. This is not allowed during the examination. Please return to fullscreen to resume your test.</p>
-        <button onclick="returnToFullscreen()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded shadow-lg text-xl transition-all">Return to Fullscreen</button>
+    <!-- 4. FULLSCREEN CHEAT WARNING OVERLAY -->
+    <div id="fullscreen-warning" class="hidden fixed inset-0 bg-red-900 bg-opacity-95 z-50 flex flex-col items-center justify-center p-8 text-center text-white">
+        <svg class="w-24 h-24 text-red-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        <h1 class="text-5xl font-black mb-4 tracking-wider">WARNING!</h1>
+        <p class="text-2xl mb-8 font-medium">You have exited full-screen mode, which is considered a violation of exam rules.</p>
+        <p class="text-lg text-red-200 mb-10 max-w-2xl">To prevent cheating, this exam must be taken in full-screen. Please click the button below immediately to return to the exam, otherwise your test will be automatically submitted.</p>
+        <button onclick="resumeExam()" class="bg-white text-red-900 font-bold text-xl py-4 px-10 rounded-full shadow-2xl hover:bg-gray-100 transition transform hover:scale-105">
+            Return to Exam
+        </button>
+    </div>
+
+    <!-- CUSTOM SUBMIT CONFIRMATION MODAL -->
+    <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full text-center shadow-2xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Submit Test?</h2>
+            <p class="text-gray-600 mb-8 text-lg">Are you sure you want to submit your test? You cannot change your answers after submission.</p>
+            <div class="flex justify-center gap-4">
+                <button onclick="document.getElementById('submit-modal').classList.add('hidden')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded transition">Cancel</button>
+                <button onclick="submitExam()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition">Yes, Submit</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // --- SECURITY / ANTI-CHEAT ---
-        let examActive = false;
+        // --- DATA ---
+        // Questions generated strictly from the provided PDF worksheet and textbook
+        const questions = [
+            {
+                q: "The value of 'a' if 10 - a = 6 is:",
+                options: ["-4", "4", "5", "-5"],
+                ans: 1 // index for "4"
+            },
+            {
+                q: "The expression for the perimeter of a rectangle if 'l' and 'b' are its length and breadth is:",
+                options: ["l + b", "2l + b", "2(l + b)", "l + 2b"],
+                ans: 2
+            },
+            {
+                q: "Which among the following pairs are NOT like terms?",
+                options: ["7b, 7a", "-7c, 3c", "2xy, 5xy", "m, -6m"],
+                ans: 0
+            },
+            {
+                q: "Simplify: 5c + 2c + c + (-c) =",
+                options: ["8c", "7c", "9c", "10c"],
+                ans: 1 // 5+2+1-1 = 7c
+            },
+            {
+                q: "The expression 4(b - y) can be written as:",
+                options: ["4b - y", "b - 4y", "4b - 4y", "4b"],
+                ans: 2
+            },
+            {
+                q: "Add the expressions: (6f - 20 + 8s) and (23 - 13f - 12s)",
+                options: ["-7f - 4s + 3", "7f + 4s - 3", "-7f + 4s + 3", "7f - 4s - 3"],
+                ans: 0
+            },
+            {
+                q: "Subtract the expression (9a - 6b + 14) from (6a + 9b - 18):",
+                options: ["3a + 15b - 32", "-3a + 15b - 32", "-3a - 15b + 32", "3a - 15b - 32"],
+                ans: 1 // (6a + 9b - 18) - (9a - 6b + 14) = 6a-9a + 9b+6b -18-14 = -3a + 15b - 32
+            },
+            {
+                q: "Simplify the expression 4(x + y) - y and find its value if x = 2 and y = -2:",
+                options: ["2", "0", "4", "-2"],
+                ans: 0 // 4x + 3y => 4(2) + 3(-2) = 8 - 6 = 2
+            },
+            {
+                q: "Leela is Radha's younger sister. Leela is 4 years younger than Radha. If Radha's age is 'x' years, Leela's age in terms of Radha's age is:",
+                options: ["x + 4", "x - 4", "4 - x", "4x"],
+                ans: 1
+            },
+            {
+                q: "Somjit makes a pattern of triangles using matchsticks. Step 1 has 3 sticks, Step 2 has 5 sticks, Step 3 has 7 sticks. What is the algebraic expression for the number of matchsticks required for Step 'n'?",
+                options: ["2n + 1", "3n", "n + 2", "2n - 1"],
+                ans: 0
+            }
+        ];
 
-        // Disable Right-Click
+        // --- STATE VARIABLES ---
+        let currentQuestion = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let questionStatus = new Array(questions.length).fill('unvisited'); // unvisited, visited, answered
+        
+        let examActive = false;
+        let timeRemaining = 30 * 60; // 30 minutes in seconds
+        let timerInterval;
+
+        // --- SECURITY: ANTI-CHEAT FEATURES ---
+
+        // 1. Disable Right Click
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Disable Inspect Element & View Source keyboard shortcuts + Escape key attempt
+        // 2. Disable Keyboard Shortcuts (Inspect Element, Save, PrintScreen)
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'F12' || 
-               (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
-               (e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
-               e.key === 'Escape') {
+            if (
+                e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+                (e.ctrlKey && (e.key === 'U' || e.key === 'S' || e.key === 'P')) ||
+                e.key === 'PrintScreen'
+            ) {
                 e.preventDefault();
+                alert("Security alert: This action is disabled during the exam.");
             }
         });
 
-        // Enforce Fullscreen
-        document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+        // 3. Prevent Copying
+        document.addEventListener('copy', (e) => {
+            e.preventDefault();
+            alert("Copying is disabled.");
+        });
 
-        function handleFullscreenChange() {
-            if (examActive) {
-                const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
-                if (!isFullscreen) {
-                    // Block screen if they exit fullscreen during an active exam
-                    document.getElementById('fullscreen-warning').classList.remove('hidden');
-                } else {
-                    document.getElementById('fullscreen-warning').classList.add('hidden');
-                }
+        // 4. Enforce Fullscreen
+        document.addEventListener('fullscreenchange', () => {
+            if (examActive && !document.fullscreenElement) {
+                document.getElementById('fullscreen-warning').classList.remove('hidden');
             }
-        }
+        });
 
-        function returnToFullscreen() {
-            const docElm = document.documentElement;
-            if (docElm.requestFullscreen) {
-                docElm.requestFullscreen().catch(err => console.log(err));
-            } else if (docElm.webkitRequestFullscreen) {
-                docElm.webkitRequestFullscreen();
-            } else if (docElm.msRequestFullscreen) {
-                docElm.msRequestFullscreen();
-            }
-        }
-
-        function exitFullscreen() {
-            if (document.exitFullscreen) {
-                document.exitFullscreen().catch(err => console.log(err));
-            } else if (document.webkitExitFullscreen) { 
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { 
-                document.msExitFullscreen();
-            }
-        }
-
-        // Data Handling - Pictograph HTML
-        const dicePictographHTML = `
-            <div class='bg-blue-50 p-4 rounded-lg my-4 border border-blue-200'>
-                <h4 class='font-bold mb-3 text-blue-900'>Dice Rolling Data (Key: 1 🎲 = 2 times)</h4>
-                <table class='w-full text-left bg-white pictograph-table'>
-                    <tr><th>Number on Dice</th><th>Number of times appeared</th></tr>
-                    <tr><td class='font-bold text-center'>1</td><td class='text-2xl'>🎲🎲</td></tr>
-                    <tr><td class='font-bold text-center'>2</td><td class='text-2xl'>🎲🎲🎲🎲🎲</td></tr>
-                    <tr><td class='font-bold text-center'>3</td><td class='text-2xl'>🎲</td></tr>
-                    <tr><td class='font-bold text-center'>4</td><td class='text-2xl'>🎲🎲🎲🎲</td></tr>
-                    <tr><td class='font-bold text-center'>5</td><td class='text-2xl'>🎲🎲🎲🎲🎲🎲</td></tr>
-                    <tr><td class='font-bold text-center'>6</td><td class='text-2xl'>🎲🎲</td></tr>
-                </table>
-            </div>
-        `;
-
-        // Data Handling - Bar Graph HTML
-        const booksBarGraphHTML = `
-            <div class='bg-green-50 p-6 rounded-lg my-4 border border-green-200 shadow-sm'>
-                <h4 class='font-bold mb-5 text-green-900 text-center'>Bar Graph: Number of Books Read in a Month</h4>
-                <div class='space-y-4 max-w-md mx-auto relative'>
-                    <div class='flex items-center'>
-                        <div class='w-16 font-bold text-gray-700 text-right pr-4'>Ali</div>
-                        <div class='bg-blue-500 h-8 rounded-r-md flex items-center shadow' style='width: 40%;'></div>
-                        <div class='ml-3 text-sm font-bold text-gray-800'>4</div>
-                    </div>
-                    <div class='flex items-center'>
-                        <div class='w-16 font-bold text-gray-700 text-right pr-4'>Ben</div>
-                        <div class='bg-red-500 h-8 rounded-r-md flex items-center shadow' style='width: 60%;'></div>
-                        <div class='ml-3 text-sm font-bold text-gray-800'>6</div>
-                    </div>
-                    <div class='flex items-center'>
-                        <div class='w-16 font-bold text-gray-700 text-right pr-4'>Cara</div>
-                        <div class='bg-yellow-500 h-8 rounded-r-md flex items-center shadow' style='width: 30%;'></div>
-                        <div class='ml-3 text-sm font-bold text-gray-800'>3</div>
-                    </div>
-                    <div class='flex items-center'>
-                        <div class='w-16 font-bold text-gray-700 text-right pr-4'>Dan</div>
-                        <div class='bg-purple-500 h-8 rounded-r-md flex items-center shadow' style='width: 80%;'></div>
-                        <div class='ml-3 text-sm font-bold text-gray-800'>8</div>
-                    </div>
-                    <!-- Axis Line -->
-                    <div class='absolute left-16 top-0 bottom-0 w-1 bg-gray-400 -z-10'></div>
-                </div>
-                <p class='text-xs font-semibold mt-6 text-gray-600 text-center'>X-axis (Horizontal): Number of Books (1 unit = 1 book)</p>
-            </div>
-        `;
-
-        // Shape HTML for Q20
-        const shapeQ20HTML = `
-            <div class='my-3'>
-                <p class='text-sm text-gray-600 mb-2'>Each small square is 1 sq. unit.</p>
-                <div class='inline-grid grid-cols-4 border-2 border-blue-800'>
-                    <div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div>
-                    <div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div>
-                    <div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div><div class='w-8 h-8 border border-blue-800 bg-blue-100'></div>
-                </div>
-            </div>
-        `;
-
-        // --- DATA: 45 Questions (Incorporating all requested variations and new chapters) ---
-        const questions = [
-            // Q. I Choose the correct answer (Variations)
-            { type: 'mcq', section: 'Choose the correct answer', text: 'The equivalent fraction for \\(\\frac{15}{25}\\) is:', options: ['\\(\\frac{3}{5}\\)', '\\(\\frac{2}{5}\\)', '\\(\\frac{4}{5}\\)', '\\(\\frac{1}{5}\\)'], answer: 0, strAnswer: '\\(\\frac{3}{5}\\)' }, // Updated Q1
-            { type: 'mcq', section: 'Choose the correct answer', text: '144 is divisible by:', options: ['5', '2', '7', '11'], answer: 1, strAnswer: '2' }, // New Q2
-            { type: 'mcq', section: 'Choose the correct answer', text: 'A decimal number with 4 in the ones place, 8 in the tenths place, and 3 in the hundredths place is:', options: ['4.38', '3.84', '4.83', '8.43'], answer: 2, strAnswer: '4.83' }, // New Q3
-            { type: 'mcq', section: 'Choose the correct answer', text: 'Find the missing denominator: \\(\\frac{3}{5} = \\frac{12}{\\Box}\\)', options: ['15', '18', '20', '25'], answer: 2, strAnswer: '20' }, // New Q4
-            { type: 'mcq', section: 'Choose the correct answer', text: 'A pentagon is a polygon which has ________ sides.', options: ['4', '5', '6', '7'], answer: 1, strAnswer: '5' }, // New Q5
-            { type: 'mcq', section: 'Choose the correct answer', text: 'Rahul drank \\(\\frac{2}{6}\\) liters of water and later drank \\(\\frac{3}{6}\\) liters. How much water did he drink in total?', options: ['\\(\\frac{1}{6}\\) liters', '\\(\\frac{4}{6}\\) liters', '\\(\\frac{6}{6}\\) liters', '\\(\\frac{5}{6}\\) liters'], answer: 3, strAnswer: '\\(\\frac{5}{6}\\) liters' }, // Updated Q6
-            { type: 'mcq', section: 'Choose the correct answer', text: 'A number divisible by both 5 and 10 is:', options: ['15', '25', '40', '55'], answer: 2, strAnswer: '40' }, // New Q7
-            { type: 'mcq', section: 'Choose the correct answer', text: 'The place value of 3 in 7.38 is:', options: ['3 ones', '3 tenths', '3 hundredths', '30'], answer: 1, strAnswer: '3 tenths' }, // New Q8
-            { type: 'mcq', section: 'Choose the correct answer', text: 'The 4th multiple of 8 is:', options: ['12', '24', '32', '40'], answer: 2, strAnswer: '32' }, // New Q9
-            { type: 'mcq', section: 'Choose the correct answer', text: 'The smallest factor of 24 is:', options: ['0', '1', '2', '24'], answer: 1, strAnswer: '1' }, // New Q10
-            
-            // Q. II Fill in the blanks (Variations)
-            { type: 'text', section: 'Fill in the blanks', text: 'If the numerator is greater than the denominator, it is an _________ fraction.', answer: ['improper'], strAnswer: 'improper' }, // New Q11
-            { type: 'text', section: 'Fill in the blanks', text: 'The fractional form of 0.75 is _________ (Write in standard fraction format, e.g., 25/100).', answer: ['75/100', '3/4'], strAnswer: '75/100' }, // Updated Q12
-            { type: 'text', section: 'Fill in the blanks', text: 'If one side of a square park is 12 m, the total length of the boundary required to fence it is _________ m.', answer: ['48'], strAnswer: '48' }, // Updated Q13
-            { type: 'text', section: 'Fill in the blanks', text: 'The distance from the center to any point on the boundary of a circle is called its _________.', answer: ['radius'], strAnswer: 'radius' }, // New Q14
-            { type: 'text', section: 'Fill in the blanks', text: '\\(\\frac{1}{8}\\) of 64 = _________', answer: ['8'], strAnswer: '8' }, // New Q15
-            { type: 'text', section: 'Fill in the blanks', text: 'The decimal number for \\(15\\frac{8}{100}\\) is _________', answer: ['15.08'], strAnswer: '15.08' }, // New Q16
-            { type: 'text', section: 'Fill in the blanks', text: 'The two factors of 17 are 1 and _________', answer: ['17'], strAnswer: '17' }, // New Q17
-            { type: 'text', section: 'Fill in the blanks', text: '\\(\\frac{1}{4}\\) of one hour in minutes is _________ minutes.', answer: ['15'], strAnswer: '15' }, // Updated Q18
-            { type: 'text', section: 'Fill in the blanks', text: 'Compare using <, > or = : \\(\\frac{7}{15} \\_\\_\\_ \\frac{11}{15}\\)', answer: ['<', 'less than', 'less'], strAnswer: '<' }, // New Q19
-            { type: 'text', section: 'Fill in the blanks', text: `Find the area of the given shape: ${shapeQ20HTML} Area = _________ sq. units.`, answer: ['12'], strAnswer: '12' }, // Updated Q20
-
-            // Q. III True or False (Variations)
-            { type: 'mcq', section: 'True or False', text: '\\(\\frac{2}{7}\\), \\(\\frac{3}{7}\\), and \\(\\frac{5}{7}\\) are unlike fractions.', options: ['True', 'False'], answer: 1, strAnswer: 'False' }, // New Q21
-            { type: 'mcq', section: 'True or False', text: 'A triangle is a polygon with 3 line segments.', options: ['True', 'False'], answer: 0, strAnswer: 'True' }, // New Q22
-            { type: 'mcq', section: 'True or False', text: 'In the decimal number 45.89, 9 is in the tenths place.', options: ['True', 'False'], answer: 1, strAnswer: 'False' }, // New Q23
-            { type: 'mcq', section: 'True or False', text: 'The greatest factor of any number is the number itself.', options: ['True', 'False'], answer: 0, strAnswer: 'True' }, // New Q24
-            { type: 'mcq', section: 'True or False', text: '\\(\\frac{7}{100}\\) is equal to 0.7', options: ['True', 'False'], answer: 1, strAnswer: 'False' }, // New Q25
-            { type: 'mcq', section: 'True or False', text: 'To find the length of the wire required to fence a garden, we need to find its area.', options: ['True', 'False'], answer: 1, strAnswer: 'False' }, // Updated Q26
-
-            // Q. IV Do as directed (Variations)
-            { type: 'text', section: 'Do as directed', text: 'Find \\(\\frac{1}{5}\\) of 45 =', answer: ['9'], strAnswer: '9' }, // New Q27
-            { type: 'mcq', section: 'Do as directed', text: 'Is 315 divisible by 5?', options: ['Yes', 'No'], answer: 0, strAnswer: 'Yes' }, // New Q28
-            { type: 'text', section: 'Do as directed', text: 'Express \\(\\frac{9}{100}\\) as a decimal.', answer: ['0.09'], strAnswer: '0.09' }, // New Q29
-            { type: 'text', section: 'Do as directed', text: 'Express 8.03 as a fraction (Use format like 405/100).', answer: ['803/100'], strAnswer: '803/100' }, // Updated Q30
-            { type: 'text', section: 'Do as directed', text: 'Write the next decimal number in the pattern: 2.45, 2.46, _________', answer: ['2.47'], strAnswer: '2.47' }, // New Q31
-            { type: 'text', section: 'Do as directed', text: 'Amit has \\(\\frac{7}{8}\\) of a pizza. He eats \\(\\frac{2}{8}\\). What fraction of the pizza is left? (Write fraction as a/b)', answer: ['5/8'], strAnswer: '5/8' }, // New Q32
-            { type: 'text', section: 'Do as directed', text: 'Find the perimeter of a triangle with sides measuring 8cm, 7cm, and 5cm. (Enter number only)', answer: ['20'], strAnswer: '20' }, // New Q33
-            
-            // NEW GEOMETRY QUESTIONS
-            { type: 'text', section: 'Geometry', text: 'A closed figure made of straight lines is called a _________.', answer: ['polygon'], strAnswer: 'polygon' }, // Updated Q34
-            { type: 'mcq', section: 'Geometry', text: 'The diameter of a circle is _________ its radius.', options: ['half of', 'double', 'equal to', 'one-third of'], answer: 1, strAnswer: 'double' },
-            { type: 'text', section: 'Geometry', text: 'If the radius of a circle is 4 cm, what is the length of its diameter? (Enter number only)', answer: ['8'], strAnswer: '8' },
-            { type: 'mcq', section: 'Geometry', text: 'Which of the following shapes is NOT considered a polygon?', options: ['Square', 'Triangle', 'Circle', 'Rectangle'], answer: 2, strAnswer: 'Circle' },
-
-            // DATA HANDLING - PICTOGRAPH
-            { type: 'mcq', section: 'Data Handling - Pictograph', text: `${dicePictographHTML} <br> <strong>Q: Based on the pictograph above, which number appeared the maximum number of times?</strong>`, options: ['Number 2', 'Number 4', 'Number 5', 'Number 6'], answer: 2, strAnswer: 'Number 5' },
-            { type: 'text', section: 'Data Handling - Pictograph', text: `${dicePictographHTML} <br> <strong>Q: According to the pictograph, how many times did the number '4' appear?</strong> (Enter a number)`, answer: ['8'], strAnswer: '8' },
-            { type: 'mcq', section: 'Data Handling - Pictograph', text: `${dicePictographHTML} <br> <strong>Q: Which two numbers appeared the exact same number of times?</strong>`, options: ['1 and 6', '2 and 5', '3 and 4', '1 and 3'], answer: 0, strAnswer: '1 and 6' },
-            { type: 'text', section: 'Data Handling - Pictograph', text: `${dicePictographHTML} <br> <strong>Q: How many total times was the dice rolled altogether?</strong> (Calculate the total across all numbers)`, answer: ['40'], strAnswer: '40' },
-            
-            // NEW DATA HANDLING - BAR GRAPH
-            { type: 'mcq', section: 'Data Handling - Bar Graph', text: `${booksBarGraphHTML} <br> <strong>Q: According to the Bar Graph, who read the maximum number of books?</strong>`, options: ['Ali', 'Ben', 'Cara', 'Dan'], answer: 3, strAnswer: 'Dan' },
-            { type: 'text', section: 'Data Handling - Bar Graph', text: `${booksBarGraphHTML} <br> <strong>Q: How many books did Ben and Cara read altogether?</strong> (Enter a number)`, answer: ['9'], strAnswer: '9 (Ben: 6 + Cara: 3)' },
-            { type: 'text', section: 'Data Handling - Bar Graph', text: `${booksBarGraphHTML} <br> <strong>Q: How many more books did Dan read compared to Ali?</strong> (Enter a number)`, answer: ['4'], strAnswer: '4 (Dan: 8 - Ali: 4)' },
-            { type: 'text', section: 'Data Handling - Bar Graph', text: `${booksBarGraphHTML} <br> <strong>Q: What is the total number of books read by all four students?</strong>`, answer: ['21'], strAnswer: '21' }
-        ];
-
-        // Ensure the dynamic total reflects correctly
-        document.getElementById('total-qs-label').innerText = questions.length;
-
-        // --- STATE MANAGEMENT ---
-        let currentQuestion = 0;
-        let totalTime = 60 * 60; // 60 minutes
-        let timerInterval;
-        
-        let answers = new Array(questions.length).fill(null);
-        let status = new Array(questions.length).fill('not-visited'); 
-
-        // --- DOM ELEMENTS ---
-        const ui = {
-            screens: {
-                instructions: document.getElementById('screen-instructions'),
-                exam: document.getElementById('screen-exam'),
-                results: document.getElementById('screen-results')
-            },
-            checkbox: document.getElementById('agree-checkbox'),
-            btnStart: document.getElementById('btn-start'),
-            timer: document.getElementById('timer'),
-            timerContainer: document.getElementById('header-timer-container'),
-            qNumber: document.getElementById('q-number'),
-            qText: document.getElementById('q-text'),
-            qOptions: document.getElementById('q-options'),
-            sectionTitle: document.getElementById('section-title'),
-            paletteGrid: document.getElementById('palette-grid'),
-            modal: document.getElementById('confirm-modal')
-        };
-
-        // --- FUNCTIONS ---
-        function toggleStartButton() {
-            if (ui.checkbox.checked) {
-                ui.btnStart.disabled = false;
-                ui.btnStart.classList.replace('bg-gray-400', 'bg-blue-600');
-                ui.btnStart.classList.replace('cursor-not-allowed', 'hover:bg-blue-700');
-            } else {
-                ui.btnStart.disabled = true;
-                ui.btnStart.classList.replace('bg-blue-600', 'bg-gray-400');
-                ui.btnStart.classList.replace('hover:bg-blue-700', 'cursor-not-allowed');
-            }
-        }
-
-        function startTimer() {
-            ui.timerContainer.classList.remove('hidden');
-            timerInterval = setInterval(() => {
-                totalTime--;
-                const m = Math.floor(totalTime / 60).toString().padStart(2, '0');
-                const s = (totalTime % 60).toString().padStart(2, '0');
-                ui.timer.innerText = `${m}:${s}`;
-
-                if(totalTime <= 300) { // 5 minutes warning
-                    ui.timer.classList.replace('text-yellow-400', 'text-red-400');
-                    ui.timer.classList.add('animate-pulse');
-                }
-
-                if(totalTime <= 0) {
-                    clearInterval(timerInterval);
-                    finishExam();
-                }
-            }, 1000);
-        }
+        // --- EXAM LOGIC ---
 
         function startExam() {
-            examActive = true;
-            returnToFullscreen();
+            // Request Fullscreen
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => console.log(err));
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
 
-            ui.screens.instructions.classList.add('hidden');
-            ui.screens.exam.classList.remove('hidden');
-            status[0] = 'not-answered'; 
-            buildPalette();
-            renderQuestion(0);
+            // UI Transitions
+            document.getElementById('instructions-page').classList.add('hidden');
+            document.getElementById('exam-page').classList.remove('hidden');
+            document.getElementById('exam-page').classList.add('flex');
+            
+            examActive = true;
+            questionStatus[0] = 'visited'; // First question is visited immediately
+
+            initPalette();
+            loadQuestion(0);
             startTimer();
         }
 
-        function buildPalette() {
-            ui.paletteGrid.innerHTML = '';
-            for (let i = 0; i < questions.length; i++) {
-                const btn = document.createElement('button');
-                btn.innerText = i + 1;
-                btn.className = `w-12 h-10 rounded font-bold transition-all ${getPaletteClass(status[i])} hover:opacity-80`;
-                if (i === currentQuestion) {
-                    btn.classList.add('ring-2', 'ring-offset-1', 'ring-blue-800');
+        function resumeExam() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => console.log(err));
+            }
+            document.getElementById('fullscreen-warning').classList.add('hidden');
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if(timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmitExam();
+                    return;
                 }
-                btn.onclick = () => jumpToQuestion(i);
-                ui.paletteGrid.appendChild(btn);
-            }
+                timeRemaining--;
+                
+                let mins = Math.floor(timeRemaining / 60);
+                let secs = timeRemaining % 60;
+                document.getElementById('timer').textContent = 
+                    `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
         }
 
-        function getPaletteClass(s) {
-            switch(s) {
-                case 'not-visited': return 'status-not-visited';
-                case 'not-answered': return 'status-not-answered';
-                case 'answered': return 'status-answered';
-                case 'review': return 'status-review';
-                default: return 'status-not-visited';
-            }
-        }
-
-        function renderQuestion(index) {
+        function loadQuestion(index) {
             currentQuestion = index;
-            const q = questions[index];
             
-            ui.sectionTitle.innerText = q.section;
-            ui.qNumber.innerText = index + 1;
-            ui.qText.innerHTML = q.text;
-            ui.qOptions.innerHTML = '';
+            // Update status if it was unvisited
+            if (questionStatus[index] === 'unvisited') {
+                questionStatus[index] = 'visited';
+            }
 
-            if (q.type === 'mcq') {
-                q.options.forEach((opt, idx) => {
-                    const isChecked = answers[index] === idx ? 'checked' : '';
-                    const html = `
-                        <label class="flex items-center gap-3 p-3 border border-gray-300 rounded-lg cursor-pointer option-label transition-colors">
-                            <input type="radio" name="q_opt" value="${idx}" class="w-4 h-4 text-blue-600 accent-blue-600" ${isChecked} onchange="captureAnswer()">
-                            <span class="text-gray-700 text-lg math-text">${opt}</span>
-                        </label>
-                    `;
-                    ui.qOptions.innerHTML += html;
-                });
-            } else if (q.type === 'text') {
-                const val = answers[index] || '';
-                ui.qOptions.innerHTML = `
-                    <div class="mt-4">
-                        <input type="text" id="q_text_input" value="${val}" placeholder="Type your answer here..." class="w-full max-w-sm border-2 border-gray-300 rounded-lg px-4 py-3 text-lg focus:outline-none focus:border-blue-600 transition-colors" onkeyup="captureAnswer()">
+            const qData = questions[index];
+            document.getElementById('question-number').textContent = `Question ${index + 1}`;
+            document.getElementById('question-text').textContent = qData.q;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            qData.options.forEach((opt, idx) => {
+                const isChecked = userAnswers[index] === idx ? 'checked' : '';
+                
+                const label = document.createElement('label');
+                label.className = "relative flex-1";
+                label.innerHTML = `
+                    <input type="radio" name="q_option" value="${idx}" ${isChecked} onchange="selectOption(${idx})">
+                    <div class="option-label shadow-sm">
+                        <div class="option-circle"></div>
+                        <div class="option-text">${opt}</div>
                     </div>
                 `;
-            }
+                optionsContainer.appendChild(label);
+            });
 
-            if (window.MathJax) {
-                MathJax.typesetPromise([ui.qText, ui.qOptions]).catch((err) => console.log(err.message));
-            }
+            // Update buttons
+            document.getElementById('prev-btn').disabled = (index === 0);
+            document.getElementById('next-btn').textContent = (index === questions.length - 1) ? 'Save & View Next' : 'Save & Next';
 
-            buildPalette(); 
+            updatePaletteUI();
         }
 
-        function captureAnswer() {
-            const q = questions[currentQuestion];
-            if (q.type === 'mcq') {
-                const selected = document.querySelector('input[name="q_opt"]:checked');
-                if (selected) answers[currentQuestion] = parseInt(selected.value);
-            } else if (q.type === 'text') {
-                const input = document.getElementById('q_text_input');
-                if (input) {
-                    const val = input.value.trim();
-                    answers[currentQuestion] = val === '' ? null : val;
-                }
-            }
-            
-            if (status[currentQuestion] !== 'review') {
-                status[currentQuestion] = answers[currentQuestion] !== null ? 'answered' : 'not-answered';
-            }
-            buildPalette();
-        }
-
-        function saveAndNext() {
-            captureAnswer();
-            status[currentQuestion] = answers[currentQuestion] !== null ? 'answered' : 'not-answered';
-            moveToNext();
-        }
-
-        function markForReview() {
-            captureAnswer();
-            status[currentQuestion] = 'review';
-            moveToNext();
+        function selectOption(optIndex) {
+            userAnswers[currentQuestion] = optIndex;
+            questionStatus[currentQuestion] = 'answered';
+            updatePaletteUI();
         }
 
         function clearResponse() {
-            answers[currentQuestion] = null;
-            status[currentQuestion] = 'not-answered';
-            renderQuestion(currentQuestion);
+            userAnswers[currentQuestion] = null;
+            questionStatus[currentQuestion] = 'visited';
+            loadQuestion(currentQuestion); // reload to clear radio buttons visually
         }
 
-        function moveToNext() {
+        function nextQuestion() {
             if (currentQuestion < questions.length - 1) {
-                const nextQ = currentQuestion + 1;
-                if (status[nextQ] === 'not-visited') status[nextQ] = 'not-answered';
-                renderQuestion(nextQ);
+                loadQuestion(currentQuestion + 1);
             } else {
-                buildPalette();
-                alert("You have reached the end of the question paper. Please review your answers or submit.");
+                // If last question, just loop back to 1st or stay
+                loadQuestion(0); 
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                loadQuestion(currentQuestion - 1);
             }
         }
 
         function jumpToQuestion(index) {
-            captureAnswer();
-            if (status[index] === 'not-visited') status[index] = 'not-answered';
-            renderQuestion(index);
+            loadQuestion(index);
+        }
+
+        function initPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                const btn = document.createElement('div');
+                btn.id = `palette-btn-${i}`;
+                btn.className = `palette-btn status-unvisited`;
+                btn.textContent = i + 1;
+                btn.onclick = () => jumpToQuestion(i);
+                grid.appendChild(btn);
+            }
+            updatePaletteUI();
+        }
+
+        function updatePaletteUI() {
+            let answered = 0;
+            let notAnswered = 0;
+            let notVisited = 0;
+
+            for (let i = 0; i < questions.length; i++) {
+                const btn = document.getElementById(`palette-btn-${i}`);
+                
+                // Base classes
+                btn.className = 'palette-btn';
+
+                if (questionStatus[i] === 'answered') {
+                    btn.classList.add('status-answered');
+                    answered++;
+                } else if (questionStatus[i] === 'visited') {
+                    btn.classList.add('status-visited');
+                    notAnswered++;
+                } else {
+                    btn.classList.add('status-unvisited');
+                    notVisited++;
+                }
+
+                // Highlight active
+                if (i === currentQuestion) {
+                    btn.classList.add('status-active');
+                }
+            }
+
+            document.getElementById('count-answered').textContent = answered;
+            document.getElementById('count-not-answered').textContent = notAnswered;
+            document.getElementById('count-not-visited').textContent = notVisited;
         }
 
         function confirmSubmit() {
-            captureAnswer(); 
-            ui.modal.classList.remove('hidden');
+            document.getElementById('submit-modal').classList.remove('hidden');
         }
 
-        function finishExam() {
-            examActive = false; // Turn off enforcement so we don't trigger the warning overlay
-            exitFullscreen(); // Automatically exit full screen
-            
+        function autoSubmitExam() {
+            alert("Time is up! Your exam will be submitted automatically.");
+            submitExam();
+        }
+
+        function submitExam() {
+            examActive = false;
             clearInterval(timerInterval);
-            ui.modal.classList.add('hidden');
-            ui.screens.exam.classList.add('hidden');
-            ui.screens.results.classList.remove('hidden');
-            ui.timerContainer.classList.add('hidden');
-            evaluateTest();
+            
+            // Exit fullscreen safely
+            if (document.exitFullscreen && document.fullscreenElement) {
+                document.exitFullscreen().catch(err => console.log(err));
+            }
+            
+            document.getElementById('submit-modal').classList.add('hidden');
+            document.getElementById('exam-page').classList.add('hidden');
+            document.getElementById('exam-page').classList.remove('flex');
+            
+            document.getElementById('result-page').classList.remove('hidden');
+            document.getElementById('result-page').classList.add('flex');
+
+            calculateAndShowResults();
         }
 
-        function evaluateTest() {
+        function calculateAndShowResults() {
             let score = 0;
-            const tbody = document.getElementById('result-tbody');
-            tbody.innerHTML = '';
+            const container = document.getElementById('review-container');
+            container.innerHTML = '';
 
-            questions.forEach((q, i) => {
-                const userAns = answers[i];
-                let isCorrect = false;
-                let displayUserAns = '-';
-
-                if (q.type === 'mcq') {
-                    if (userAns !== null) {
-                        isCorrect = userAns === q.answer;
-                        displayUserAns = q.options[userAns];
-                    }
-                } else if (q.type === 'text') {
-                    if (userAns !== null) {
-                        displayUserAns = userAns;
-                        isCorrect = q.answer.some(a => a.toLowerCase() === userAns.toLowerCase());
-                    }
-                }
-
+            questions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const correctAns = q.ans;
+                const isCorrect = userAns === correctAns;
+                
                 if (isCorrect) score++;
 
-                let statusBadge = '';
-                if (userAns === null) {
-                    statusBadge = '<span class="px-2 py-1 bg-gray-200 text-gray-700 rounded text-xs font-bold">Unattempted</span>';
-                } else if (isCorrect) {
-                    statusBadge = '<span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Correct</span>';
-                } else {
-                    statusBadge = '<span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold">Incorrect</span>';
-                }
+                const reviewDiv = document.createElement('div');
+                reviewDiv.className = `p-6 rounded-lg border ${isCorrect ? 'bg-green-50 border-green-200' : (userAns === null ? 'bg-gray-50 border-gray-200' : 'bg-red-50 border-red-200')}`;
+                
+                let optionsHtml = '';
+                q.options.forEach((opt, oIdx) => {
+                    let optStyle = "text-gray-700";
+                    let icon = "";
+                    
+                    if (oIdx === correctAns) {
+                        optStyle = "text-green-700 font-bold";
+                        icon = "✓ Correct Answer";
+                    } else if (oIdx === userAns && !isCorrect) {
+                        optStyle = "text-red-700 font-bold line-through";
+                        icon = "✗ Your Answer";
+                    }
 
-                const tr = document.createElement('tr');
-                tr.className = "border-b border-gray-200 hover:bg-gray-50";
-                tr.innerHTML = `
-                    <td class="p-3 font-bold text-gray-700">${i + 1}</td>
-                    <td class="p-3">${statusBadge}</td>
-                    <td class="p-3 text-gray-800 math-text">${displayUserAns}</td>
-                    <td class="p-3 text-green-700 font-bold math-text">${q.strAnswer}</td>
+                    optionsHtml += `<div class="mb-2 ${optStyle}">${String.fromCharCode(65 + oIdx)}. ${opt} <span class="text-sm ml-2">${icon}</span></div>`;
+                });
+
+                let statusText = isCorrect ? `<span class="text-green-600 font-bold">Correct (+1)</span>` : (userAns === null ? `<span class="text-gray-500 font-bold">Not Attempted (0)</span>` : `<span class="text-red-600 font-bold">Incorrect (0)</span>`);
+
+                reviewDiv.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-bold text-gray-800 flex-1 mr-4">Q${idx + 1}. ${q.q}</h3>
+                        ${statusText}
+                    </div>
+                    <div class="pl-4 border-l-4 ${isCorrect ? 'border-green-400' : (userAns === null ? 'border-gray-400' : 'border-red-400')}">
+                        ${optionsHtml}
+                    </div>
                 `;
-                tbody.appendChild(tr);
+                container.appendChild(reviewDiv);
             });
 
-            document.getElementById('final-score').innerText = score;
-            if (window.MathJax) {
-                MathJax.typesetPromise([tbody]).catch((err) => console.log(err.message));
-            }
+            document.getElementById('final-score').textContent = `${score} / ${questions.length}`;
         }
+
     </script>
 </body>
 </html>
