@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBSE Grade 7 - Algebraic Expressions Test</title>
+    <title>CBSE Grade 7 - Fractions Test</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Security & Anti-Cheat Styles */
+        /* General Styles */
         body {
             user-select: none; /* Prevent text selection */
             -webkit-user-select: none;
@@ -15,7 +15,6 @@
             background-color: #f3f4f6;
         }
 
-        /* Hide scrollbar for a cleaner fullscreen app */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -100,11 +99,20 @@
 </head>
 <body class="text-gray-800 font-sans h-screen flex flex-col overflow-hidden">
 
+    <!-- 0. ALREADY ATTEMPTED PAGE -->
+    <div id="already-attempted-page" class="hidden flex-1 flex flex-col items-center justify-center bg-gray-50 p-8 text-center">
+        <div class="bg-white p-10 rounded-xl shadow-lg max-w-lg w-full border border-gray-200">
+            <svg class="w-20 h-20 text-red-500 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">Exam Already Attempted</h1>
+            <p class="text-gray-600 text-lg">Our records indicate that you have already submitted this exam. Multiple attempts are not permitted.</p>
+        </div>
+    </div>
+
     <!-- 1. INSTRUCTIONS PAGE -->
     <div id="instructions-page" class="flex-1 flex flex-col bg-white overflow-y-auto">
-        <header class="bg-blue-700 text-white p-4 shadow-md flex justify-between items-center">
+        <header class="bg-indigo-700 text-white p-4 shadow-md flex justify-between items-center">
             <h1 class="text-2xl font-bold">CBSE Grade 7 - Mathematics Test</h1>
-            <span class="font-semibold bg-blue-800 px-3 py-1 rounded">Subject: Algebraic Expressions</span>
+            <span class="font-semibold bg-indigo-800 px-3 py-1 rounded">Subject: Fractions</span>
         </header>
 
         <main class="max-w-4xl mx-auto w-full p-8 mt-6 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
@@ -116,6 +124,7 @@
                     <li><strong>Total Duration:</strong> 30 Minutes (1800 seconds).</li>
                     <li><strong>Total Questions:</strong> 10 Multiple Choice Questions.</li>
                     <li><strong>Marking Scheme:</strong> +1 mark for each correct answer. No negative marking.</li>
+                    <li><strong>Attempt Limit:</strong> You can only attempt and submit this test <strong>once</strong>. Please review your answers carefully before submitting.</li>
                     <li>The clock has been set on the server and the countdown timer at the top right corner of your screen will display the time remaining for you to complete the exam. When the clock runs out, the exam ends by default.</li>
                     <li>The question palette at the right of screen shows one of the following statuses of each of the questions numbered:
                         <div class="flex gap-4 mt-3 text-sm font-semibold">
@@ -125,20 +134,10 @@
                         </div>
                     </li>
                 </ul>
-
-                <div class="mt-6 p-4 bg-red-50 border-l-4 border-red-500 rounded text-red-900">
-                    <h3 class="font-bold text-lg mb-2">Security & Anti-Cheat Rules (STRICT)</h3>
-                    <ul class="list-disc pl-5 space-y-1">
-                        <li>The test will open in <strong>Full-Screen Mode</strong>.</li>
-                        <li>Do not press the <code>ESC</code> key or try to exit full-screen mode. Doing so will freeze the test.</li>
-                        <li>Right-clicking, taking screenshots, and inspecting code are strictly prohibited and disabled.</li>
-                        <li>Do not switch tabs or windows.</li>
-                    </ul>
-                </div>
             </div>
 
             <div class="mt-8 flex justify-center border-t border-gray-300 pt-6">
-                <button id="start-btn" onclick="startExam()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg shadow-lg text-xl transition transform hover:scale-105">
+                <button id="start-btn" onclick="startExam()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-10 rounded-lg shadow-lg text-xl transition transform hover:scale-105">
                     I am ready to begin
                 </button>
             </div>
@@ -149,10 +148,10 @@
     <div id="exam-page" class="hidden flex-1 flex flex-col bg-gray-100 h-full">
         <!-- Header -->
         <header class="bg-white shadow px-6 py-3 flex justify-between items-center border-b border-gray-200 shrink-0">
-            <h1 class="text-xl font-bold text-blue-700">Algebraic Expressions Test</h1>
+            <h1 class="text-xl font-bold text-indigo-700">Fractions Test</h1>
             <div class="flex items-center gap-4">
-                <div class="bg-blue-50 border border-blue-200 px-4 py-2 rounded-lg flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-lg flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="text-gray-600 font-semibold">Time Left:</span>
                     <span id="timer" class="text-xl font-bold text-red-600 tracking-wider">30:00</span>
                 </div>
@@ -186,7 +185,7 @@
                         <button onclick="clearResponse()" class="text-red-600 hover:bg-red-50 border border-red-200 font-semibold py-2 px-6 rounded transition">
                             Clear Response
                         </button>
-                        <button onclick="nextQuestion()" id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow transition">
+                        <button onclick="nextQuestion()" id="next-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded shadow transition">
                             Save & Next
                         </button>
                     </div>
@@ -221,10 +220,10 @@
     <div id="result-page" class="hidden flex-1 bg-gray-50 overflow-y-auto p-8">
         <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-gray-200 p-8">
             <div class="text-center mb-10 border-b pb-8">
-                <h1 class="text-4xl font-extrabold text-blue-700 mb-4">Exam Completed Successfully</h1>
+                <h1 class="text-4xl font-extrabold text-indigo-700 mb-4">Exam Completed Successfully</h1>
                 <p class="text-xl text-gray-600">Here is your performance summary.</p>
-                <div class="mt-6 inline-block bg-blue-50 border border-blue-200 rounded-lg p-6">
-                    <div class="text-5xl font-black text-blue-600" id="final-score">8 / 10</div>
+                <div class="mt-6 inline-block bg-indigo-50 border border-indigo-200 rounded-lg p-6">
+                    <div class="text-5xl font-black text-indigo-600" id="final-score">0 / 10</div>
                     <div class="text-gray-500 font-semibold mt-2 uppercase tracking-wide">Total Score</div>
                 </div>
             </div>
@@ -236,14 +235,13 @@
         </div>
     </div>
 
-    <!-- 4. FULLSCREEN CHEAT WARNING OVERLAY -->
-    <div id="fullscreen-warning" class="hidden fixed inset-0 bg-red-900 bg-opacity-95 z-50 flex flex-col items-center justify-center p-8 text-center text-white">
-        <svg class="w-24 h-24 text-red-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-        <h1 class="text-5xl font-black mb-4 tracking-wider">WARNING!</h1>
-        <p class="text-2xl mb-8 font-medium">You have exited full-screen mode, which is considered a violation of exam rules.</p>
-        <p class="text-lg text-red-200 mb-10 max-w-2xl">To prevent cheating, this exam must be taken in full-screen. Please click the button below immediately to return to the exam, otherwise your test will be automatically submitted.</p>
-        <button onclick="resumeExam()" class="bg-white text-red-900 font-bold text-xl py-4 px-10 rounded-full shadow-2xl hover:bg-gray-100 transition transform hover:scale-105">
-            Return to Exam
+    <!-- 4. FULLSCREEN RETURN OVERLAY -->
+    <div id="fullscreen-warning" class="hidden fixed inset-0 bg-gray-900 bg-opacity-95 z-50 flex flex-col items-center justify-center p-8 text-center text-white">
+        <svg class="w-20 h-20 text-indigo-400 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+        <h1 class="text-4xl font-bold mb-4 tracking-wider">Please Return to Full-Screen</h1>
+        <p class="text-xl text-gray-300 mb-10 max-w-2xl">This exam is designed to be taken in full-screen mode to prevent distractions. Please click the button below to resume your test.</p>
+        <button onclick="resumeExam()" class="bg-indigo-600 text-white font-bold text-xl py-4 px-10 rounded shadow-lg hover:bg-indigo-500 transition transform hover:scale-105">
+            Resume Exam
         </button>
     </div>
 
@@ -251,85 +249,94 @@
     <div id="submit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
         <div class="bg-white rounded-lg p-8 max-w-md w-full text-center shadow-2xl">
             <h2 class="text-2xl font-bold text-gray-800 mb-4">Submit Test?</h2>
-            <p class="text-gray-600 mb-8 text-lg">Are you sure you want to submit your test? You cannot change your answers after submission.</p>
+            <p class="text-gray-600 mb-8 text-lg">Are you sure you want to submit your test? Once submitted, you cannot re-attempt the exam.</p>
             <div class="flex justify-center gap-4">
                 <button onclick="document.getElementById('submit-modal').classList.add('hidden')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded transition">Cancel</button>
-                <button onclick="submitExam()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition">Yes, Submit</button>
+                <button onclick="submitExam()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded transition">Yes, Submit</button>
             </div>
         </div>
     </div>
 
     <script>
+        // Check if the user has already attempted the exam
+        window.onload = () => {
+            if(localStorage.getItem('cbse_fractions_exam_attempted') === 'true') {
+                document.getElementById('instructions-page').classList.add('hidden');
+                document.getElementById('already-attempted-page').classList.remove('hidden');
+                document.getElementById('already-attempted-page').classList.add('flex');
+            }
+        };
+
         // --- DATA ---
         // Questions generated strictly from the provided PDF worksheet and textbook
         const questions = [
             {
-                q: "The value of 'a' if 10 - a = 6 is:",
-                options: ["-4", "4", "5", "-5"],
-                ans: 1 // index for "4"
+                q: "Which among the following is the multiplicative inverse of 6/7?",
+                options: ["-6/7", "7/6", "1/7", "1/6"],
+                ans: 1 
             },
             {
-                q: "The expression for the perimeter of a rectangle if 'l' and 'b' are its length and breadth is:",
-                options: ["l + b", "2l + b", "2(l + b)", "l + 2b"],
-                ans: 2
+                q: "What is the product of 8/9 and its multiplicative inverse?",
+                options: ["-1", "0", "1", "9/8"],
+                ans: 2 
             },
             {
-                q: "Which among the following pairs are NOT like terms?",
-                options: ["7b, 7a", "-7c, 3c", "2xy, 5xy", "m, -6m"],
-                ans: 0
+                q: "Evaluate: 5 ÷ (10/24)",
+                options: ["5", "1/2", "0", "12"],
+                ans: 3 
             },
             {
-                q: "Simplify: 5c + 2c + c + (-c) =",
-                options: ["8c", "7c", "9c", "10c"],
-                ans: 1 // 5+2+1-1 = 7c
+                q: "Subtract: 17/3 - 14/5",
+                options: ["2 and 13/15", "2 and 15/13", "13/15", "1"],
+                ans: 0 
             },
             {
-                q: "The expression 4(b - y) can be written as:",
-                options: ["4b - y", "b - 4y", "4b - 4y", "4b"],
-                ans: 2
-            },
-            {
-                q: "Add the expressions: (6f - 20 + 8s) and (23 - 13f - 12s)",
-                options: ["-7f - 4s + 3", "7f + 4s - 3", "-7f + 4s + 3", "7f - 4s - 3"],
-                ans: 0
-            },
-            {
-                q: "Subtract the expression (9a - 6b + 14) from (6a + 9b - 18):",
-                options: ["3a + 15b - 32", "-3a + 15b - 32", "-3a - 15b + 32", "3a - 15b - 32"],
-                ans: 1 // (6a + 9b - 18) - (9a - 6b + 14) = 6a-9a + 9b+6b -18-14 = -3a + 15b - 32
-            },
-            {
-                q: "Simplify the expression 4(x + y) - y and find its value if x = 2 and y = -2:",
-                options: ["2", "0", "4", "-2"],
-                ans: 0 // 4x + 3y => 4(2) + 3(-2) = 8 - 6 = 2
-            },
-            {
-                q: "Leela is Radha's younger sister. Leela is 4 years younger than Radha. If Radha's age is 'x' years, Leela's age in terms of Radha's age is:",
-                options: ["x + 4", "x - 4", "4 - x", "4x"],
+                q: "Which is heavier: 12/15 of 500 grams or 3/20 of 4 kg?",
+                options: ["12/15 of 500 grams", "3/20 of 4 kg", "Both are equal", "Cannot be determined"],
                 ans: 1
             },
             {
-                q: "Somjit makes a pattern of triangles using matchsticks. Step 1 has 3 sticks, Step 2 has 5 sticks, Step 3 has 7 sticks. What is the algebraic expression for the number of matchsticks required for Step 'n'?",
-                options: ["2n + 1", "3n", "n + 2", "2n - 1"],
+                q: "Tenzin drinks 1/2 glass of milk every day. How many glasses of milk does he drink in the month of January?",
+                options: ["15", "30", "31/2", "30/2"],
+                ans: 2 
+            },
+            {
+                q: "A water tank is filled from a tap. If the tap is open for 1 hour, 7/10 of the tank gets filled. How much of the tank is filled if the tap is open for 1/3 hour?",
+                options: ["7/30 part", "14/30 part", "21/40 part", "7/10 part"],
                 ans: 0
+            },
+            {
+                q: "Find the area of a rectangular park with sides 3 3/4 ft and 9 3/5 ft.",
+                options: ["30 sq ft", "32 sq ft", "36 sq ft", "40 sq ft"],
+                ans: 2 
+            },
+            {
+                q: "Mariam's grandmother baked a cake. Mariam and her cousins finished 4/5 of the cake. The remaining cake was shared equally by Mariam's three friends. What fraction of the whole cake did each friend get?",
+                options: ["1/5", "1/12", "1/15", "3/5"],
+                ans: 2 
+            },
+            {
+                q: "A boy spent 3/5 of his money on buying cloth and 1/4 of his money on buying shoes. If initially he had ₹2400, how much amount is left with him?",
+                options: ["₹360", "₹1440", "₹600", "₹400"],
+                ans: 0 
             }
         ];
 
         // --- STATE VARIABLES ---
         let currentQuestion = 0;
         let userAnswers = new Array(questions.length).fill(null);
-        let questionStatus = new Array(questions.length).fill('unvisited'); // unvisited, visited, answered
+        let questionStatus = new Array(questions.length).fill('unvisited'); 
         
         let examActive = false;
         let timeRemaining = 30 * 60; // 30 minutes in seconds
         let timerInterval;
 
-        // --- SECURITY: ANTI-CHEAT FEATURES ---
+        // --- SILENT SECURITY FEATURES ---
 
         // 1. Disable Right Click
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // 2. Disable Keyboard Shortcuts (Inspect Element, Save, PrintScreen)
+        // 2. Disable Keyboard Shortcuts (Inspect Element, Save, PrintScreen) silently
         document.addEventListener('keydown', (e) => {
             if (
                 e.key === 'F12' || 
@@ -338,14 +345,12 @@
                 e.key === 'PrintScreen'
             ) {
                 e.preventDefault();
-                alert("Security alert: This action is disabled during the exam.");
             }
         });
 
-        // 3. Prevent Copying
+        // 3. Prevent Copying silently
         document.addEventListener('copy', (e) => {
             e.preventDefault();
-            alert("Copying is disabled.");
         });
 
         // 4. Enforce Fullscreen
@@ -358,6 +363,12 @@
         // --- EXAM LOGIC ---
 
         function startExam() {
+            // Double check local storage just in case
+            if(localStorage.getItem('cbse_fractions_exam_attempted') === 'true') {
+                alert("You have already attempted this exam.");
+                return;
+            }
+
             // Request Fullscreen
             const elem = document.documentElement;
             if (elem.requestFullscreen) {
@@ -374,7 +385,7 @@
             document.getElementById('exam-page').classList.add('flex');
             
             examActive = true;
-            questionStatus[0] = 'visited'; // First question is visited immediately
+            questionStatus[0] = 'visited'; 
 
             initPalette();
             loadQuestion(0);
@@ -458,7 +469,7 @@
             if (currentQuestion < questions.length - 1) {
                 loadQuestion(currentQuestion + 1);
             } else {
-                // If last question, just loop back to 1st or stay
+                // Loop back to 1st
                 loadQuestion(0); 
             }
         }
@@ -530,6 +541,9 @@
         }
 
         function submitExam() {
+            // PREVENT RE-ATTEMPT
+            localStorage.setItem('cbse_fractions_exam_attempted', 'true');
+
             examActive = false;
             clearInterval(timerInterval);
             
