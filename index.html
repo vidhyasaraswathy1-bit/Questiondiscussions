@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBSE Grade 7 - Fractions Test</title>
+    <title>CBSE Grade 7 - A Tale of Three Intersecting Lines</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* General Styles */
@@ -112,7 +112,7 @@
     <div id="instructions-page" class="flex-1 flex flex-col bg-white overflow-y-auto">
         <header class="bg-indigo-700 text-white p-4 shadow-md flex justify-between items-center">
             <h1 class="text-2xl font-bold">CBSE Grade 7 - Mathematics Test</h1>
-            <span class="font-semibold bg-indigo-800 px-3 py-1 rounded">Subject: Fractions</span>
+            <span class="font-semibold bg-indigo-800 px-3 py-1 rounded">Subject: A Tale of Three Intersecting Lines</span>
         </header>
 
         <main class="max-w-4xl mx-auto w-full p-8 mt-6 bg-gray-50 border border-gray-200 rounded-lg shadow-sm">
@@ -121,8 +121,8 @@
             <div class="space-y-4 text-lg text-gray-700">
                 <p>Please read the following instructions carefully before starting the exam:</p>
                 <ul class="list-disc pl-6 space-y-2">
-                    <li><strong>Total Duration:</strong> 30 Minutes (1800 seconds).</li>
-                    <li><strong>Total Questions:</strong> 10 Multiple Choice Questions.</li>
+                    <li><strong>Total Duration:</strong> 45 Minutes (2700 seconds).</li>
+                    <li><strong>Total Questions:</strong> 18 Multiple Choice Questions.</li>
                     <li><strong>Marking Scheme:</strong> +1 mark for each correct answer. No negative marking.</li>
                     <li><strong>Attempt Limit:</strong> You can only attempt and submit this test <strong>once</strong>. Please review your answers carefully before submitting.</li>
                     <li>The clock has been set on the server and the countdown timer at the top right corner of your screen will display the time remaining for you to complete the exam. When the clock runs out, the exam ends by default.</li>
@@ -148,12 +148,12 @@
     <div id="exam-page" class="hidden flex-1 flex flex-col bg-gray-100 h-full">
         <!-- Header -->
         <header class="bg-white shadow px-6 py-3 flex justify-between items-center border-b border-gray-200 shrink-0">
-            <h1 class="text-xl font-bold text-indigo-700">Fractions Test</h1>
+            <h1 class="text-xl font-bold text-indigo-700">Intersecting Lines Test</h1>
             <div class="flex items-center gap-4">
                 <div class="bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-lg flex items-center gap-2">
                     <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="text-gray-600 font-semibold">Time Left:</span>
-                    <span id="timer" class="text-xl font-bold text-red-600 tracking-wider">30:00</span>
+                    <span id="timer" class="text-xl font-bold text-red-600 tracking-wider">45:00</span>
                 </div>
                 <button onclick="confirmSubmit()" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded font-bold shadow transition">Submit Test</button>
             </div>
@@ -205,7 +205,7 @@
                 <div class="grid grid-cols-2 gap-2 text-xs font-semibold mb-6 border-y border-gray-200 py-4">
                     <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-dcfce3 bg-green-200"></div> <span id="count-answered">0</span> Answered</div>
                     <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-fee2e2 bg-red-200"></div> <span id="count-not-answered">0</span> Not Answered</div>
-                    <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-e5e7eb bg-gray-200"></div> <span id="count-not-visited">10</span> Not Visited</div>
+                    <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-e5e7eb bg-gray-200"></div> <span id="count-not-visited">18</span> Not Visited</div>
                 </div>
 
                 <h3 class="font-bold text-gray-700 mb-4">Question Palette</h3>
@@ -222,9 +222,15 @@
             <div class="text-center mb-10 border-b pb-8">
                 <h1 class="text-4xl font-extrabold text-indigo-700 mb-4">Exam Completed Successfully</h1>
                 <p class="text-xl text-gray-600">Here is your performance summary.</p>
-                <div class="mt-6 inline-block bg-indigo-50 border border-indigo-200 rounded-lg p-6">
-                    <div class="text-5xl font-black text-indigo-600" id="final-score">0 / 10</div>
-                    <div class="text-gray-500 font-semibold mt-2 uppercase tracking-wide">Total Score</div>
+                <div class="mt-6 flex justify-center gap-6 flex-wrap">
+                    <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-6 min-w-[200px]">
+                        <div class="text-5xl font-black text-indigo-600" id="final-score">0 / 18</div>
+                        <div class="text-gray-500 font-semibold mt-2 uppercase tracking-wide">Total Score</div>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 min-w-[200px]">
+                        <div class="text-5xl font-black text-blue-600" id="total-time">0m 0s</div>
+                        <div class="text-gray-500 font-semibold mt-2 uppercase tracking-wide">Time Spent</div>
+                    </div>
                 </div>
             </div>
 
@@ -260,7 +266,7 @@
     <script>
         // Check if the user has already attempted the exam
         window.onload = () => {
-            if(localStorage.getItem('cbse_fractions_exam_attempted') === 'true') {
+            if(localStorage.getItem('cbse_triangles_exam_attempted') === 'true') {
                 document.getElementById('instructions-page').classList.add('hidden');
                 document.getElementById('already-attempted-page').classList.remove('hidden');
                 document.getElementById('already-attempted-page').classList.add('flex');
@@ -268,57 +274,160 @@
         };
 
         // --- DATA ---
-        // Questions generated strictly from the provided PDF worksheet and textbook
+        // Questions generated strictly from Chapter 7: A Tale of Three Intersecting Lines
         const questions = [
             {
-                q: "Which among the following is the multiplicative inverse of 6/7?",
-                options: ["-6/7", "7/6", "1/7", "1/6"],
+                q: "In an equilateral triangle, all sides are:",
+                options: ["Equal", "Unequal", "Parallel", "Perpendicular"],
+                ans: 0 
+            },
+            {
+                q: "In a triangle, the sum of any two sides must be:",
+                options: ["Less than the third side", "Greater than the third side", "Equal to the third side", "Half of the third side"],
                 ans: 1 
             },
             {
-                q: "What is the product of 8/9 and its multiplicative inverse?",
-                options: ["-1", "0", "1", "9/8"],
+                q: "If three points lie on a straight line, can a triangle be formed?",
+                options: ["Yes", "No", "Sometimes", "Only if it is a right triangle"],
+                ans: 1 
+            },
+            {
+                q: "The exterior angle of a triangle is 120°. One interior opposite angle is 45°. The other interior opposite angle is:",
+                options: ["65°", "70°", "75°", "80°"],
                 ans: 2 
             },
             {
-                q: "Evaluate: 5 ÷ (10/24)",
-                options: ["5", "1/2", "0", "12"],
-                ans: 3 
-            },
-            {
-                q: "Subtract: 17/3 - 14/5",
-                options: ["2 and 13/15", "2 and 15/13", "13/15", "1"],
-                ans: 0 
-            },
-            {
-                q: "Which is heavier: 12/15 of 500 grams or 3/20 of 4 kg?",
-                options: ["12/15 of 500 grams", "3/20 of 4 kg", "Both are equal", "Cannot be determined"],
+                q: "Three wires of lengths 8 cm, 9 cm and 18 cm are taken to form a triangular frame. What is the correct conclusion?",
+                options: ["Triangle can be formed", "Triangle cannot be formed", "Triangle is right-angled", "Triangle is equilateral"],
                 ans: 1
             },
             {
-                q: "Tenzin drinks 1/2 glass of milk every day. How many glasses of milk does he drink in the month of January?",
-                options: ["15", "30", "31/2", "30/2"],
+                q: "A triangle has angles 35°, 65° and 80°. The triangle is:",
+                options: ["Obtuse-angled", "Right-angled", "Acute-angled", "Isosceles"],
                 ans: 2 
             },
             {
-                q: "A water tank is filled from a tap. If the tap is open for 1 hour, 7/10 of the tank gets filled. How much of the tank is filled if the tap is open for 1/3 hour?",
-                options: ["7/30 part", "14/30 part", "21/40 part", "7/10 part"],
-                ans: 0
+                q: "In a triangle ABC, if ∠A = 60° and ∠B = 30°, then the exterior angle formed by producing BC is equal to:",
+                options: ["180°", "99°", "90°", "105°"],
+                ans: 2
             },
             {
-                q: "Find the area of a rectangular park with sides 3 3/4 ft and 9 3/5 ft.",
-                options: ["30 sq ft", "32 sq ft", "36 sq ft", "40 sq ft"],
-                ans: 2 
+                q: "A triangle with exactly two equal sides is called:",
+                options: ["Scalene", "Isosceles", "Equilateral", "Right-angled"],
+                ans: 1 
             },
             {
-                q: "Mariam's grandmother baked a cake. Mariam and her cousins finished 4/5 of the cake. The remaining cake was shared equally by Mariam's three friends. What fraction of the whole cake did each friend get?",
-                options: ["1/5", "1/12", "1/15", "3/5"],
-                ans: 2 
-            },
-            {
-                q: "A boy spent 3/5 of his money on buying cloth and 1/4 of his money on buying shoes. If initially he had ₹2400, how much amount is left with him?",
-                options: ["₹360", "₹1440", "₹600", "₹400"],
+                q: "Check whether a triangle can be formed with side lengths 24 cm, 26 cm, and 28 cm.",
+                options: ["Yes", "No", "Only if it is a right triangle", "Data insufficient"],
                 ans: 0 
+            },
+            {
+                q: "Find the third angle of a triangle if two of the angles are 36° and 72°.",
+                options: ["36°", "72°", "90°", "108°"],
+                ans: 1 
+            },
+            {
+                q: "Find the third angle of a triangle if two of the angles are 90° and 30°.",
+                options: ["45°", "60°", "90°", "30°"],
+                ans: 1 
+            },
+            {
+                q: "Can you construct a triangle all of whose angles are equal to 70°?",
+                options: ["Yes, it will be equilateral", "Yes, it will be isosceles", "No, sum of angles exceeds 180°", "No, because sides are not given"],
+                ans: 2 
+            },
+            {
+                q: "Riya wants to make a triangular flower bed using planks of 4 m, 5 m, and 9 m. Can she form a triangle?",
+                options: ["Yes, because 4 + 5 ≤ 9", "Yes, because it forms a right angle", "No, because the sum of two sides (4+5) is equal to the third side (9)", "No, because 9 - 5 < 4"],
+                ans: 2 
+            },
+            {
+                q: "If Riya cannot form a triangle with 4 m, 5 m, and 9 m planks, what side length (smaller than 9 m) could replace the 9 m plank to allow her to make a triangle?",
+                options: ["10 m", "9.5 m", "8 m", "9 m"],
+                ans: 2 
+            },
+            {
+                q: "According to the rules of angles in a triangle, if A and B are two interior angles, which condition must be true?",
+                options: ["A + B > 180°", "0° < A + B < 180°", "A + B = 180°", "A + B = 90°"],
+                ans: 1 
+            },
+            {
+                q: "Find the value of the unknown exterior angle x in the following figure.",
+                hasCanvas: true,
+                options: ["100°", "110°", "120°", "130°"],
+                ans: 1,
+                renderCanvas: function(canvasId) {
+                    const c = document.getElementById(canvasId); if(!c) return;
+                    const ctx = c.getContext('2d');
+                    ctx.clearRect(0,0,300,150);
+                    // Accurately calculated layout for 65 and 45 degree angles
+                    ctx.beginPath(); ctx.moveTo(30,120); ctx.lineTo(250,120); ctx.strokeStyle='#374151'; ctx.lineWidth=2; ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(70,120); ctx.lineTo(160,120); ctx.lineTo(120.5,11.6); ctx.closePath();
+                    ctx.fillStyle='#f3f4f6'; ctx.fill(); ctx.stroke();
+                    
+                    ctx.beginPath(); ctx.arc(70,120, 25, 0, -65*Math.PI/180, true); ctx.strokeStyle='#166534'; ctx.stroke();
+                    ctx.fillStyle='#166534'; ctx.font="bold 14px sans-serif"; ctx.fillText("65°", 100, 105);
+                    
+                    ctx.beginPath(); ctx.arc(120.5,11.6, 25, 70*Math.PI/180, 115*Math.PI/180, false); ctx.stroke();
+                    ctx.fillText("45°", 120.5, 45);
+                    
+                    ctx.beginPath(); ctx.arc(160,120, 20, 0, -70*Math.PI/180, true); ctx.strokeStyle='#ef4444'; ctx.stroke();
+                    ctx.fillStyle='#ef4444'; ctx.font="bold 16px sans-serif"; ctx.fillText("x", 185, 105);
+                }
+            },
+            {
+                q: "The exterior angle of a triangle is 120°. One interior opposite angle is 45°. Find the other interior opposite angle (marked as x) based on the figure.",
+                hasCanvas: true,
+                options: ["65°", "70°", "75°", "80°"],
+                ans: 2,
+                renderCanvas: function(canvasId) {
+                    const c = document.getElementById(canvasId); if(!c) return;
+                    const ctx = c.getContext('2d');
+                    ctx.clearRect(0,0,300,150);
+                    // Accurately calculated layout for 120 exterior and 45 interior
+                    ctx.beginPath(); ctx.moveTo(20,120); ctx.lineTo(240,120); ctx.strokeStyle='#374151'; ctx.lineWidth=2; ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(60,120); ctx.lineTo(160,120); ctx.lineTo(123.4,56.6); ctx.closePath();
+                    ctx.fillStyle='#f3f4f6'; ctx.fill(); ctx.stroke();
+                    
+                    ctx.beginPath(); ctx.arc(60,120, 25, 0, -45*Math.PI/180, true); ctx.strokeStyle='#166534'; ctx.stroke();
+                    ctx.fillStyle='#166534'; ctx.font="bold 14px sans-serif"; ctx.fillText("45°", 95, 110);
+                    
+                    ctx.beginPath(); ctx.arc(123.4,56.6, 20, 60*Math.PI/180, 135*Math.PI/180, false); ctx.strokeStyle='#ef4444'; ctx.stroke();
+                    ctx.fillStyle='#ef4444'; ctx.font="bold 16px sans-serif"; ctx.fillText("x", 123, 90);
+
+                    ctx.beginPath(); ctx.arc(160,120, 25, 0, -60*Math.PI/180, true); ctx.strokeStyle='#2563eb'; ctx.stroke();
+                    ctx.fillStyle='#2563eb'; ctx.font="bold 14px sans-serif"; ctx.fillText("120°", 195, 105);
+                }
+            },
+            {
+                q: "In the given figure, line XY is drawn parallel to base BC of ∆ABC. If ∠B = 36° and ∠C = 72°, find the measure of ∠BAC.",
+                hasCanvas: true,
+                options: ["36°", "72°", "90°", "108°"],
+                ans: 1,
+                renderCanvas: function(canvasId) {
+                    const c = document.getElementById(canvasId); if(!c) return;
+                    const ctx = c.getContext('2d');
+                    ctx.clearRect(0,0,300,160);
+                    // Accurately calculated layout for 36 and 72 degrees with Parallel Line
+                    ctx.beginPath(); ctx.moveTo(20,59.5); ctx.lineTo(280,59.5); ctx.strokeStyle='#3b82f6'; ctx.lineWidth=2; ctx.setLineDash([5,5]); ctx.stroke();
+                    ctx.setLineDash([]);
+                    ctx.fillStyle='#3b82f6'; ctx.font="bold 14px sans-serif"; ctx.fillText("X", 30, 50); ctx.fillText("Y", 260, 50);
+                    
+                    ctx.beginPath(); ctx.moveTo(30,130); ctx.lineTo(250,130); ctx.strokeStyle='#374151'; ctx.lineWidth=2; ctx.stroke();
+                    ctx.fillStyle='#374151'; ctx.fillText("B", 65, 150); ctx.fillText("C", 185, 150); ctx.fillText("A", 162, 45);
+                    
+                    ctx.beginPath(); ctx.moveTo(70,130); ctx.lineTo(190,130); ctx.lineTo(167,59.5); ctx.closePath();
+                    ctx.fillStyle='#f3f4f6'; ctx.fill(); ctx.stroke();
+                    
+                    ctx.beginPath(); ctx.arc(70,130, 30, 0, -36*Math.PI/180, true); ctx.strokeStyle='#166534'; ctx.stroke();
+                    ctx.fillStyle='#166534'; ctx.fillText("36°", 115, 120);
+                    
+                    ctx.beginPath(); ctx.arc(190,130, 25, Math.PI, Math.PI + 72*Math.PI/180, false); ctx.stroke();
+                    ctx.fillText("72°", 155, 120);
+                    
+                    ctx.beginPath(); ctx.arc(167,59.5, 25, 72*Math.PI/180, 144*Math.PI/180, false); ctx.strokeStyle='#ef4444'; ctx.stroke();
+                    ctx.fillStyle='#ef4444'; ctx.font="bold 16px sans-serif"; ctx.fillText("?", 167, 95);
+                }
             }
         ];
 
@@ -326,9 +435,11 @@
         let currentQuestion = 0;
         let userAnswers = new Array(questions.length).fill(null);
         let questionStatus = new Array(questions.length).fill('unvisited'); 
+        let timePerQuestion = new Array(questions.length).fill(0);
+        let questionEnterTime = null;
         
         let examActive = false;
-        let timeRemaining = 30 * 60; // 30 minutes in seconds
+        let timeRemaining = 45 * 60; // 45 minutes in seconds
         let timerInterval;
 
         // --- SILENT SECURITY FEATURES ---
@@ -362,9 +473,26 @@
 
         // --- EXAM LOGIC ---
 
+        function formatTime(seconds) {
+            if (seconds === 0) return "0s";
+            if (seconds < 60) return `${seconds}s`;
+            let mins = Math.floor(seconds / 60);
+            let secs = seconds % 60;
+            return `${mins}m ${secs}s`;
+        }
+
+        function recordTimeSpent() {
+            if (questionEnterTime !== null) {
+                const now = Date.now();
+                const spentSeconds = Math.floor((now - questionEnterTime) / 1000);
+                timePerQuestion[currentQuestion] += spentSeconds;
+                questionEnterTime = now;
+            }
+        }
+
         function startExam() {
             // Double check local storage just in case
-            if(localStorage.getItem('cbse_fractions_exam_attempted') === 'true') {
+            if(localStorage.getItem('cbse_triangles_exam_attempted') === 'true') {
                 alert("You have already attempted this exam.");
                 return;
             }
@@ -386,6 +514,7 @@
             
             examActive = true;
             questionStatus[0] = 'visited'; 
+            questionEnterTime = Date.now();
 
             initPalette();
             loadQuestion(0);
@@ -417,7 +546,12 @@
         }
 
         function loadQuestion(index) {
+            if (examActive && questionEnterTime !== null) {
+                recordTimeSpent();
+            }
+
             currentQuestion = index;
+            questionEnterTime = Date.now();
             
             // Update status if it was unvisited
             if (questionStatus[index] === 'unvisited') {
@@ -426,7 +560,17 @@
 
             const qData = questions[index];
             document.getElementById('question-number').textContent = `Question ${index + 1}`;
-            document.getElementById('question-text').textContent = qData.q;
+            
+            let qText = qData.q;
+            if (qData.hasCanvas) {
+                // Dynamically append canvas for precise drawing execution
+                qText += `<canvas id="active-canvas-${index}" width="300" height="150" class="w-full max-w-sm mx-auto my-4 bg-white border border-gray-300 rounded shadow-sm"></canvas>`;
+            }
+            document.getElementById('question-text').innerHTML = qText;
+
+            if (qData.renderCanvas) {
+                setTimeout(() => qData.renderCanvas(`active-canvas-${index}`), 50);
+            }
 
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
@@ -542,8 +686,9 @@
 
         function submitExam() {
             // PREVENT RE-ATTEMPT
-            localStorage.setItem('cbse_fractions_exam_attempted', 'true');
+            localStorage.setItem('cbse_triangles_exam_attempted', 'true');
 
+            recordTimeSpent();
             examActive = false;
             clearInterval(timerInterval);
             
@@ -595,18 +740,35 @@
 
                 let statusText = isCorrect ? `<span class="text-green-600 font-bold">Correct (+1)</span>` : (userAns === null ? `<span class="text-gray-500 font-bold">Not Attempted (0)</span>` : `<span class="text-red-600 font-bold">Incorrect (0)</span>`);
 
+                let qTextReview = q.q;
+                if (q.hasCanvas) {
+                    qTextReview += `<canvas id="review-canvas-${idx}" width="300" height="150" class="w-full max-w-sm mx-auto my-4 bg-white border border-gray-300 rounded shadow-sm"></canvas>`;
+                }
+
                 reviewDiv.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-bold text-gray-800 flex-1 mr-4">Q${idx + 1}. ${q.q}</h3>
-                        ${statusText}
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-start mb-4 gap-2">
+                        <h3 class="text-lg font-bold text-gray-800 flex-1 mr-4">Q${idx + 1}. ${qTextReview}</h3>
+                        <div class="flex items-center gap-4 bg-white px-3 py-1 rounded-full border shadow-sm shrink-0">
+                            <span class="text-sm font-semibold text-gray-600 flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                ${formatTime(timePerQuestion[idx])}
+                            </span>
+                            <span class="border-l pl-3">${statusText}</span>
+                        </div>
                     </div>
                     <div class="pl-4 border-l-4 ${isCorrect ? 'border-green-400' : (userAns === null ? 'border-gray-400' : 'border-red-400')}">
                         ${optionsHtml}
                     </div>
                 `;
                 container.appendChild(reviewDiv);
+
+                if (q.hasCanvas && q.renderCanvas) {
+                    setTimeout(() => q.renderCanvas(`review-canvas-${idx}`), 50);
+                }
             });
 
+            const totalSecondsSpent = (45 * 60) - timeRemaining;
+            document.getElementById('total-time').textContent = formatTime(totalSecondsSpent);
             document.getElementById('final-score').textContent = `${score} / ${questions.length}`;
         }
 
