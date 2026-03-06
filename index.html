@@ -1,502 +1,468 @@
-import React, { useState } from 'react';
-import { ChevronRight, Eye, EyeOff, Calculator, CheckCircle2, Award, PlayCircle, Lightbulb } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 7 Math Sample Paper Tool</title>
+    
+    <!-- Load Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load React and ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- Load Babel to understand React JSX syntax in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-// --- Visual Simulator Components ---
+    <style>
+        /* Small utility to hide scrollbars on the sidebar but keep functionality */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+    
+    <!-- The React app will be injected here -->
+    <div id="root"></div>
 
-const DecimalSim = ({ ones = 0, tenths = 0, hundredths = 0 }) => (
-  <div className="flex flex-col gap-3 p-4 bg-sky-50 rounded-xl border border-sky-100">
-    <div className="flex items-center gap-2 mb-2">
-      <Lightbulb className="text-sky-500" size={18} />
-      <span className="text-sm font-semibold text-sky-800">Visualizing Decimals</span>
-    </div>
-    <div className="flex flex-wrap gap-4 items-end">
-      {ones > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {Array.from({ length: Math.min(ones, 20) }).map((_, i) => (
-            <div key={`o-${i}`} className="w-12 h-12 bg-sky-500 rounded shadow-sm border border-sky-600 flex items-center justify-center text-white text-xs font-bold shadow-inner">1</div>
-          ))}
-          {ones > 20 && <span className="text-sky-600 font-bold self-center">... ({ones} total)</span>}
-        </div>
-      )}
-      {tenths > 0 && (
-        <div className="flex gap-1 bg-sky-100 p-1 rounded">
-          {Array.from({ length: Math.min(tenths, 20) }).map((_, i) => (
-            <div key={`t-${i}`} className="w-3 h-12 bg-sky-400 rounded shadow-sm border border-sky-500"></div>
-          ))}
-        </div>
-      )}
-      {hundredths > 0 && (
-        <div className="flex flex-wrap gap-1 w-16 bg-sky-100 p-1 rounded">
-          {Array.from({ length: Math.min(hundredths, 20) }).map((_, i) => (
-            <div key={`h-${i}`} className="w-2 h-2 bg-sky-300 rounded shadow-sm"></div>
-          ))}
-        </div>
-      )}
-    </div>
-    <p className="text-xs text-sky-600 mt-2">Large blocks = Ones, Tall strips = Tenths, Tiny dots = Hundredths.</p>
-  </div>
-);
+    <script type="text/babel">
+        const { useState } = React;
 
-const FractionSim = ({ bars }) => (
-  <div className="flex flex-col gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-    <div className="flex items-center gap-2 mb-1">
-      <Lightbulb className="text-emerald-500" size={18} />
-      <span className="text-sm font-semibold text-emerald-800">Visualizing Fractions</span>
-    </div>
-    {bars.map((b, i) => (
-      <div key={i} className="flex items-center gap-3 w-full">
-        <span className="w-20 text-xs font-bold text-emerald-700 truncate">{b.label}</span>
-        <div className="flex-1 h-6 flex border-2 border-emerald-600 rounded overflow-hidden max-w-md">
-          {Array.from({ length: Math.min(b.den, 30) }).map((_, j) => (
-            <div key={j} className={`flex-1 border-r border-emerald-400/50 ${j < b.num ? 'bg-emerald-400' : 'bg-white'}`}></div>
-          ))}
-        </div>
-        <span className="w-12 text-sm font-bold text-emerald-700">{b.num}/{b.den}</span>
-      </div>
-    ))}
-  </div>
-);
+        // --- Icon Components (Replacing lucide-react for standalone browser usage) ---
+        const IconBase = ({ size = 24, className = "", children }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {children}
+            </svg>
+        );
+        const ChevronRight = (p) => <IconBase {...p}><path d="m9 18 6-6-6-6"/></IconBase>;
+        const Eye = (p) => <IconBase {...p}><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></IconBase>;
+        const EyeOff = (p) => <IconBase {...p}><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></IconBase>;
+        const Calculator = (p) => <IconBase {...p}><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></IconBase>;
+        const CheckCircle2 = (p) => <IconBase {...p}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></IconBase>;
+        const PlayCircle = (p) => <IconBase {...p}><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></IconBase>;
+        const Lightbulb = (p) => <IconBase {...p}><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></IconBase>;
 
-const TriangleSim = ({ angles = [], ext = null, sides = [], type = "standard" }) => {
-  return (
-    <div className="flex flex-col items-center p-4 bg-amber-50 rounded-xl border border-amber-100">
-      <div className="flex items-center gap-2 mb-4 w-full">
-        <Lightbulb className="text-amber-500" size={18} />
-        <span className="text-sm font-semibold text-amber-800">Visualizing Triangles</span>
-      </div>
-      <div className="relative">
-        <svg width="240" height="140" viewBox="0 0 240 140">
-          <polygon points="60,20 20,110 140,110" fill="#fde68a" stroke="#d97706" strokeWidth="3" />
-          {ext && <line x1="140" y1="110" x2="220" y2="110" stroke="#d97706" strokeWidth="3" strokeDasharray="6" />}
-          
-          {/* Internal Angles */}
-          {angles[0] && <text x="60" y="45" fontSize="13" fill="#92400e" textAnchor="middle" fontWeight="bold">{angles[0]}°</text>}
-          {angles[1] && <text x="40" y="105" fontSize="13" fill="#92400e" fontWeight="bold">{angles[1]}°</text>}
-          {angles[2] && <text x="110" y="105" fontSize="13" fill="#92400e" fontWeight="bold">{angles[2]}°</text>}
-          
-          {/* External Angle */}
-          {ext && <text x="165" y="100" fontSize="14" fill="#dc2626" fontWeight="bold">{ext}°</text>}
-          {ext && <path d="M 140 110 A 20 20 0 0 0 160 90" fill="none" stroke="#dc2626" strokeWidth="2.5" />}
-
-          {/* Sides */}
-          {sides[0] && <text x="25" y="60" fontSize="12" fill="#b45309" fontWeight="bold">{sides[0]}</text>}
-          {sides[1] && <text x="115" y="60" fontSize="12" fill="#b45309" fontWeight="bold">{sides[1]}</text>}
-          {sides[2] && <text x="80" y="125" fontSize="12" fill="#b45309" fontWeight="bold" textAnchor="middle">{sides[2]}</text>}
-        </svg>
-      </div>
-    </div>
-  );
-};
-
-const SticksSim = ({ sticks }) => (
-  <div className="flex flex-col items-center gap-2 p-4 bg-rose-50 rounded-xl border border-rose-100">
-    <div className="flex items-center gap-2 mb-2 w-full">
-      <Lightbulb className="text-rose-500" size={18} />
-      <span className="text-sm font-semibold text-rose-800">Triangle Inequality Visualizer</span>
-    </div>
-    <div className="flex justify-center gap-1 w-full max-w-md">
-      <div style={{ width: `${(sticks[0] / sticks[2]) * 100}%` }} className="h-6 bg-red-400 rounded-l shadow-sm flex items-center justify-center text-xs text-white font-bold">{sticks[0]}</div>
-      <div style={{ width: `${(sticks[1] / sticks[2]) * 100}%` }} className="h-6 bg-blue-400 rounded-r shadow-sm flex items-center justify-center text-xs text-white font-bold">{sticks[1]}</div>
-    </div>
-    <div className="w-full max-w-md h-6 bg-slate-700 rounded shadow-sm relative mt-1 flex items-center justify-center text-xs text-white font-bold">
-      {sticks[2]} (Base)
-    </div>
-    <p className="text-sm font-medium mt-3 text-rose-900">
-      Sum of two small sides ({sticks[0]} + {sticks[1]} = {sticks[0] + sticks[1]}) {sticks[0] + sticks[1] > sticks[2] ? 'is greater than (>)' : 'is NOT greater than (≤)'} the base ({sticks[2]}).
-    </p>
-  </div>
-);
-
-const NumberLineSim = ({ jumps, max, highlight }) => (
-  <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-100 overflow-hidden flex flex-col">
-    <div className="flex items-center gap-2 mb-8">
-      <Lightbulb className="text-indigo-500" size={18} />
-      <span className="text-sm font-semibold text-indigo-800">Multiples & LCM Number Line</span>
-    </div>
-    <div className="overflow-x-auto pb-6">
-      <div className="relative h-16 min-w-[500px]" style={{ width: `${max * 20}px` }}>
-        <div className="absolute top-10 w-full h-1 bg-indigo-300 rounded"></div>
-        {Array.from({ length: max + 1 }).map((_, i) => (
-          <div key={i} className="absolute top-9 w-0.5 h-3 bg-indigo-400" style={{ left: `${(i / max) * 100}%` }}>
-            <span className={`absolute -bottom-6 -left-2 text-xs transition-transform ${highlight === i ? 'font-bold text-red-600 scale-125' : 'text-indigo-600'}`}>{i % 2 === 0 ? i : ''}</span>
-          </div>
-        ))}
-        {jumps && jumps.map((jump, jIdx) => {
-          const steps = Math.floor(max / jump);
-          return Array.from({ length: steps }).map((_, i) => {
-            const startX = (i * jump / max) * 100;
-            const endX = ((i + 1) * jump / max) * 100;
-            return (
-              <div key={`${jIdx}-${i}`} className="absolute top-10 h-8 border-t-2 border-r-2 rounded-tr-xl"
-                style={{ left: `${startX}%`, width: `${endX - startX}%`, borderColor: jIdx === 0 ? '#ec4899' : '#3b82f6', transform: 'translateY(-100%)', borderStyle: jIdx === 1 ? 'dashed' : 'solid', opacity: 0.7 }}
-              ></div>
-            );
-          });
-        })}
-      </div>
-    </div>
-  </div>
-);
-
-const AlgebraSim = ({ expr, vars }) => (
-  <div className="flex flex-col gap-3 p-4 bg-orange-50 rounded-xl border border-orange-100">
-    <div className="flex items-center gap-2 mb-1">
-      <Lightbulb className="text-orange-500" size={18} />
-      <span className="text-sm font-semibold text-orange-800">Algebra / Value Mapping</span>
-    </div>
-    <div className="text-lg font-mono font-bold text-orange-800 text-center border-b border-orange-200 pb-3">{expr}</div>
-    <div className="flex justify-center gap-3 flex-wrap mt-2">
-      {Object.entries(vars).map(([k, v]) => (
-        <div key={k} className="flex items-center border border-orange-300 rounded-lg shadow-sm overflow-hidden bg-white">
-          <span className="bg-orange-200 text-orange-900 font-bold px-3 py-1.5 text-sm">{k}</span>
-          <span className="px-4 py-1.5 text-slate-700 text-sm font-medium">{v}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-const MagicSquareSim = ({ grid, sum }) => (
-  <div className="flex flex-col items-center p-4 bg-violet-50 rounded-xl border border-violet-100">
-    <div className="flex items-center gap-2 mb-3 w-full">
-      <Lightbulb className="text-violet-500" size={18} />
-      <span className="text-sm font-semibold text-violet-800">Magic Square (Target Sum = {sum})</span>
-    </div>
-    <div className="grid grid-cols-3 gap-1.5 p-2 bg-violet-700 rounded-xl shadow-inner">
-      {grid.map((num, i) => (
-        <div key={i} className="w-14 h-14 flex items-center justify-center bg-white rounded-lg text-violet-900 font-bold text-xl shadow-sm">
-          {num || '?'}
-        </div>
-      ))}
-    </div>
-    <p className="text-xs text-violet-600 mt-3 font-medium">Every row, column, and diagonal adds up to {sum}.</p>
-  </div>
-);
-
-const SequenceSim = ({ seq, highlight }) => (
-  <div className="flex flex-col p-4 bg-pink-50 rounded-xl border border-pink-100">
-    <div className="flex items-center gap-2 mb-3 w-full">
-      <Lightbulb className="text-pink-500" size={18} />
-      <span className="text-sm font-semibold text-pink-800">Sequence Pattern</span>
-    </div>
-    <div className="flex flex-wrap items-center gap-2">
-      {seq.map((num, i) => (
-        <React.Fragment key={i}>
-          <div className={`px-3 py-2 flex items-center justify-center rounded-lg font-bold shadow-sm transition-transform ${highlight === num ? 'bg-pink-500 text-white ring-4 ring-pink-200 scale-110' : 'bg-white text-pink-800 border border-pink-200'}`}>
-            {num}
-          </div>
-          {i < seq.length - 1 && <span className="text-pink-400 text-sm font-black">→</span>}
-        </React.Fragment>
-      ))}
-    </div>
-  </div>
-);
-
-// Unified Simulator Dispatcher
-const Simulator = ({ sim }) => {
-  if (!sim) return null;
-  const { type, data } = sim;
-  switch (type) {
-    case 'decimal': return <DecimalSim {...data} />;
-    case 'fraction': return <FractionSim {...data} />;
-    case 'triangle': return <TriangleSim {...data} />;
-    case 'sticks': return <SticksSim {...data} />;
-    case 'number-line': return <NumberLineSim {...data} />;
-    case 'algebra': return <AlgebraSim {...data} />;
-    case 'magic-square': return <MagicSquareSim {...data} />;
-    case 'sequence': return <SequenceSim {...data} />;
-    default: return <div className="p-4 bg-slate-100 rounded text-sm text-slate-500">Visualization not configured.</div>;
-  }
-};
-
-// --- Main Data (Grouped by Chapters) ---
-const paperData = {
-  header: {
-    school: "INDIAN SCHOOL DARSAIT",
-    exam: "SAMPLE PAPER, 2025-26",
-    subject: "Class VII: MATHEMATICS"
-  },
-  chapters: [
-    {
-      id: "Ch3_V1",
-      title: "Chapter 3: A Peek Beyond the Point",
-      desc: "Decimals, Measurements, and Conversions",
-      questions: [
-        { id: 1, text: "The length of a ribbon is 3.4 m. This is equal to:", type: "mcq", options: ["34 tenths of a meter", "3 tenths and 4 hundredths of a meter", "3 ones and 4 tenths of a meter", "34 hundredths of a meter"], ans: "3 ones and 4 tenths of a meter", sim: { type: 'decimal', data: { ones: 3, tenths: 4 } } },
-        { id: 2, text: "Arrange in increasing order: 0.45, 0.405, 0.54, 0.504.", type: "mcq", options: ["0.405 < 0.45 < 0.504 < 0.54", "0.405 < 0.45 < 0.54 < 0.504", "0.45 < 0.405 < 0.504 < 0.54", "0.504 < 0.45 < 0.405 < 0.54"], ans: "0.405 < 0.45 < 0.504 < 0.54", sim: { type: 'fraction', data: { bars: [{ label: '0.405', num: 40, den: 100 }, { label: '0.450', num: 45, den: 100 }, { label: '0.504', num: 50, den: 100 }, { label: '0.540', num: 54, den: 100 }] } } },
-        { id: 3, text: "If the total weight of vegetables bought is 0.5 kg + 0.25 kg + 0.05 kg, then the total is:", type: "mcq", options: ["0.75 kg", "0.80 kg", "0.85 kg", "0.95 kg"], ans: "0.80 kg", sim: { type: 'decimal', data: { ones: 0, tenths: 8, hundredths: 0 } } },
-        { id: 22, text: "A notebook is 2.45 cm thick. If 10 such notebooks are stacked, what will be the total height in meters?", type: "subjective", ans: "Total height in cm: 2.45 × 10 = 24.5 cm.\nConverted to meters: 24.5 ÷ 100 = 0.245 m.", sim: { type: 'algebra', data: { expr: "2.45 cm × 10 = 24.5 cm", vars: { "1 m": "100 cm", "24.5 cm": "0.245 m" } } } },
-        { id: 25, text: "Radhika's mother gave her ₹10.50 and her father gave her ₹15.80. Find the total amount given to Radhika by her parents.", type: "subjective", ans: "Total = 10.50 + 15.80 = ₹26.30", orText: "Raju bought a book for ₹35.65. He gave ₹50 to the shopkeeper. How much money did he get back?", orAns: "Received = 50.00 - 35.65 = ₹14.35", sim: { type: 'decimal', data: { ones: 26, tenths: 3 } } },
-        { id: 26, text: "A shopkeeper sells 3.75 m of cloth on Monday, 4.5 m on Tuesday, and 2.85 m on Wednesday.\n(a) Find the total cloth sold in three days.\n(b) How much more cloth was sold on Tuesday than Wednesday?", type: "subjective", ans: "(a) Total = 3.75 + 4.5 + 2.85 = 11.10 m\n(b) Difference = 4.5 - 2.85 = 1.65 m.", sim: { type: 'decimal', data: { ones: 11, tenths: 1 } } }
-      ]
-    },
-    {
-      id: "Ch4",
-      title: "Chapter 4: Expressions Using Letter-Numbers",
-      desc: "Algebraic Expressions and Variables",
-      questions: [
-        { id: 15, text: "The nth odd number is given by:", type: "mcq", options: ["n+1", "2n", "2n-1", "n²-1"], ans: "2n-1", sim: { type: 'sequence', data: { seq: ["n=1 → 1", "n=2 → 3", "n=3 → 5", "Pattern: 2n-1"] } } },
-        { id: 23, text: "A shopkeeper sells x kg of sugar at ₹50 per kg and y kg of rice at ₹40 per kg. He spent ₹20 on transport. Write an algebraic expression for his total cost.", type: "subjective", ans: "Total cost = 50x + 40y + 20.", orText: "Find the value of the expression 2p - 3q + 5 when p = 4 and q = -1.", orAns: "2(4) - 3(-1) + 5 = 8 + 3 + 5 = 16.", sim: { type: 'algebra', data: { expr: "Total = 50x + 40y + 20", vars: { "Sugar (x)": "₹50", "Rice (y)": "₹40", "Fixed Cost": "₹20" } } } },
-        { id: 27, text: "Simplify the expression (40x + 75y) - (6x + 10y) by grouping like terms and then find the value if x = 2 and y = 3.", type: "subjective", ans: "Simplified: 34x + 65y.\nValue: 34(2) + 65(3) = 68 + 195 = 263.", orText: "Subtract the following: 3pq - 2p + q from 4pq + 7p - 2p", orAns: "4pq + 5p - (3pq - 2p + q) = pq + 7p - q", sim: { type: 'algebra', data: { expr: "34x + 65y", vars: { "x=2": "34(2) = 68", "y=3": "65(3) = 195", "Sum": 263 } } } },
-        { id: 32, text: "Take Ruhi's present age to be x years. Write expressions for:\n(a) Her age after 5 years from now?\n(b) Her age 3 years back?\n(c) Grandfather is 6 times her age. His age?\n(d) Grandmother is 2 years younger than grandfather. Her age?\n(e) Father's age is 5 years more than 3 times Ruhi's age. His age?", type: "subjective", ans: "(a) (x + 5)\n(b) (x - 3)\n(c) 6x\n(d) (6x - 2)\n(e) (3x + 5)", sim: { type: 'algebra', data: { expr: "Current Age = x", vars: { "Future": "x+5", "Past": "x-3", "Grandpa": "6x", "Dad": "3x+5" } } } }
-      ]
-    },
-    {
-      id: "Ch6",
-      title: "Chapter 6: Number Play",
-      desc: "Magic Squares, Cryptarithms, and Fibonacci Sequences",
-      questions: [
-        { id: 14, text: "A cryptarithm shows: T + T + T = UT. Which digit must T be?", type: "mcq", options: ["3", "4", "5", "6"], ans: "5", sim: { type: 'algebra', data: { expr: "T + T + T = U T", vars: { "T=5": "5 + 5 + 5 = 15", "U": 1 } } } },
-        { id: 16, text: "In a valid 3×3 magic square using 1-9, the magic sum must be:", type: "mcq", options: ["12", "15", "18", "45"], ans: "15", sim: { type: 'magic-square', data: { sum: 15, grid: [8, 1, 6, 3, 5, 7, 4, 9, 2] } } },
-        { id: 17, text: "What is the 10th term of the Virahānka-Fibonacci sequence?", type: "mcq", options: ["34", "55", "89", "21"], ans: "55", sim: { type: 'sequence', data: { seq: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55], highlight: 55 } } },
-        { id: 29, text: "(i) Anu has odd number of ₹1 coins, odd number of ₹5 coins, and even number of ₹10 coins. Can total be ₹205?\n(ii) Find the parity of the sum: 2 even + 3 odd numbers", type: "subjective", ans: "(i) Odd + Odd + Even = Even. Total cannot be ₹205 (which is odd).\n(ii) 2 even + 3 odd = Even + Odd = Odd.", sim: { type: 'algebra', data: { expr: "Parity Rules", vars: { "Odd + Odd": "Even", "Even + Even": "Even", "Even + Odd": "Odd" } } } },
-        { id: 33, text: "(i) Create a 3×3 magic square using numbers 2-10.\n(ii) Write the next Virahānka number after 89.", type: "subjective", ans: "(i) Magic Sum = 18. Center is 6.\n(ii) Next term = 55 + 89 = 144.", sim: { type: 'magic-square', data: { sum: 18, grid: [9, 2, 7, 4, 6, 8, 5, 10, 3] } } },
-        { id: 37, text: "[Case Study] A music teacher is planning a performance using classical beats (short=1, long=2). Rhythms follow Virahānka-Fibonacci.\n(i) Number of rhythms of 6 beats?\n(ii) Number of rhythms of 7 beats?\n(iii) Number of rhythms of 8 beats?", type: "subjective", ans: "(i) 6th term is 13.\n(ii) 7th term is 21.\n(iii) 8th term is 34.", orText: "(iii) Predict number of rhythms for 9 beats.", orAns: "(iii) The 9th term is 55.", sim: { type: 'sequence', data: { seq: [13, 21, 34, 55], highlight: 55 } } }
-      ]
-    },
-    {
-      id: "Ch7",
-      title: "Chapter 7: A Tale of Three Intersecting Lines",
-      desc: "Triangle Properties, Angles, and Construction",
-      questions: [
-        { id: 10, text: "The exterior angle of a triangle is 120°. One interior opposite angle is 45°. The other interior opposite angle is:", type: "mcq", options: ["65°", "70°", "75°", "80°"], ans: "75°", sim: { type: 'triangle', data: { angles: [45, 75, null], ext: 120 } } },
-        { id: 11, text: "Three wires of lengths 8 cm, 9 cm and 18 cm are taken to form a triangular frame. What is the correct conclusion?", type: "mcq", options: ["Triangle can be formed", "Triangle cannot be formed", "Triangle is right-angled", "Triangle is equilateral"], ans: "Triangle cannot be formed", sim: { type: 'sticks', data: { sticks: [8, 9, 18] } } },
-        { id: 12, text: "A triangle has angles 35°, 65° and 80°. The triangle is:", type: "mcq", options: ["Obtuse-angled", "Right-angled", "Acute-angled", "Isosceles"], ans: "Acute-angled", sim: { type: 'triangle', data: { angles: [35, 65, 80] } } },
-        { id: 13, text: "In a ∆ABC, if ∠A=60° and ∠B=30°, then the exterior angle formed by producing BC is equal to:", type: "mcq", options: ["180°", "99°", "90°", "105°"], ans: "90°", sim: { type: 'triangle', data: { angles: [60, 30, null], ext: 90 } } },
-        { id: 28, text: "Construct a triangle when two sides are 5 cm and 7 cm and the included angle is 60°.", type: "subjective", ans: "Draw base 7 cm. At one end, construct a 60° angle. Cut an arc of 5 cm. Join to complete the triangle.", sim: { type: 'triangle', data: { sides: [5, null, 7], angles: [null, 60, null] } } },
-        { id: 34, text: "Check whether a triangle can be formed with sides 9 cm, 11 cm and 20 cm.", type: "subjective", ans: "9 + 11 = 20. Sum is not greater. Triangle cannot be formed.", orText: "Find the exterior angle of a triangle if the interior opposite angles are 46° and 54°.\nAlso, find the third angle if two angles are 58° and 62°.", orAns: "Ext angle = 46° + 54° = 100°.\nThird angle = 180° - 120° = 60°.", sim: { type: 'sticks', data: { sticks: [9, 11, 20] } } },
-        { id: 36, text: "[Case Study] An artist creates a triangular art installation using two angles measuring 48° and 72°.\n(i) Classify the triangle by angles.\n(ii) State whether it is scalene or isosceles.\n(iii) State the property used.", type: "subjective", ans: "(i) Acute angle triangle\n(ii) Scalene\n(iii) Angle sum property", orText: "(iii) Find the third angle.", orAns: "(iii) 180° - (48° + 72°) = 60°", sim: { type: 'triangle', data: { angles: [48, 72, 60] } } }
-      ]
-    },
-    {
-      id: "Ch8",
-      title: "Chapter 8: Working with Fractions",
-      desc: "Operations with Fractions, Perimeter and Area",
-      questions: [
-        { id: 4, text: "The length of a rectangular sheet of paper is ⅗ cm and the breadth is ⅖ cm. What is the perimeter of the paper?", type: "mcq", options: ["1 cm", "2 cm", "3 cm", "4 cm"], ans: "2 cm", sim: { type: 'fraction', data: { bars: [{ label: 'L (3/5)', num: 3, den: 5 }, { label: 'B (2/5)', num: 2, den: 5 }] } } },
-        { id: 5, text: "½ + ⅓ is equal to:", type: "mcq", options: ["⅙", "⅚", "⅗", "11/6"], ans: "⅚", sim: { type: 'fraction', data: { bars: [{ label: '1/2 (as 3/6)', num: 3, den: 6 }, { label: '1/3 (as 2/6)', num: 2, den: 6 }, { label: 'Total', num: 5, den: 6 }] } } },
-        { id: 6, text: "The side of an equilateral triangle is ½ cm. The perimeter of the triangle is:", type: "mcq", options: ["1 cm", "2 cm", "3/2 cm", "None of these"], ans: "3/2 cm", sim: { type: 'triangle', data: { sides: ['1/2', '1/2', '1/2'] } } },
-        { id: 7, text: "A water bottle contains 2 liters of water. Meenu drank ⅛ of water. How much water did Meenu drink?", type: "mcq", options: ["½ litre", "⅛ litre", "¼ litre", "None of these"], ans: "¼ litre", sim: { type: 'fraction', data: { bars: [{ label: '1/8 of 2', num: 2, den: 8 }] } } },
-        { id: 8, text: "A container holds 5½ litres of water. If ¾ of the water is used, how much water is left?", type: "mcq", options: ["1 ⅜ lit.", "2 ¼ lit.", "4 ⅛ lit.", "1 ¼ lit."], ans: "1 ⅜ lit.", sim: { type: 'algebra', data: { expr: "11/2 - 3/4 = 22/4 - 3/4", vars: { "Result": "19/4 = 4 3/4 lit." } } } },
-        { id: 9, text: "⅖ × 5⅕ is equal to:", type: "mcq", options: ["26/25", "52/25", "2/5", "6"], ans: "52/25", sim: { type: 'algebra', data: { expr: "2/5 × 26/5", vars: { "Num": "2 × 26 = 52", "Den": "5 × 5 = 25" } } } },
-        { id: 21, text: "Rohan is dividing 1¾ kg of sweets equally among his seven friends. How much does each friend receive?", type: "subjective", ans: "1¾ = 7/4 kg. Distributed among 7 friends: (7/4) × (1/7) = ¼ kg.", sim: { type: 'fraction', data: { bars: [{ label: 'Total (7/4)', num: 7, den: 4 }, { label: '1 Friend', num: 1, den: 4 }] } } },
-        { id: 30, text: "Lipika always reads a book for 1¾ hour every day. She reads an entire book in 6 days. How many hours in total were required by her to finish the book?", type: "subjective", ans: "(7/4) × 6 = (7/2) × 3 = 21/2 = 10½ hours.", sim: { type: 'algebra', data: { expr: "7/4 hrs × 6 days", vars: { "Total": "42/4 = 21/2 hrs" } } } }
-      ]
-    },
-    {
-      id: "Ch3_V2",
-      title: "Chapter 3 (Vol 2): Finding Common Ground",
-      desc: "Factors, Multiples, HCF and LCM",
-      questions: [
-        { id: 18, text: "The length, width, and height of a box are 12 cm, 18 cm, and 36 cm, respectively. Which of the following-sized cubes can be packed in this box without leaving gaps?", type: "mcq", options: ["9 cm", "6 cm", "4 cm", "3 cm"], ans: "6 cm", sim: { type: 'algebra', data: { expr: "HCF(12, 18, 36) = 6", vars: { "L": "12", "W": "18", "H": "36" } } } },
-        { id: 19, text: "Among the numbers below, which is the largest number that perfectly divides both 306 and 36?", type: "mcq", options: ["36", "612", "18", "3"], ans: "18", sim: { type: 'algebra', data: { expr: "HCF(306, 36) = 18", vars: {} } } },
-        { id: 20, text: "Children are playing 'Fire in the Mountain.' When 6 was called, no one got out. When 9 was called, no one got out. When 10 was called, some got out. How many children could have been playing initially?", type: "mcq", options: ["72", "90", "45", "3"], ans: "72", sim: { type: 'lcm-line', data: { max: 36, jumps: [6, 9], highlight: 18 } } },
-        { id: 24, text: "Find the common factors and the HCF of the following numbers: 140, 275", type: "subjective", ans: "Common Factors: 1, 5. \nHCF = 5.", sim: { type: 'algebra', data: { expr: "HCF(140, 275) = 5", vars: { "140": "5 × 28", "275": "5 × 55" } } } },
-        { id: 31, text: "Find the LCM of the following numbers: 105, 195, 65", type: "subjective", ans: "LCM = 3 × 5 × 7 × 13 = 1365", orText: "Find two numbers whose HCF is 1, and LCM is 66.", orAns: "Possible pairs: (1, 66), (2, 33), (3, 22), (6, 11).", sim: { type: 'algebra', data: { expr: "LCM(105, 195, 65) = 1365", vars: { "HCF×LCM": "Product" } } } },
-        { id: 35, text: "Find the smallest number that is divisible by 3, 4, 5, and 7, but leaves a remainder of 10 when divided by 11.", type: "subjective", ans: "LCM(3,4,5,7) = 420.\nCheck multiples: 420×5 = 2100. (2100 % 11 = 10). Ans: 2100.", orText: "Find the HCF and LCM of 6 and 8. Verify that LCM × HCF = Product of two numbers.", orAns: "HCF = 2. LCM = 24. Product = 48. Verified.", sim: { type: 'algebra', data: { expr: "LCM(3,4,5,7) = 420", vars: { "Multiplier": 5, "Result": 2100 } } } },
-        { id: 38, text: "[Case Study] In a game, students say 'clap' for multiples of 4 and 'snap' for multiples of 6.\n(i) Find the multiples of 4.\n(ii) Find the factors of 6.\n(iii) At what number will they say both 'clap' and 'snap' together?", type: "subjective", ans: "(i) Multiples of 4: 4, 8, 12, 16...\n(ii) Factors of 6: 1, 2, 3, 6.\n(iii) First common number (LCM): 12.", orText: "(iii) Find the HCF of 4 and 6.", orAns: "(iii) HCF of 4 and 6 is 2.", sim: { type: 'number-line', data: { max: 24, jumps: [4, 6], highlight: 12 } } }
-      ]
-    }
-  ]
-};
-
-export default function App() {
-  const [activeTab, setActiveTab] = useState(paperData.chapters[0].id);
-  const [revealedAnswers, setRevealedAnswers] = useState({});
-  const [activeSims, setActiveSims] = useState({});
-
-  const currentChapter = paperData.chapters.find(c => c.id === activeTab);
-
-  const toggleAnswer = (qId) => setRevealedAnswers(p => ({ ...p, [qId]: !p[qId] }));
-  const toggleSim = (qId) => setActiveSims(p => ({ ...p, [qId]: !p[qId] }));
-
-  const revealAllInChapter = () => {
-    const newRevealed = { ...revealedAnswers };
-    let allRevealed = currentChapter.questions.every(q => newRevealed[q.id]);
-    currentChapter.questions.forEach(q => newRevealed[q.id] = !allRevealed);
-    setRevealedAnswers(newRevealed);
-  };
-
-  const isAllRevealed = currentChapter.questions.every(q => revealedAnswers[q.id]);
-
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col md:flex-row">
-      
-      {/* Sidebar / Navigation */}
-      <aside className="w-full md:w-80 bg-white border-r border-slate-200 shadow-sm flex-shrink-0 flex flex-col h-auto md:h-screen md:sticky top-0">
-        <div className="p-6 bg-blue-600 text-white flex-shrink-0">
-          <h1 className="text-xl font-bold tracking-tight">{paperData.header.school}</h1>
-          <div className="mt-4 flex items-center gap-2 text-sm bg-blue-700/50 py-1.5 px-3 rounded-md w-max">
-            <Calculator size={16} />
-            <span>Syllabus Chapter View</span>
-          </div>
-        </div>
-        
-        <div className="flex-1 overflow-y-auto p-4 flex gap-2 md:flex-col hide-scrollbar">
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 hidden md:block px-2">Chapters</p>
-          {paperData.chapters.map((chapter) => (
-            <button
-              key={chapter.id}
-              onClick={() => setActiveTab(chapter.id)}
-              className={`flex flex-col items-start text-left px-4 py-3 rounded-xl mb-2 transition-all duration-200 flex-shrink-0 md:flex-shrink w-64 md:w-full ${
-                activeTab === chapter.id 
-                  ? 'bg-blue-50 border border-blue-200 shadow-sm' 
-                  : 'text-slate-600 hover:bg-slate-100 border border-transparent'
-              }`}
-            >
-              <div className="flex items-center w-full">
-                <span className={`font-semibold text-sm ${activeTab === chapter.id ? 'text-blue-800' : 'text-slate-700'}`}>
-                  {chapter.title.split(':')[0]}
-                </span>
-                {activeTab === chapter.id && <ChevronRight size={18} className="ml-auto hidden md:block text-blue-500" />}
-              </div>
-              <span className={`text-xs mt-1 truncate w-full ${activeTab === chapter.id ? 'text-blue-600' : 'text-slate-500'}`}>
-                {chapter.title.split(':')[1] || chapter.desc}
-              </span>
-            </button>
-          ))}
-        </div>
-      </aside>
-
-      {/* Main Content Area */}
-      <main className="flex-1 p-4 md:p-8 max-h-screen overflow-y-auto">
-        <div className="max-w-4xl mx-auto">
-          
-          {/* Chapter Header */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h2 className="text-2xl font-bold text-slate-800">
-                {currentChapter.title}
-              </h2>
-              <p className="text-slate-500 mt-1">{currentChapter.desc}</p>
+        // --- Visual Simulator Components ---
+        const DecimalSim = ({ ones = 0, tenths = 0, hundredths = 0 }) => (
+          <div className="flex flex-col gap-3 p-4 bg-sky-50 rounded-xl border border-sky-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Lightbulb className="text-sky-500" size={18} />
+              <span className="text-sm font-semibold text-sky-800">Visualizing Decimals</span>
             </div>
-            
-            <button 
-              onClick={revealAllInChapter}
-              className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors border flex-shrink-0 ${
-                isAllRevealed 
-                  ? 'bg-slate-100 text-slate-600 border-slate-300 hover:bg-slate-200' 
-                  : 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
-              }`}
-            >
-              {isAllRevealed ? <EyeOff size={18} /> : <Eye size={18} />}
-              {isAllRevealed ? "Hide Solutions" : "Reveal Solutions"}
-            </button>
+            <div className="flex flex-wrap gap-4 items-end">
+              {ones > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {Array.from({ length: Math.min(ones, 20) }).map((_, i) => (
+                    <div key={`o-${i}`} className="w-12 h-12 bg-sky-500 rounded shadow-sm border border-sky-600 flex items-center justify-center text-white text-xs font-bold shadow-inner">1</div>
+                  ))}
+                  {ones > 20 && <span className="text-sky-600 font-bold self-center">... ({ones} total)</span>}
+                </div>
+              )}
+              {tenths > 0 && (
+                <div className="flex gap-1 bg-sky-100 p-1 rounded">
+                  {Array.from({ length: Math.min(tenths, 20) }).map((_, i) => (
+                    <div key={`t-${i}`} className="w-3 h-12 bg-sky-400 rounded shadow-sm border border-sky-500"></div>
+                  ))}
+                </div>
+              )}
+              {hundredths > 0 && (
+                <div className="flex flex-wrap gap-1 w-16 bg-sky-100 p-1 rounded">
+                  {Array.from({ length: Math.min(hundredths, 20) }).map((_, i) => (
+                    <div key={`h-${i}`} className="w-2 h-2 bg-sky-300 rounded shadow-sm"></div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-sky-600 mt-2">Large blocks = Ones, Tall strips = Tenths, Tiny dots = Hundredths.</p>
           </div>
+        );
 
-          {/* Questions Grid */}
-          <div className="space-y-6">
-            {currentChapter.questions.map((q) => (
-              <div key={q.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 transition-all hover:shadow-md">
-                
-                {/* Question Top Row */}
-                <div className="flex gap-4 mb-4">
-                  <span className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center font-bold text-sm">
-                    {q.id}
-                  </span>
-                  <p className="text-lg text-slate-800 leading-relaxed font-medium mt-0.5 whitespace-pre-wrap">{q.text}</p>
+        const FractionSim = ({ bars }) => (
+          <div className="flex flex-col gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <div className="flex items-center gap-2 mb-1">
+              <Lightbulb className="text-emerald-500" size={18} />
+              <span className="text-sm font-semibold text-emerald-800">Visualizing Fractions</span>
+            </div>
+            {bars.map((b, i) => (
+              <div key={i} className="flex items-center gap-3 w-full">
+                <span className="w-20 text-xs font-bold text-emerald-700 truncate">{b.label}</span>
+                <div className="flex-1 h-6 flex border-2 border-emerald-600 rounded overflow-hidden max-w-md">
+                  {Array.from({ length: Math.min(b.den, 30) }).map((_, j) => (
+                    <div key={j} className={`flex-1 border-r border-emerald-400/50 ${j < b.num ? 'bg-emerald-400' : 'bg-white'}`}></div>
+                  ))}
                 </div>
-
-                {/* Simulator Area */}
-                <div className="pl-12 mb-6">
-                  <button 
-                    onClick={() => toggleSim(q.id)}
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors mb-3 ${
-                      activeSims[q.id] ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'
-                    }`}
-                  >
-                    <PlayCircle size={16} className={activeSims[q.id] ? "text-indigo-600" : ""} />
-                    {activeSims[q.id] ? 'Close Visualizer' : 'Visualize Concept'}
-                  </button>
-                  
-                  {activeSims[q.id] && (
-                    <div className="mb-4 animate-in fade-in slide-in-from-top-2">
-                      <Simulator sim={q.sim} />
-                    </div>
-                  )}
-                </div>
-
-                {/* MCQ Options Display */}
-                {q.type === "mcq" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-12 mb-4">
-                    {q.options.map((opt, idx) => (
-                      <div 
-                        key={idx} 
-                        className={`p-3 rounded-xl border-2 flex items-center transition-all ${
-                          revealedAnswers[q.id] && opt === q.ans
-                            ? 'bg-green-50 border-green-500 shadow-sm' 
-                            : 'bg-white border-slate-100'
-                        }`}
-                      >
-                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs mr-3 font-bold ${
-                          revealedAnswers[q.id] && opt === q.ans ? 'bg-green-500 text-white' : 'bg-slate-100 text-slate-500'
-                        }`}>
-                          {String.fromCharCode(97 + idx)}
-                        </span>
-                        <span className={`${revealedAnswers[q.id] && opt === q.ans ? 'text-green-800 font-medium' : 'text-slate-600'}`}>
-                          {opt}
-                        </span>
-                        {revealedAnswers[q.id] && opt === q.ans && <CheckCircle2 className="ml-auto text-green-500" size={20} />}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* OR Question */}
-                {q.type === "subjective" && q.orText && (
-                  <div className="pl-12 my-6">
-                    <div className="flex items-center gap-4 my-4">
-                      <div className="h-px bg-slate-200 flex-1"></div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">OR</span>
-                      <div className="h-px bg-slate-200 flex-1"></div>
-                    </div>
-                    <p className="text-lg text-slate-800 leading-relaxed font-medium whitespace-pre-wrap">{q.orText}</p>
-                  </div>
-                )}
-
-                {/* Answer Reveal Area */}
-                <div className="pl-12 mt-6">
-                  {revealedAnswers[q.id] && q.type === "subjective" && (
-                    <div className="mb-4">
-                      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500"></div>
-                        <h4 className="text-emerald-800 font-bold mb-2 flex items-center gap-2 text-sm uppercase tracking-wide">
-                          <CheckCircle2 size={16} /> Solution
-                        </h4>
-                        <p className="text-emerald-900 leading-relaxed whitespace-pre-wrap font-medium">{q.ans}</p>
-                      </div>
-
-                      {q.orAns && (
-                        <div className="mt-4 bg-emerald-50/60 border border-emerald-200 border-dashed rounded-xl p-5 relative overflow-hidden">
-                           <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-400"></div>
-                           <h4 className="text-emerald-800 font-bold mb-2 text-sm uppercase tracking-wide">
-                             Alternate (OR) Solution
-                           </h4>
-                           <p className="text-emerald-900 leading-relaxed whitespace-pre-wrap font-medium">{q.orAns}</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {q.type === "subjective" && (
-                     <button 
-                       onClick={() => toggleAnswer(q.id)}
-                       className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                         revealedAnswers[q.id] ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                       }`}
-                     >
-                       {revealedAnswers[q.id] ? <EyeOff size={16} /> : <Eye size={16} />}
-                       {revealedAnswers[q.id] ? 'Hide Answer' : 'Show Answer'}
-                     </button>
-                  )}
-                </div>
-
+                <span className="w-12 text-sm font-bold text-emerald-700">{b.num}/{b.den}</span>
               </div>
             ))}
           </div>
+        );
 
-        </div>
-      </main>
-    </div>
-  );
-}
+        const TriangleSim = ({ angles = [], ext = null, sides = [] }) => (
+          <div className="flex flex-col items-center p-4 bg-amber-50 rounded-xl border border-amber-100">
+            <div className="flex items-center gap-2 mb-4 w-full">
+              <Lightbulb className="text-amber-500" size={18} />
+              <span className="text-sm font-semibold text-amber-800">Visualizing Triangles</span>
+            </div>
+            <div className="relative">
+              <svg width="240" height="140" viewBox="0 0 240 140">
+                <polygon points="60,20 20,110 140,110" fill="#fde68a" stroke="#d97706" strokeWidth="3" />
+                {ext && <line x1="140" y1="110" x2="220" y2="110" stroke="#d97706" strokeWidth="3" strokeDasharray="6" />}
+                {angles[0] && <text x="60" y="45" fontSize="13" fill="#92400e" textAnchor="middle" fontWeight="bold">{angles[0]}°</text>}
+                {angles[1] && <text x="40" y="105" fontSize="13" fill="#92400e" fontWeight="bold">{angles[1]}°</text>}
+                {angles[2] && <text x="110" y="105" fontSize="13" fill="#92400e" fontWeight="bold">{angles[2]}°</text>}
+                {ext && <text x="165" y="100" fontSize="14" fill="#dc2626" fontWeight="bold">{ext}°</text>}
+                {ext && <path d="M 140 110 A 20 20 0 0 0 160 90" fill="none" stroke="#dc2626" strokeWidth="2.5" />}
+                {sides[0] && <text x="25" y="60" fontSize="12" fill="#b45309" fontWeight="bold">{sides[0]}</text>}
+                {sides[1] && <text x="115" y="60" fontSize="12" fill="#b45309" fontWeight="bold">{sides[1]}</text>}
+                {sides[2] && <text x="80" y="125" fontSize="12" fill="#b45309" fontWeight="bold" textAnchor="middle">{sides[2]}</text>}
+              </svg>
+            </div>
+          </div>
+        );
+
+        const SticksSim = ({ sticks }) => (
+          <div className="flex flex-col items-center gap-2 p-4 bg-rose-50 rounded-xl border border-rose-100">
+            <div className="flex items-center gap-2 mb-2 w-full">
+              <Lightbulb className="text-rose-500" size={18} />
+              <span className="text-sm font-semibold text-rose-800">Triangle Inequality Visualizer</span>
+            </div>
+            <div className="flex justify-center gap-1 w-full max-w-md">
+              <div style={{ width: `${(sticks[0] / sticks[2]) * 100}%` }} className="h-6 bg-red-400 rounded-l shadow-sm flex items-center justify-center text-xs text-white font-bold">{sticks[0]}</div>
+              <div style={{ width: `${(sticks[1] / sticks[2]) * 100}%` }} className="h-6 bg-blue-400 rounded-r shadow-sm flex items-center justify-center text-xs text-white font-bold">{sticks[1]}</div>
+            </div>
+            <div className="w-full max-w-md h-6 bg-slate-700 rounded shadow-sm relative mt-1 flex items-center justify-center text-xs text-white font-bold">
+              {sticks[2]} (Base)
+            </div>
+            <p className="text-sm font-medium mt-3 text-rose-900">
+              Sum of two small sides ({sticks[0]} + {sticks[1]} = {sticks[0] + sticks[1]}) {sticks[0] + sticks[1] > sticks[2] ? 'is greater than (>)' : 'is NOT greater than (≤)'} the base ({sticks[2]}).
+            </p>
+          </div>
+        );
+
+        const NumberLineSim = ({ jumps, max, highlight }) => (
+          <div className="p-4 bg-indigo-50 rounded-xl border border-indigo-100 overflow-hidden flex flex-col">
+            <div className="flex items-center gap-2 mb-8">
+              <Lightbulb className="text-indigo-500" size={18} />
+              <span className="text-sm font-semibold text-indigo-800">Multiples & LCM Number Line</span>
+            </div>
+            <div className="overflow-x-auto pb-6">
+              <div className="relative h-16 min-w-[500px]" style={{ width: `${max * 20}px` }}>
+                <div className="absolute top-10 w-full h-1 bg-indigo-300 rounded"></div>
+                {Array.from({ length: max + 1 }).map((_, i) => (
+                  <div key={i} className="absolute top-9 w-0.5 h-3 bg-indigo-400" style={{ left: `${(i / max) * 100}%` }}>
+                    <span className={`absolute -bottom-6 -left-2 text-xs transition-transform ${highlight === i ? 'font-bold text-red-600 scale-125' : 'text-indigo-600'}`}>{i % 2 === 0 ? i : ''}</span>
+                  </div>
+                ))}
+                {jumps && jumps.map((jump, jIdx) => {
+                  const steps = Math.floor(max / jump);
+                  return Array.from({ length: steps }).map((_, i) => {
+                    const startX = (i * jump / max) * 100;
+                    const endX = ((i + 1) * jump / max) * 100;
+                    return (
+                      <div key={`${jIdx}-${i}`} className="absolute top-10 h-8 border-t-2 border-r-2 rounded-tr-xl"
+                        style={{ left: `${startX}%`, width: `${endX - startX}%`, borderColor: jIdx === 0 ? '#ec4899' : '#3b82f6', transform: 'translateY(-100%)', borderStyle: jIdx === 1 ? 'dashed' : 'solid', opacity: 0.7 }}
+                      ></div>
+                    );
+                  });
+                })}
+              </div>
+            </div>
+          </div>
+        );
+
+        const AlgebraSim = ({ expr, vars }) => (
+          <div className="flex flex-col gap-3 p-4 bg-orange-50 rounded-xl border border-orange-100">
+            <div className="flex items-center gap-2 mb-1">
+              <Lightbulb className="text-orange-500" size={18} />
+              <span className="text-sm font-semibold text-orange-800">Algebra / Value Mapping</span>
+            </div>
+            <div className="text-lg font-mono font-bold text-orange-800 text-center border-b border-orange-200 pb-3">{expr}</div>
+            <div className="flex justify-center gap-3 flex-wrap mt-2">
+              {Object.entries(vars).map(([k, v]) => (
+                <div key={k} className="flex items-center border border-orange-300 rounded-lg shadow-sm overflow-hidden bg-white">
+                  <span className="bg-orange-200 text-orange-900 font-bold px-3 py-1.5 text-sm">{k}</span>
+                  <span className="px-4 py-1.5 text-slate-700 text-sm font-medium">{v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+        const MagicSquareSim = ({ grid, sum }) => (
+          <div className="flex flex-col items-center p-4 bg-violet-50 rounded-xl border border-violet-100">
+            <div className="flex items-center gap-2 mb-3 w-full">
+              <Lightbulb className="text-violet-500" size={18} />
+              <span className="text-sm font-semibold text-violet-800">Magic Square (Target Sum = {sum})</span>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5 p-2 bg-violet-700 rounded-xl shadow-inner">
+              {grid.map((num, i) => (
+                <div key={i} className="w-14 h-14 flex items-center justify-center bg-white rounded-lg text-violet-900 font-bold text-xl shadow-sm">
+                  {num || '?'}
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-violet-600 mt-3 font-medium">Every row, column, and diagonal adds up to {sum}.</p>
+          </div>
+        );
+
+        const SequenceSim = ({ seq, highlight }) => (
+          <div className="flex flex-col p-4 bg-pink-50 rounded-xl border border-pink-100">
+            <div className="flex items-center gap-2 mb-3 w-full">
+              <Lightbulb className="text-pink-500" size={18} />
+              <span className="text-sm font-semibold text-pink-800">Sequence Pattern</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {seq.map((num, i) => (
+                <React.Fragment key={i}>
+                  <div className={`px-3 py-2 flex items-center justify-center rounded-lg font-bold shadow-sm transition-transform ${highlight === num ? 'bg-pink-500 text-white ring-4 ring-pink-200 scale-110' : 'bg-white text-pink-800 border border-pink-200'}`}>
+                    {num}
+                  </div>
+                  {i < seq.length - 1 && <span className="text-pink-400 text-sm font-black">→</span>}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        );
+
+        const Simulator = ({ sim }) => {
+          if (!sim) return null;
+          const { type, data } = sim;
+          switch (type) {
+            case 'decimal': return <DecimalSim {...data} />;
+            case 'fraction': return <FractionSim {...data} />;
+            case 'triangle': return <TriangleSim {...data} />;
+            case 'sticks': return <SticksSim {...data} />;
+            case 'number-line': return <NumberLineSim {...data} />;
+            case 'algebra': return <AlgebraSim {...data} />;
+            case 'magic-square': return <MagicSquareSim {...data} />;
+            case 'sequence': return <SequenceSim {...data} />;
+            default: return <div className="p-4 bg-slate-100 rounded text-sm text-slate-500">Visualization not configured.</div>;
+          }
+        };
+
+        // --- Main Data ---
+        const paperData = {
+          header: { school: "INDIAN SCHOOL DARSAIT", exam: "SAMPLE PAPER, 2025-26", subject: "Class VII: MATHEMATICS" },
+          chapters: [
+            {
+              id: "Ch3_V1", title: "Chapter 3: A Peek Beyond the Point", desc: "Decimals, Measurements, and Conversions",
+              questions: [
+                { id: 1, text: "The length of a ribbon is 3.4 m. This is equal to:", type: "mcq", options: ["34 tenths of a meter", "3 tenths and 4 hundredths of a meter", "3 ones and 4 tenths of a meter", "34 hundredths of a meter"], ans: "3 ones and 4 tenths of a meter", sim: { type: 'decimal', data: { ones: 3, tenths: 4 } } },
+                { id: 2, text: "Arrange in increasing order: 0.45, 0.405, 0.54, 0.504.", type: "mcq", options: ["0.405 < 0.45 < 0.504 < 0.54", "0.405 < 0.45 < 0.54 < 0.504", "0.45 < 0.405 < 0.504 < 0.54", "0.504 < 0.45 < 0.405 < 0.54"], ans: "0.405 < 0.45 < 0.504 < 0.54", sim: { type: 'fraction', data: { bars: [{ label: '0.405', num: 40, den: 100 }, { label: '0.450', num: 45, den: 100 }, { label: '0.504', num: 50, den: 100 }, { label: '0.540', num: 54, den: 100 }] } } },
+                { id: 3, text: "If the total weight of vegetables bought is 0.5 kg + 0.25 kg + 0.05 kg, then the total is:", type: "mcq", options: ["0.75 kg", "0.80 kg", "0.85 kg", "0.95 kg"], ans: "0.80 kg", sim: { type: 'decimal', data: { ones: 0, tenths: 8, hundredths: 0 } } },
+                { id: 22, text: "A notebook is 2.45 cm thick. If 10 such notebooks are stacked, what will be the total height in meters?", type: "subjective", ans: "Total height in cm: 2.45 × 10 = 24.5 cm.\nConverted to meters: 24.5 ÷ 100 = 0.245 m.", sim: { type: 'algebra', data: { expr: "2.45 cm × 10 = 24.5 cm", vars: { "1 m": "100 cm", "24.5 cm": "0.245 m" } } } },
+                { id: 25, text: "Radhika's mother gave her ₹10.50 and her father gave her ₹15.80. Find the total amount given to Radhika by her parents.", type: "subjective", ans: "Total = 10.50 + 15.80 = ₹26.30", orText: "Raju bought a book for ₹35.65. He gave ₹50 to the shopkeeper. How much money did he get back?", orAns: "Received = 50.00 - 35.65 = ₹14.35", sim: { type: 'decimal', data: { ones: 26, tenths: 3 } } },
+                { id: 26, text: "A shopkeeper sells 3.75 m of cloth on Monday, 4.5 m on Tuesday, and 2.85 m on Wednesday.\n(a) Find the total cloth sold in three days.\n(b) How much more cloth was sold on Tuesday than Wednesday?", type: "subjective", ans: "(a) Total = 3.75 + 4.5 + 2.85 = 11.10 m\n(b) Difference = 4.5 - 2.85 = 1.65 m.", sim: { type: 'decimal', data: { ones: 11, tenths: 1 } } }
+              ]
+            },
+            {
+              id: "Ch4", title: "Chapter 4: Expressions Using Letter-Numbers", desc: "Algebraic Expressions and Variables",
+              questions: [
+                { id: 15, text: "The nth odd number is given by:", type: "mcq", options: ["n+1", "2n", "2n-1", "n²-1"], ans: "2n-1", sim: { type: 'sequence', data: { seq: ["n=1 → 1", "n=2 → 3", "n=3 → 5", "Pattern: 2n-1"] } } },
+                { id: 23, text: "A shopkeeper sells x kg of sugar at ₹50 per kg and y kg of rice at ₹40 per kg. He spent ₹20 on transport. Write an algebraic expression for his total cost.", type: "subjective", ans: "Total cost = 50x + 40y + 20.", orText: "Find the value of the expression 2p - 3q + 5 when p = 4 and q = -1.", orAns: "2(4) - 3(-1) + 5 = 8 + 3 + 5 = 16.", sim: { type: 'algebra', data: { expr: "Total = 50x + 40y + 20", vars: { "Sugar (x)": "₹50", "Rice (y)": "₹40", "Fixed Cost": "₹20" } } } },
+                { id: 27, text: "Simplify the expression (40x + 75y) - (6x + 10y) by grouping like terms and then find the value if x = 2 and y = 3.", type: "subjective", ans: "Simplified: 34x + 65y.\nValue: 34(2) + 65(3) = 68 + 195 = 263.", orText: "Subtract the following: 3pq - 2p + q from 4pq + 7p - 2p", orAns: "4pq + 5p - (3pq - 2p + q) = pq + 7p - q", sim: { type: 'algebra', data: { expr: "34x + 65y", vars: { "x=2": "34(2) = 68", "y=3": "65(3) = 195", "Sum": 263 } } } },
+                { id: 32, text: "Take Ruhi's present age to be x years. Write expressions for:\n(a) Her age after 5 years from now?\n(b) Her age 3 years back?\n(c) Grandfather is 6 times her age. His age?\n(d) Grandmother is 2 years younger than grandfather. Her age?\n(e) Father's age is 5 years more than 3 times Ruhi's age. His age?", type: "subjective", ans: "(a) (x + 5)\n(b) (x - 3)\n(c) 6x\n(d) (6x - 2)\n(e) (3x + 5)", sim: { type: 'algebra', data: { expr: "Current Age = x", vars: { "Future": "x+5", "Past": "x-3", "Grandpa": "6x", "Dad": "3x+5" } } } }
+              ]
+            },
+            {
+              id: "Ch6", title: "Chapter 6: Number Play", desc: "Magic Squares, Cryptarithms, and Fibonacci Sequences",
+              questions: [
+                { id: 14, text: "A cryptarithm shows: T + T + T = UT. Which digit must T be?", type: "mcq", options: ["3", "4", "5", "6"], ans: "5", sim: { type: 'algebra', data: { expr: "T + T + T = U T", vars: { "T=5": "5 + 5 + 5 = 15", "U": 1 } } } },
+                { id: 16, text: "In a valid 3×3 magic square using 1-9, the magic sum must be:", type: "mcq", options: ["12", "15", "18", "45"], ans: "15", sim: { type: 'magic-square', data: { sum: 15, grid: [8, 1, 6, 3, 5, 7, 4, 9, 2] } } },
+                { id: 17, text: "What is the 10th term of the Virahānka-Fibonacci sequence?", type: "mcq", options: ["34", "55", "89", "21"], ans: "55", sim: { type: 'sequence', data: { seq: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55], highlight: 55 } } },
+                { id: 29, text: "(i) Anu has odd number of ₹1 coins, odd number of ₹5 coins, and even number of ₹10 coins. Can total be ₹205?\n(ii) Find the parity of the sum: 2 even + 3 odd numbers", type: "subjective", ans: "(i) Odd + Odd + Even = Even. Total cannot be ₹205 (which is odd).\n(ii) 2 even + 3 odd = Even + Odd = Odd.", sim: { type: 'algebra', data: { expr: "Parity Rules", vars: { "Odd + Odd": "Even", "Even + Even": "Even", "Even + Odd": "Odd" } } } },
+                { id: 33, text: "(i) Create a 3×3 magic square using numbers 2-10.\n(ii) Write the next Virahānka number after 89.", type: "subjective", ans: "(i) Magic Sum = 18. Center is 6.\n(ii) Next term = 55 + 89 = 144.", sim: { type: 'magic-square', data: { sum: 18, grid: [9, 2, 7, 4, 6, 8, 5, 10, 3] } } },
+                { id: 37, text: "[Case Study] A music teacher is planning a performance using classical beats (short=1, long=2). Rhythms follow Virahānka-Fibonacci.\n(i) Number of rhythms of 6 beats?\n(ii) Number of rhythms of 7 beats?\n(iii) Number of rhythms of 8 beats?", type: "subjective", ans: "(i) 6th term is 13.\n(ii) 7th term is 21.\n(iii) 8th term is 34.", orText: "(iii) Predict number of rhythms for 9 beats.", orAns: "(iii) The 9th term is 55.", sim: { type: 'sequence', data: { seq: [13, 21, 34, 55], highlight: 55 } } }
+              ]
+            },
+            {
+              id: "Ch7", title: "Chapter 7: A Tale of Three Intersecting Lines", desc: "Triangle Properties, Angles, and Construction",
+              questions: [
+                { id: 10, text: "The exterior angle of a triangle is 120°. One interior opposite angle is 45°. The other interior opposite angle is:", type: "mcq", options: ["65°", "70°", "75°", "80°"], ans: "75°", sim: { type: 'triangle', data: { angles: [45, 75, null], ext: 120 } } },
+                { id: 11, text: "Three wires of lengths 8 cm, 9 cm and 18 cm are taken to form a triangular frame. What is the correct conclusion?", type: "mcq", options: ["Triangle can be formed", "Triangle cannot be formed", "Triangle is right-angled", "Triangle is equilateral"], ans: "Triangle cannot be formed", sim: { type: 'sticks', data: { sticks: [8, 9, 18] } } },
+                { id: 12, text: "A triangle has angles 35°, 65° and 80°. The triangle is:", type: "mcq", options: ["Obtuse-angled", "Right-angled", "Acute-angled", "Isosceles"], ans: "Acute-angled", sim: { type: 'triangle', data: { angles: [35, 65, 80] } } },
+                { id: 13, text: "In a ∆ABC, if ∠A=60° and ∠B=30°, then the exterior angle formed by producing BC is equal to:", type: "mcq", options: ["180°", "99°", "90°", "105°"], ans: "90°", sim: { type: 'triangle', data: { angles: [60, 30, null], ext: 90 } } },
+                { id: 28, text: "Construct a triangle when two sides are 5 cm and 7 cm and the included angle is 60°.", type: "subjective", ans: "Draw base 7 cm. At one end, construct a 60° angle. Cut an arc of 5 cm. Join to complete the triangle.", sim: { type: 'triangle', data: { sides: [5, null, 7], angles: [null, 60, null] } } },
+                { id: 34, text: "Check whether a triangle can be formed with sides 9 cm, 11 cm and 20 cm.", type: "subjective", ans: "9 + 11 = 20. Sum is not greater. Triangle cannot be formed.", orText: "Find the exterior angle of a triangle if the interior opposite angles are 46° and 54°.\nAlso, find the third angle if two angles are 58° and 62°.", orAns: "Ext angle = 46° + 54° = 100°.\nThird angle = 180° - 120° = 60°.", sim: { type: 'sticks', data: { sticks: [9, 11, 20] } } },
+                { id: 36, text: "[Case Study] An artist creates a triangular art installation using two angles measuring 48° and 72°.\n(i) Classify the triangle by angles.\n(ii) State whether it is scalene or isosceles.\n(iii) State the property used.", type: "subjective", ans: "(i) Acute angle triangle\n(ii) Scalene\n(iii) Angle sum property", orText: "(iii) Find the third angle.", orAns: "(iii) 180° - (48° + 72°) = 60°", sim: { type: 'triangle', data: { angles: [48, 72, 60] } } }
+              ]
+            },
+            {
+              id: "Ch8", title: "Chapter 8: Working with Fractions", desc: "Operations with Fractions, Perimeter and Area",
+              questions: [
+                { id: 4, text: "The length of a rectangular sheet of paper is ⅗ cm and the breadth is ⅖ cm. What is the perimeter of the paper?", type: "mcq", options: ["1 cm", "2 cm", "3 cm", "4 cm"], ans: "2 cm", sim: { type: 'fraction', data: { bars: [{ label: 'L (3/5)', num: 3, den: 5 }, { label: 'B (2/5)', num: 2, den: 5 }] } } },
+                { id: 5, text: "½ + ⅓ is equal to:", type: "mcq", options: ["⅙", "⅚", "⅗", "11/6"], ans: "⅚", sim: { type: 'fraction', data: { bars: [{ label: '1/2 (as 3/6)', num: 3, den: 6 }, { label: '1/3 (as 2/6)', num: 2, den: 6 }, { label: 'Total', num: 5, den: 6 }] } } },
+                { id: 6, text: "The side of an equilateral triangle is ½ cm. The perimeter of the triangle is:", type: "mcq", options: ["1 cm", "2 cm", "3/2 cm", "None of these"], ans: "3/2 cm", sim: { type: 'triangle', data: { sides: ['1/2', '1/2', '1/2'] } } },
+                { id: 7, text: "A water bottle contains 2 liters of water. Meenu drank ⅛ of water. How much water did Meenu drink?", type: "mcq", options: ["½ litre", "⅛ litre", "¼ litre", "None of these"], ans: "¼ litre", sim: { type: 'fraction', data: { bars: [{ label: '1/8 of 2', num: 2, den: 8 }] } } },
+                { id: 8, text: "A container holds 5½ litres of water. If ¾ of the water is used, how much water is left?", type: "mcq", options: ["1 ⅜ lit.", "2 ¼ lit.", "4 ⅛ lit.", "1 ¼ lit."], ans: "1 ⅜ lit.", sim: { type: 'algebra', data: { expr: "11/2 - 3/4 = 22/4 - 3/4", vars: { "Result": "19/4 = 4 3/4 lit." } } } },
+                { id: 9, text: "⅖ × 5⅕ is equal to:", type: "mcq", options: ["26/25", "52/25", "2/5", "6"], ans: "52/25", sim: { type: 'algebra', data: { expr: "2/5 × 26/5", vars: { "Num": "2 × 26 = 52", "Den": "5 × 5 = 25" } } } },
+                { id: 21, text: "Rohan is dividing 1¾ kg of sweets equally among his seven friends. How much does each friend receive?", type: "subjective", ans: "1¾ = 7/4 kg. Distributed among 7 friends: (7/4) × (1/7) = ¼ kg.", sim: { type: 'fraction', data: { bars: [{ label: 'Total (7/4)', num: 7, den: 4 }, { label: '1 Friend', num: 1, den: 4 }] } } },
+                { id: 30, text: "Lipika always reads a book for 1¾ hour every day. She reads an entire book in 6 days. How many hours in total were required by her to finish the book?", type: "subjective", ans: "(7/4) × 6 = (7/2) × 3 = 21/2 = 10½ hours.", sim: { type: 'algebra', data: { expr: "7/4 hrs × 6 days", vars: { "Total": "42/4 = 21/2 hrs" } } } }
+              ]
+            },
+            {
+              id: "Ch3_V2", title: "Chapter 3 (Vol 2): Finding Common Ground", desc: "Factors, Multiples, HCF and LCM",
+              questions: [
+                { id: 18, text: "The length, width, and height of a box are 12 cm, 18 cm, and 36 cm, respectively. Which of the following-sized cubes can be packed in this box without leaving gaps?", type: "mcq", options: ["9 cm", "6 cm", "4 cm", "3 cm"], ans: "6 cm", sim: { type: 'algebra', data: { expr: "HCF(12, 18, 36) = 6", vars: { "L": "12", "W": "18", "H": "36" } } } },
+                { id: 19, text: "Among the numbers below, which is the largest number that perfectly divides both 306 and 36?", type: "mcq", options: ["36", "612", "18", "3"], ans: "18", sim: { type: 'algebra', data: { expr: "HCF(306, 36) = 18", vars: {} } } },
+                { id: 20, text: "Children are playing 'Fire in the Mountain.' When 6 was called, no one got out. When 9 was called, no one got out. When 10 was called, some got out. How many children could have been playing initially?", type: "mcq", options: ["72", "90", "45", "3"], ans: "72", sim: { type: 'number-line', data: { max: 36, jumps: [6, 9], highlight: 18 } } },
+                { id: 24, text: "Find the common factors and the HCF of the following numbers: 140, 275", type: "subjective", ans: "Common Factors: 1, 5. \nHCF = 5.", sim: { type: 'algebra', data: { expr: "HCF(140, 275) = 5", vars: { "140": "5 × 28", "275": "5 × 55" } } } },
+                { id: 31, text: "Find the LCM of the following numbers: 105, 195, 65", type: "subjective", ans: "LCM = 3 × 5 × 7 × 13 = 1365", orText: "Find two numbers whose HCF is 1, and LCM is 66.", orAns: "Possible pairs: (1, 66), (2, 33), (3, 22), (6, 11).", sim: { type: 'algebra', data: { expr: "LCM(105, 195, 65) = 1365", vars: { "HCF×LCM": "Product" } } } },
+                { id: 35, text: "Find the smallest number that is divisible by 3, 4, 5, and 7, but leaves a remainder of 10 when divided by 11.", type: "subjective", ans: "LCM(3,4,5,7) = 420.\nCheck multiples: 420×5 = 2100. (2100 % 11 = 10). Ans: 2100.", orText: "Find the HCF and LCM of 6 and 8. Verify that LCM × HCF = Product of two numbers.", orAns: "HCF = 2. LCM = 24. Product = 48. Verified.", sim: { type: 'algebra', data: { expr: "LCM(3,4,5,7) = 420", vars: { "Multiplier": 5, "Result": 2100 } } } },
+                { id: 38, text: "[Case Study] In a game, students say 'clap' for multiples of 4 and 'snap' for multiples of 6.\n(i) Find the multiples of 4.\n(ii) Find the factors of 6.\n(iii) At what number will they say both 'clap' and 'snap' together?", type: "subjective", ans: "(i) Multiples of 4: 4, 8, 12, 16...\n(ii) Factors of 6: 1, 2, 3, 6.\n(iii) First common number (LCM): 12.", orText: "(iii) Find the HCF of 4 and 6.", orAns: "(iii) HCF of 4 and 6 is 2.", sim: { type: 'number-line', data: { max: 24, jumps: [4, 6], highlight: 12 } } }
+              ]
+            }
+          ]
+        };
+
+        function App() {
+          const [activeTab, setActiveTab] = useState(paperData.chapters[0].id);
+          const [revealedAnswers, setRevealedAnswers] = useState({});
+          const [activeSims, setActiveSims] = useState({});
+
+          const currentChapter = paperData.chapters.find(c => c.id === activeTab);
+
+          const toggleAnswer = (qId) => setRevealedAnswers(p => ({ ...p, [qId]: !p[qId] }));
+          const toggleSim = (qId) => setActiveSims(p => ({ ...p, [qId]: !p[qId] }));
+
+          const revealAllInChapter = () => {
+            const newRevealed = { ...revealedAnswers };
+            let allRevealed = currentChapter.questions.every(q => newRevealed[q.id]);
+            currentChapter.questions.forEach(q => newRevealed[q.id] = !allRevealed);
+            setRevealedAnswers(newRevealed);
+          };
+
+          const isAllRevealed = currentChapter.questions.every(q => revealedAnswers[q.id]);
+
+          return (
+            <div className="min-h-screen flex flex-col md:flex-row">
+              <aside className="w-full md:w-80 bg-white border-r border-slate-200 shadow-sm flex-shrink-0 flex flex-col h-auto md:h-screen md:sticky top-0">
+                <div className="p-6 bg-blue-600 text-white flex-shrink-0">
+                  <h1 className="text-xl font-bold tracking-tight">{paperData.header.school}</h1>
+                  <div className="mt-4 flex items-center gap-2 text-sm bg-blue-700/50 py-1.5 px-3 rounded-md w-max">
+                    <Calculator size={16} />
+                    <span>Syllabus Chapter View</span>
+                  </div>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto p-4 flex gap-2 md:flex-col hide-scrollbar">
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 hidden md:block px-2">Chapters</p>
+                  {paperData.chapters.map((chapter) => (
+                    <button
+                      key={chapter.id}
+                      onClick={() => setActiveTab(chapter.id)}
+                      className={`flex flex-col items-start text-left px-4 py-3 rounded-xl mb-2 transition-all duration-200 flex-shrink-0 md:flex-shrink w-64 md:w-full ${
+                        activeTab === chapter.id 
+                          ? 'bg-blue-50 border border-blue-200 shadow-sm' 
+                          : 'text-slate-600 hover:bg-slate-100 border border-transparent'
+                      }`}
+                    >
+                      <div className="flex items-center w-full">
+                        <span className={`font-semibold text-sm ${activeTab === chapter.id ? 'text-blue-800' : 'text-slate-700'}`}>
+                          {chapter.title.split(':')[0]}
+                        </span>
+                        {activeTab === chapter.id && <ChevronRight size={18} className="ml-auto hidden md:block text-blue-500" />}
+                      </div>
+                      <span className={`text-xs mt-1 truncate w-full ${activeTab === chapter.id ? 'text-blue-600' : 'text-slate-500'}`}>
+                        {chapter.title.split(':')[1] || chapter.desc}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </aside>
+
+              <main className="flex-1 p-4 md:p-8 max-h-screen overflow-y-auto">
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                      <h2 className="text-2xl font-bold text-slate-800">{currentChapter.title}</h2>
+                      <p className="text-slate-500 mt-1">{currentChapter.desc}</p>
+                    </div>
+                    
+                    <button onClick={revealAllInChapter} className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-colors border flex-shrink-0 ${isAllRevealed ? 'bg-slate-100 text-slate-600 border-slate-300 hover:bg-slate-200' : 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'}`}>
+                      {isAllRevealed ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {isAllRevealed ? "Hide Solutions" : "Reveal Solutions"}
+                    </button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {currentChapter.questions.map((q) => (
+                      <div key={q.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 transition-all hover:shadow-md">
+                        <div className="flex gap-4 mb-4">
+                          <span className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center font-bold text-sm">{q.id}</span>
+                          <p className="text-lg text-slate-800 leading-relaxed font-medium mt-0.5 whitespace-pre-wrap">{q.text}</p>
+                        </div>
+
+                        <div className="pl-12 mb-6">
+                          <button onClick={() => toggleSim(q.id)} className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors mb-3 ${activeSims[q.id] ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600'}`}>
+                            <PlayCircle size={16} className={activeSims[q.id] ? "text-indigo-600" : ""} />
+                            {activeSims[q.id] ? 'Close Visualizer' : 'Visualize Concept'}
+                          </button>
+                          
+                          {activeSims[q.id] && <div className="mb-4"><Simulator sim={q.sim} /></div>}
+                        </div>
+
+                        {q.type === "mcq" && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-12 mb-4">
+                            {q.options.map((opt, idx) => (
+                              <div key={idx} className={`p-3 rounded-xl border-2 flex items-center transition-all ${revealedAnswers[q.id] && opt === q.ans ? 'bg-green-50 border-green-500 shadow-sm' : 'bg-white border-slate-100'}`}>
+                                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs mr-3 font-bold ${revealedAnswers[q.id] && opt === q.ans ? 'bg-green-500 text-white' : 'bg-slate-100 text-slate-500'}`}>{String.fromCharCode(97 + idx)}</span>
+                                <span className={`${revealedAnswers[q.id] && opt === q.ans ? 'text-green-800 font-medium' : 'text-slate-600'}`}>{opt}</span>
+                                {revealedAnswers[q.id] && opt === q.ans && <CheckCircle2 className="ml-auto text-green-500" size={20} />}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {q.type === "subjective" && q.orText && (
+                          <div className="pl-12 my-6">
+                            <div className="flex items-center gap-4 my-4">
+                              <div className="h-px bg-slate-200 flex-1"></div>
+                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">OR</span>
+                              <div className="h-px bg-slate-200 flex-1"></div>
+                            </div>
+                            <p className="text-lg text-slate-800 leading-relaxed font-medium whitespace-pre-wrap">{q.orText}</p>
+                          </div>
+                        )}
+
+                        <div className="pl-12 mt-6">
+                          {revealedAnswers[q.id] && q.type === "subjective" && (
+                            <div className="mb-4">
+                              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500"></div>
+                                <h4 className="text-emerald-800 font-bold mb-2 flex items-center gap-2 text-sm uppercase tracking-wide"><CheckCircle2 size={16} /> Solution</h4>
+                                <p className="text-emerald-900 leading-relaxed whitespace-pre-wrap font-medium">{q.ans}</p>
+                              </div>
+
+                              {q.orAns && (
+                                <div className="mt-4 bg-emerald-50/60 border border-emerald-200 border-dashed rounded-xl p-5 relative overflow-hidden">
+                                   <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-400"></div>
+                                   <h4 className="text-emerald-800 font-bold mb-2 text-sm uppercase tracking-wide">Alternate (OR) Solution</h4>
+                                   <p className="text-emerald-900 leading-relaxed whitespace-pre-wrap font-medium">{q.orAns}</p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {q.type === "subjective" && (
+                             <button onClick={() => toggleAnswer(q.id)} className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${revealedAnswers[q.id] ? 'bg-slate-100 text-slate-600 hover:bg-slate-200' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'}`}>
+                               {revealedAnswers[q.id] ? <EyeOff size={16} /> : <Eye size={16} />}
+                               {revealedAnswers[q.id] ? 'Hide Answer' : 'Show Answer'}
+                             </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </main>
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
