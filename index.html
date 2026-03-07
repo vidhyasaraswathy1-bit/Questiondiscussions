@@ -267,7 +267,7 @@
     <script>
         // Check if the user has already attempted the exam
         window.onload = () => {
-            if(localStorage.getItem('cbse_grade7_mixed_exam_attempted') === 'true') {
+            if(localStorage.getItem('cbse_grade7_mixed_exam_attempted_v2') === 'true') {
                 document.getElementById('instructions-page').classList.add('hidden');
                 document.getElementById('already-attempted-page').classList.remove('hidden');
                 document.getElementById('already-attempted-page').classList.add('flex');
@@ -380,7 +380,7 @@
         }
 
         function startExam() {
-            if(localStorage.getItem('cbse_grade7_mixed_exam_attempted') === 'true') {
+            if(localStorage.getItem('cbse_grade7_mixed_exam_attempted_v2') === 'true') {
                 alert("You have already attempted this exam.");
                 return;
             }
@@ -561,7 +561,7 @@
 
         function submitExam() {
             // PREVENT RE-ATTEMPT
-            localStorage.setItem('cbse_grade7_mixed_exam_attempted', 'true');
+            localStorage.setItem('cbse_grade7_mixed_exam_attempted_v2', 'true');
 
             recordTimeSpent();
             examActive = false;
