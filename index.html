@@ -64,6 +64,7 @@
                     <li>The examination will comprise of <strong>20</strong> Multiple Choice Questions (MCQs).</li>
                     <li>Total duration of the exam is <strong>20 minutes</strong>.</li>
                     <li>You can attempt this test <strong>only once</strong>. Re-attempts are strictly prohibited.</li>
+                    <li><strong>Fullscreen Enforcement:</strong> Exiting fullscreen mode will pause the exam and block access until you return to fullscreen.</li>
                     <li>Use the palette on the right to navigate. Ensure you click "Save & Next" to submit an answer.</li>
                     <li>Once submitted, you will be able to review your answers.</li>
                 </ul>
@@ -71,6 +72,22 @@
             
             <button onclick="startExam()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-md shadow transition duration-200 text-lg">
                 I am ready to begin
+            </button>
+        </div>
+    </div>
+
+    <!-- Fullscreen Enforcement Overlay -->
+    <div id="fullscreen-blocker" class="hidden fixed inset-0 z-[100] bg-gray-900 bg-opacity-95 flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full text-center">
+            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Exam Paused</h2>
+            <p class="text-gray-600 text-lg mb-8">You have exited fullscreen mode. For exam integrity, you must remain in fullscreen mode to attempt the questions.</p>
+            <button onclick="requestFullscreenAndContinue()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow transition duration-200 text-lg">
+                Return to Fullscreen
             </button>
         </div>
     </div>
@@ -229,126 +246,26 @@
     <script>
         // Updated Questions Data - Similar concepts to the images but completely NEW questions and values
         const questions = [
-            {
-                id: 1,
-                text: "Which of the following is the number of zeros in the square of 700?",
-                options: ["2", "3", "4", "5"],
-                correctAnswer: 2 // Index 2 -> "4"
-            },
-            {
-                id: 2,
-                text: "Which of the following numbers is a perfect square?",
-                options: ["225", "1028", "7923", "85000"],
-                correctAnswer: 0 // Index 0 -> "225"
-            },
-            {
-                id: 3,
-                text: "Which of the following will have 9 at its unit's place?",
-                options: ["12<sup>2</sup>", "14<sup>2</sup>", "17<sup>2</sup>", "15<sup>2</sup>"],
-                correctAnswer: 2 // Index 2 -> "17^2"
-            },
-            {
-                id: 4,
-                text: "If 8439 is squared, what will be the digit at its unit's place?",
-                options: ["1", "9", "3", "7"],
-                correctAnswer: 0 // Index 0 -> "1"
-            },
-            {
-                id: 5,
-                text: "The square of an odd natural number is always ___________?",
-                options: ["prime", "even", "odd", "a multiple of 3"],
-                correctAnswer: 2 // Index 2 -> "odd"
-            },
-            {
-                id: 6,
-                text: "The value of 21<sup>2</sup> - 1 is:",
-                options: ["40", "41", "440", "441"],
-                correctAnswer: 2 // Index 2 -> "440"
-            },
-            {
-                id: 7,
-                text: "The value of &radic;(0.09 &times; 0.49) is:",
-                options: ["21", "2.1", "0.21", "0.0021"],
-                correctAnswer: 2 // Index 2 -> "0.21"
-            },
-            {
-                id: 8,
-                text: "Which of the following is the sum of the first six odd natural numbers?",
-                options: ["25", "36", "49", "64"],
-                correctAnswer: 1 // Index 1 -> "36"
-            },
-            {
-                id: 9,
-                text: "Find the length of the side of a square field whose area is 784 m<sup>2</sup>.",
-                options: ["22 m", "24 m", "26 m", "28 m"],
-                correctAnswer: 3 // Index 3 -> "28 m"
-            },
-            {
-                id: 10,
-                text: "A perfect square can never end with which of the following number of zeros?",
-                options: ["2", "4", "6", "3"],
-                correctAnswer: 3 // Index 3 -> "3"
-            },
-            {
-                id: 11,
-                text: "Find the square root of 5184.",
-                options: ["62", "72", "82", "92"],
-                correctAnswer: 1 // Index 1 -> "72"
-            },
-            {
-                id: 12,
-                text: "Find the square root of 15625.",
-                options: ["115", "125", "135", "145"],
-                correctAnswer: 1 // Index 1 -> "125"
-            },
-            {
-                id: 13,
-                text: "Find the square root of 2401.",
-                options: ["31", "39", "41", "49"],
-                correctAnswer: 3 // Index 3 -> "49"
-            },
-            {
-                id: 14,
-                text: "Which of the following numbers CANNOT be a perfect square?",
-                options: ["1024", "3136", "4057", "5041"],
-                correctAnswer: 2 // Index 2 -> "4057"
-            },
-            {
-                id: 15,
-                text: "Which one among 53<sup>2</sup>, 114<sup>2</sup>, 381<sup>2</sup>, 45<sup>2</sup> has its last digit as 6?",
-                options: ["53<sup>2</sup>", "114<sup>2</sup>", "381<sup>2</sup>", "45<sup>2</sup>"],
-                correctAnswer: 1 // Index 1 -> "114^2"
-            },
-            {
-                id: 16,
-                text: "Given 135<sup>2</sup> = 18225, what is the value of 136<sup>2</sup>?",
-                options: ["18225 + 135", "18225 + 36<sup>2</sup>", "18225 + 271", "18225 + 136"],
-                correctAnswer: 2 // Index 2 -> "18225 + 271"
-            },
-            {
-                id: 17,
-                text: "The value of 35<sup>2</sup> - 34<sup>2</sup> is:",
-                options: ["34", "35", "69", "1"],
-                correctAnswer: 2 // Index 2 -> "69"
-            },
-            {
-                id: 18,
-                text: "Which of the following represents a Pythagorean triplet?",
-                options: ["(2, 3, 4)", "(6, 8, 10)", "(5, 7, 9)", "(8, 9, 10)"],
-                correctAnswer: 1 // Index 1 -> "(6, 8, 10)"
-            },
-            {
-                id: 19,
-                text: "Find the square root of 256/441.",
-                options: ["14/21", "16/21", "16/19", "14/19"],
-                correctAnswer: 1 // Index 1 -> "16/21"
-            },
-            {
-                id: 20,
-                text: "By which smallest natural number should 50 be multiplied to get a perfect square?",
-                options: ["2", "3", "4", "5"],
-                correctAnswer: 0 // Index 0 -> "2"
-            }
+            { id: 1, text: "Which of the following is the number of zeros in the square of 700?", options: ["2", "3", "4", "5"], correctAnswer: 2 },
+            { id: 2, text: "Which of the following numbers is a perfect square?", options: ["225", "1028", "7923", "85000"], correctAnswer: 0 },
+            { id: 3, text: "Which of the following will have 9 at its unit's place?", options: ["12<sup>2</sup>", "14<sup>2</sup>", "17<sup>2</sup>", "15<sup>2</sup>"], correctAnswer: 2 },
+            { id: 4, text: "If 8439 is squared, what will be the digit at its unit's place?", options: ["1", "9", "3", "7"], correctAnswer: 0 },
+            { id: 5, text: "The square of an odd natural number is always ___________?", options: ["prime", "even", "odd", "a multiple of 3"], correctAnswer: 2 },
+            { id: 6, text: "The value of 21<sup>2</sup> - 1 is:", options: ["40", "41", "440", "441"], correctAnswer: 2 },
+            { id: 7, text: "The value of &radic;(0.09 &times; 0.49) is:", options: ["21", "2.1", "0.21", "0.0021"], correctAnswer: 2 },
+            { id: 8, text: "Which of the following is the sum of the first six odd natural numbers?", options: ["25", "36", "49", "64"], correctAnswer: 1 },
+            { id: 9, text: "Find the length of the side of a square field whose area is 784 m<sup>2</sup>.", options: ["22 m", "24 m", "26 m", "28 m"], correctAnswer: 3 },
+            { id: 10, text: "A perfect square can never end with which of the following number of zeros?", options: ["2", "4", "6", "3"], correctAnswer: 3 },
+            { id: 11, text: "Find the square root of 5184.", options: ["62", "72", "82", "92"], correctAnswer: 1 },
+            { id: 12, text: "Find the square root of 15625.", options: ["115", "125", "135", "145"], correctAnswer: 1 },
+            { id: 13, text: "Find the square root of 2401.", options: ["31", "39", "41", "49"], correctAnswer: 3 },
+            { id: 14, text: "Which of the following numbers CANNOT be a perfect square?", options: ["1024", "3136", "4057", "5041"], correctAnswer: 2 },
+            { id: 15, text: "Which one among 53<sup>2</sup>, 114<sup>2</sup>, 381<sup>2</sup>, 45<sup>2</sup> has its last digit as 6?", options: ["53<sup>2</sup>", "114<sup>2</sup>", "381<sup>2</sup>", "45<sup>2</sup>"], correctAnswer: 1 },
+            { id: 16, text: "Given 135<sup>2</sup> = 18225, what is the value of 136<sup>2</sup>?", options: ["18225 + 135", "18225 + 36<sup>2</sup>", "18225 + 271", "18225 + 136"], correctAnswer: 2 },
+            { id: 17, text: "The value of 35<sup>2</sup> - 34<sup>2</sup> is:", options: ["34", "35", "69", "1"], correctAnswer: 2 },
+            { id: 18, text: "Which of the following represents a Pythagorean triplet?", options: ["(2, 3, 4)", "(6, 8, 10)", "(5, 7, 9)", "(8, 9, 10)"], correctAnswer: 1 },
+            { id: 19, text: "Find the square root of 256/441.", options: ["14/21", "16/21", "16/19", "14/19"], correctAnswer: 1 },
+            { id: 20, text: "By which smallest natural number should 50 be multiplied to get a perfect square?", options: ["2", "3", "4", "5"], correctAnswer: 0 }
         ];
 
         // State Variables
@@ -357,6 +274,7 @@
         let questionStatuses = new Array(questions.length).fill('not-visited'); // not-visited, not-answered, answered, marked, marked-answered
         let timeRemaining = 20 * 60; // 20 minutes in seconds
         let timerInterval;
+        let isExamActive = false; // Tracks if the user is currently taking the exam
         const EXAM_KEY = 'cbse8MathExamAttempted_v3';
 
         // Initialize Application
@@ -369,16 +287,48 @@
             }
         };
 
+        // Fullscreen Enforcement Logic
+        function enforceFullscreen() {
+            if (!isExamActive) return;
+
+            const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+            const blocker = document.getElementById('fullscreen-blocker');
+
+            if (!isFullscreen) {
+                blocker.classList.remove('hidden');
+            } else {
+                blocker.classList.add('hidden');
+            }
+        }
+
+        // Event listeners for exiting/entering fullscreen
+        document.addEventListener('fullscreenchange', enforceFullscreen);
+        document.addEventListener('webkitfullscreenchange', enforceFullscreen);
+        document.addEventListener('msfullscreenchange', enforceFullscreen);
+
+        // Helper to request fullscreen 
+        function requestFullscreenAndContinue() {
+            const elem = document.documentElement;
+            let promise;
+            if (elem.requestFullscreen) {
+                promise = elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                promise = elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                promise = elem.msRequestFullscreen();
+            }
+            
+            if(promise !== undefined){
+                promise.catch(err => console.log(`Error attempting to enable fullscreen: ${err.message}`));
+            }
+        }
+
         function startExam() {
             // Request Fullscreen
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen().catch(err => console.log(`Error attempting to enable fullscreen: ${err.message}`));
-            } else if (elem.webkitRequestFullscreen) { /* Safari */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE11 */
-                elem.msRequestFullscreen();
-            }
+            requestFullscreenAndContinue();
+
+            // Set exam to active
+            isExamActive = true;
 
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('exam-screen').classList.remove('hidden');
@@ -394,6 +344,12 @@
         }
 
         function updateTimer() {
+            // Only tick the timer if the blocker is not active
+            const blocker = document.getElementById('fullscreen-blocker');
+            if(!blocker.classList.contains('hidden')){
+                return; // Pause timer when fullscreen is exited
+            }
+
             if (timeRemaining <= 0) {
                 clearInterval(timerInterval);
                 autoSubmit();
@@ -563,6 +519,9 @@
             closeAlert();
             clearInterval(timerInterval);
             
+            // Exam is no longer active
+            isExamActive = false;
+            
             let score = 0;
             questions.forEach((q, index) => {
                 if (selectedAnswers[index] === q.correctAnswer) {
@@ -579,6 +538,9 @@
         }
 
         function showResultScreen(score) {
+            // Ensure no warning popups when forcing fullscreen exit
+            document.getElementById('fullscreen-blocker').classList.add('hidden');
+
             // Exit Fullscreen
             if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
                 if (document.exitFullscreen) {
