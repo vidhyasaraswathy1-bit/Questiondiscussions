@@ -48,7 +48,7 @@
         #blur-overlay {
             display: none;
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.95); z-index: 9999;
+            background: rgba(0, 0, 0, 0.98); z-index: 9999;
             flex-direction: column; align-items: center; justify-content: center;
             color: white; text-align: center;
         }
@@ -70,7 +70,8 @@
     <div id="blur-overlay">
         <svg class="w-24 h-24 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
         <h1 class="text-4xl font-bold mb-2">WARNING!</h1>
-        <p class="text-xl max-w-lg">You have navigated away from the exam window. This action is recorded. Please click anywhere on the screen to return to the exam.</p>
+        <p class="text-xl max-w-lg mb-4">Exam interrupted. Fullscreen mode exited, or window focus lost.</p>
+        <p class="text-md text-gray-300">Click anywhere on this screen to return to the exam in Fullscreen.</p>
     </div>
 
     <!-- Custom Confirm Modal -->
@@ -267,6 +268,14 @@
         }));
 
         // --- 3. INITIALIZATION & ANTI-CHEAT ---
+        function showWarningOverlay() {
+            // Only show if the exam is active
+            if (!document.getElementById('exam-screen').classList.contains('hidden') && 
+                document.getElementById('result-screen').classList.contains('hidden')) {
+                document.getElementById('blur-overlay').style.display = 'flex';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // Check if already attempted
             if (localStorage.getItem('ayisha_exam_completed') === 'true') {
@@ -278,50 +287,68 @@
             // Anti-cheat Listeners
             document.addEventListener('contextmenu', e => e.preventDefault()); // Block right click
             
-            const handlePrintScreen = (e) => {
+            const handleKeyboardShortcuts = (e) => {
+                // Block PrintScreen specifically
                 if (e.key === 'PrintScreen' || e.code === 'PrintScreen') {
                     e.preventDefault();
-                    // Attempt to overwrite clipboard
-                    if (navigator.clipboard) {
-                        navigator.clipboard.writeText('Screenshots are disabled during this examination.').catch(()=> {});
-                    }
-                    // Show blur warning immediately
-                    document.getElementById('blur-overlay').style.display = 'flex';
+                    if (navigator.clipboard) navigator.clipboard.writeText('Screenshots disabled.').catch(()=> {});
+                    showWarningOverlay();
                 }
-            };
 
-            document.addEventListener('keydown', (e) => {
-                // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+                // Block OS-Level snipping shortcuts (Win+Shift+S / Cmd+Shift+4 / Cmd+Shift+5)
+                // Meta key is Windows key or Mac Command key
+                if (e.metaKey && e.shiftKey && (e.key === 'S' || e.key === 's' || e.key === '4' || e.key === '5')) {
+                    e.preventDefault();
+                    showWarningOverlay();
+                }
+
+                // Block Developer Tools (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
                 if (e.key === 'F12' || 
                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || 
                    (e.ctrlKey && e.key === 'U')) {
                     e.preventDefault();
                 }
-                handlePrintScreen(e);
-            });
-            
-            // Also catch keyup for PrintScreen as OS behaves differently on different platforms
-            document.addEventListener('keyup', handlePrintScreen);
+            };
 
+            // Listen on both keydown and keyup
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+            document.addEventListener('keyup', handleKeyboardShortcuts);
+
+            // Disable Copying content except inputs
             document.addEventListener('copy', e => {
-                // Allow copy inside textarea and text inputs
                 if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
                     e.preventDefault();
                 }
             });
             
-            // Window focus tracking
-            window.addEventListener('blur', () => {
-                if(!document.getElementById('exam-screen').classList.contains('hidden') && 
-                   document.getElementById('result-screen').classList.contains('hidden')) {
-                    document.getElementById('blur-overlay').style.display = 'flex';
-                }
+            // Focus Tracking (Window blur / Tab switches)
+            window.addEventListener('blur', showWarningOverlay);
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) showWarningOverlay();
             });
 
-            // Click overlay to return
+            // Fullscreen Exit Tracking (Fixes the Esc trick)
+            const handleFullscreenChange = () => {
+                if (!document.fullscreenElement && 
+                    !document.webkitIsFullScreen && 
+                    !document.mozFullScreen && 
+                    !document.msFullscreenElement) {
+                    showWarningOverlay(); // Instantly block if they leave fullscreen
+                }
+            };
+
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+            // Click overlay to return to fullscreen and hide warning
             document.getElementById('blur-overlay').addEventListener('click', () => {
-                document.getElementById('blur-overlay').style.display = 'none';
-                enterFullscreen(); // Ensure it stays fullscreen
+                enterFullscreen(); // Re-enter fullscreen first
+                // Add a small delay to ensure fullscreen is active before hiding overlay
+                setTimeout(() => {
+                    document.getElementById('blur-overlay').style.display = 'none';
+                }, 200);
             });
         });
 
