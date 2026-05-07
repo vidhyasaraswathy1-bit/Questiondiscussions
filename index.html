@@ -3,645 +3,645 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mock Exam Portal - CBSE Class 8 Math</title>
+    <title>Grade 8 Mathematics Assessment - Ayisha</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Modern Classic Custom Styles */
+        /* Anti-selection and general SSC styling */
         body {
-            background-color: #f0f2f5;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            user-select: none; /* Prevent text selection for exam feel */
+            user-select: none; /* Prevent text selection */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            background-color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Allow selection inside textareas */
+        textarea, input[type="text"] {
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* Palette Button Colors */
+        .btn-not-visited { background-color: #e5e7eb; color: #374151; border: 1px solid #d1d5db; }
+        .btn-not-answered { background-color: #ef4444; color: white; border: 1px solid #dc2626; }
+        .btn-answered { background-color: #22c55e; color: white; border: 1px solid #16a34a; }
+        .btn-marked { background-color: #8b5cf6; color: white; border: 1px solid #7c3aed; }
+        
+        .question-palette-btn {
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 5px; font-weight: bold; cursor: pointer;
+            transition: all 0.2s;
         }
         
-        .exam-header {
-            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+        /* Blur Overlay */
+        #blur-overlay {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.95); z-index: 9999;
+            flex-direction: column; align-items: center; justify-content: center;
+            color: white; text-align: center;
         }
+        
+        input[type="radio"] { transform: scale(1.2); margin-right: 10px; cursor: pointer; }
+        .option-row { display: flex; align-items: center; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s;}
+        .option-row:hover { background-color: #f9fafb; }
+        .option-row.selected { background-color: #eff6ff; border-color: #3b82f6; }
 
-        /* Palette Button Shapes - SSC Style */
-        .q-btn {
-            clip-path: polygon(25% 0%, 100% 0%, 100% 75%, 75% 100%, 0% 100%, 0% 25%);
-            transition: all 0.2s ease;
-        }
-        .q-btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* Status Colors */
-        .status-not-visited { background-color: #e5e7eb; color: #374151; border: 1px solid #d1d5db; clip-path: none; border-radius: 4px; }
-        .status-not-answered { background-color: #ef4444; color: white; clip-path: polygon(0 0, 100% 0, 100% 80%, 80% 100%, 0 100%); }
-        .status-answered { background-color: #22c55e; color: white; clip-path: polygon(0 20%, 20% 0, 100% 0, 100% 100%, 0 100%); }
-        .status-marked { background-color: #8b5cf6; color: white; border-radius: 50%; clip-path: none; }
-        .status-marked-answered { background-color: #8b5cf6; color: white; border-radius: 50%; clip-path: none; position: relative;}
-        .status-marked-answered::after {
-            content: ''; position: absolute; bottom: 2px; right: 2px; width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%;
-        }
-
-        /* Custom Radio Button */
-        .option-label {
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .option-label:hover {
-            background-color: #eff6ff;
-        }
-        .option-input:checked + .option-text {
-            font-weight: 600;
-            color: #1e40af;
+        /* Disable physical printing */
+        @media print {
+            body { display: none !important; }
         }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden">
+<body class="text-gray-800 h-screen flex flex-col">
 
-    <!-- Screen 1: Start Screen -->
-    <div id="start-screen" class="absolute inset-0 z-50 bg-white flex items-center justify-center">
-        <div class="max-w-2xl w-full p-8 bg-white border border-gray-200 rounded-lg shadow-xl text-center">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Central Board Mock Test</h1>
-            <h2 class="text-xl text-gray-600 mb-6">Subject: Mathematics (Squares & Square Roots) | Class: 8</h2>
-            
-            <div class="bg-blue-50 p-6 rounded-md text-left mb-8 text-sm text-gray-700">
-                <h3 class="font-bold text-lg mb-2 text-blue-900">General Instructions:</h3>
-                <ul class="list-disc pl-5 space-y-2">
-                    <li>The examination will comprise of <strong>20</strong> Multiple Choice Questions (MCQs).</li>
-                    <li>Total duration of the exam is <strong>20 minutes</strong>.</li>
-                    <li>You can attempt this test <strong>only once</strong>. Re-attempts are strictly prohibited.</li>
-                    <li><strong>Fullscreen Enforcement:</strong> Exiting fullscreen mode will pause the exam and block access until you return to fullscreen.</li>
-                    <li>Use the palette on the right to navigate. Ensure you click "Save & Next" to submit an answer.</li>
-                    <li>Once submitted, you will be able to review your answers.</li>
+    <!-- Blur Warning Overlay -->
+    <div id="blur-overlay">
+        <svg class="w-24 h-24 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        <h1 class="text-4xl font-bold mb-2">WARNING!</h1>
+        <p class="text-xl max-w-lg">You have navigated away from the exam window. This action is recorded. Please click anywhere on the screen to return to the exam.</p>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-[10000] flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4 shadow-2xl">
+            <h3 class="text-xl font-bold mb-4 text-gray-800">Confirm Submission</h3>
+            <p id="confirm-msg" class="text-gray-600 mb-6"></p>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeConfirmModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 font-semibold transition">Cancel</button>
+                <button onclick="proceedWithSubmit()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-semibold transition">Yes, Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions / Entry Page -->
+    <div id="intro-screen" class="flex-1 flex items-center justify-center bg-white">
+        <div class="max-w-2xl w-full p-8 bg-gray-50 rounded-xl shadow-lg border border-gray-200">
+            <h1 class="text-3xl font-bold text-blue-700 mb-2 border-b pb-4">CBSE Grade 8 - Mathematics Assessment</h1>
+            <div class="mt-4 space-y-4 text-gray-700">
+                <p><strong>Candidate Name:</strong> Ayisha</p>
+                <p><strong>Subject:</strong> Squares, Square Roots, Cubes, and Cube Roots</p>
+                <p><strong>Total Questions:</strong> 20</p>
+                <p><strong>Total Time:</strong> 30 Minutes</p>
+                
+                <h3 class="font-bold text-lg mt-6 text-red-600">Strict Instructions (Read Carefully):</h3>
+                <ul class="list-disc pl-5 space-y-2 text-sm">
+                    <li>The exam will automatically open in <strong>Fullscreen Mode</strong>.</li>
+                    <li><strong>Do not exit fullscreen</strong>, switch tabs, or minimize the browser. Doing so will freeze the exam and log a warning.</li>
+                    <li>Right-click, text selection (except in text boxes), Inspect Element, and Print Screen are strictly disabled.</li>
+                    <li>Some questions are multiple choice, while others require you to <strong>type your answer</strong>.</li>
+                    <li>You can only attempt this examination <strong>once</strong>.</li>
                 </ul>
             </div>
             
-            <button onclick="startExam()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-md shadow transition duration-200 text-lg">
-                I am ready to begin
+            <div id="already-attempted-msg" class="hidden mt-6 p-4 bg-red-100 text-red-700 border border-red-400 rounded">
+                You have already completed this exam. Multiple attempts are not allowed.
+            </div>
+
+            <button id="start-btn" onclick="startExam()" class="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-200 shadow-md">
+                I am Ready, Begin Test
             </button>
         </div>
     </div>
 
-    <!-- Fullscreen Enforcement Overlay -->
-    <div id="fullscreen-blocker" class="hidden fixed inset-0 z-[100] bg-gray-900 bg-opacity-95 flex items-center justify-center backdrop-blur-sm">
-        <div class="bg-white p-8 rounded-lg shadow-2xl max-w-lg w-full text-center">
-            <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
+    <!-- Main Exam Interface -->
+    <div id="exam-screen" class="hidden h-screen flex flex-col">
+        <!-- Top Navbar -->
+        <div class="bg-blue-700 text-white px-6 py-3 flex justify-between items-center shadow-md">
+            <div class="font-bold text-xl tracking-wide">CBSE ONLINE ASSESSMENT</div>
+            <div class="flex items-center space-x-6">
+                <div class="bg-blue-800 px-4 py-1 rounded text-sm font-semibold">Candidate: Ayisha</div>
+                <div class="flex items-center text-lg font-mono bg-red-600 px-4 py-1 rounded shadow-inner">
+                    Time Left: <span id="timer-display" class="ml-2 font-bold">30:00</span>
+                </div>
             </div>
-            <h2 class="text-3xl font-bold text-gray-800 mb-4">Exam Paused</h2>
-            <p class="text-gray-600 text-lg mb-8">You have exited fullscreen mode. For exam integrity, you must remain in fullscreen mode to attempt the questions.</p>
-            <button onclick="requestFullscreenAndContinue()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow transition duration-200 text-lg">
-                Return to Fullscreen
-            </button>
         </div>
-    </div>
 
-    <!-- Screen 2: Exam Interface -->
-    <div id="exam-screen" class="hidden h-full flex flex-col">
-        <!-- Header -->
-        <header class="exam-header text-white shadow-md z-10 flex justify-between items-center px-6 py-3">
-            <div class="flex items-center gap-4">
-                <div class="font-bold text-xl tracking-wide">CBT MOCK PORTAL</div>
-            </div>
-            <div class="flex items-center gap-8">
-                <div class="flex flex-col text-right">
-                    <span class="text-sm text-blue-200">Candidate Name:</span>
-                    <span class="font-semibold text-lg">Ayisha</span>
-                </div>
-                <div class="bg-white text-blue-900 px-4 py-2 rounded shadow-inner border border-blue-200 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
-                    </svg>
-                    <span class="text-sm font-bold">Time Left:</span>
-                    <span id="timer" class="text-xl font-mono font-bold text-red-600">20:00</span>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content Layout -->
-        <div class="flex-1 flex overflow-hidden">
-            
+        <div class="flex flex-1 overflow-hidden">
             <!-- Left Side: Question Area -->
-            <div class="flex-1 flex flex-col bg-white overflow-y-auto">
+            <div class="flex-1 flex flex-col bg-white border-r border-gray-300">
                 <!-- Question Header -->
-                <div class="border-b border-gray-200 px-8 py-4 flex justify-between items-center bg-gray-50">
-                    <h2 class="text-xl font-bold text-gray-800" id="q-number-display">Question No. 1</h2>
-                    <div class="text-sm font-semibold text-gray-500 bg-gray-200 px-3 py-1 rounded">Single Choice Type</div>
+                <div class="px-8 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                    <h2 id="q-no-header" class="text-xl font-bold text-gray-800">Question No. 1</h2>
+                    <span class="text-sm font-semibold text-gray-500">Marks: +1, -0</span>
                 </div>
 
                 <!-- Question Content -->
-                <div class="px-8 py-6 flex-1">
-                    <p id="q-text" class="text-lg text-gray-800 mb-8 leading-relaxed font-medium">
-                        Loading question...
-                    </p>
+                <div class="p-8 flex-1 overflow-y-auto">
+                    <div id="case-study-container" class="hidden mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-900 shadow-sm">
+                        <h3 class="font-bold mb-2">Case Study:</h3>
+                        <p id="case-study-text" class="text-sm leading-relaxed"></p>
+                    </div>
+                    <div id="question-text" class="text-lg font-medium text-gray-800 mb-8 leading-relaxed">
+                        <!-- Question goes here -->
+                    </div>
 
-                    <div id="options-container" class="space-y-4 max-w-2xl">
-                        <!-- Options injected via JS -->
+                    <!-- Options / Text Input -->
+                    <div id="options-container" class="space-y-3">
+                        <!-- Injected here via JS -->
                     </div>
                 </div>
 
-                <!-- Action Footer -->
-                <div class="border-t border-gray-200 p-4 bg-gray-50 flex justify-between items-center gap-2">
-                    <div class="flex gap-2">
-                        <button onclick="markForReview()" class="px-6 py-2 border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-medium rounded shadow-sm">
-                            Mark for Review & Next
-                        </button>
-                        <button onclick="clearResponse()" class="px-6 py-2 border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-medium rounded shadow-sm">
-                            Clear Response
-                        </button>
+                <!-- Bottom Action Buttons -->
+                <div class="p-4 bg-gray-100 border-t border-gray-300 flex justify-between items-center">
+                    <div class="space-x-3">
+                        <button onclick="markForReview()" class="px-5 py-2 bg-purple-100 text-purple-700 border border-purple-300 rounded font-semibold hover:bg-purple-200 transition">Mark for Review & Next</button>
+                        <button onclick="clearResponse()" class="px-5 py-2 bg-white text-gray-700 border border-gray-300 rounded font-semibold hover:bg-gray-50 transition">Clear Response</button>
+                    </div>
+                    <div class="space-x-3">
+                        <button id="prev-btn" onclick="prevQuestion()" class="px-5 py-2 bg-gray-500 text-white rounded font-semibold hover:bg-gray-600 transition disabled:opacity-50">Previous</button>
+                        <button id="next-btn" onclick="saveAndNext()" class="px-6 py-2 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition">Save & Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Palette -->
+            <div class="w-80 bg-gray-50 flex flex-col shadow-inner z-10">
+                <div class="p-4 border-b border-gray-300 flex-1 overflow-y-auto">
+                    <div class="grid grid-cols-2 gap-2 text-xs mb-6 font-semibold">
+                        <div class="flex items-center"><div class="w-4 h-4 btn-answered rounded-sm mr-2"></div> Answered</div>
+                        <div class="flex items-center"><div class="w-4 h-4 btn-not-answered rounded-sm mr-2"></div> Not Answered</div>
+                        <div class="flex items-center"><div class="w-4 h-4 btn-not-visited rounded-sm mr-2"></div> Not Visited</div>
+                        <div class="flex items-center"><div class="w-4 h-4 btn-marked rounded-sm mr-2"></div> Marked Review</div>
                     </div>
                     
-                    <button onclick="saveAndNext()" class="px-8 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded shadow-sm">
-                        Save & Next
-                    </button>
-                </div>
-            </div>
-
-            <!-- Right Side: Status Palette -->
-            <div class="w-80 bg-blue-50 border-l border-blue-100 flex flex-col shadow-inner">
-                <!-- Candidate Info Mini -->
-                <div class="p-4 border-b border-blue-100 flex items-center gap-3 bg-white">
-                    <div class="w-16 h-16 bg-gray-200 rounded-md border border-gray-300 flex items-center justify-center text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="font-bold text-gray-700 text-sm">Ayisha</div>
-                        <div class="text-xs text-gray-500">Sub: Mathematics</div>
+                    <h3 class="font-bold text-gray-700 mb-3 border-b pb-2">Question Palette</h3>
+                    <div id="palette-grid" class="grid grid-cols-4 gap-3">
+                        <!-- Palette Buttons injected here -->
                     </div>
                 </div>
-
-                <!-- Palette Legend -->
-                <div class="p-4 grid grid-cols-2 gap-y-3 gap-x-2 text-xs font-medium text-gray-600 border-b border-blue-100 bg-white">
-                    <div class="flex items-center gap-2"><div class="w-6 h-6 status-answered flex items-center justify-center text-white">0</div> Answered</div>
-                    <div class="flex items-center gap-2"><div class="w-6 h-6 status-not-answered flex items-center justify-center text-white">0</div> Not Answered</div>
-                    <div class="flex items-center gap-2"><div class="w-6 h-6 status-not-visited flex items-center justify-center">0</div> Not Visited</div>
-                    <div class="flex items-center gap-2"><div class="w-6 h-6 status-marked flex items-center justify-center text-white">0</div> Marked for Review</div>
-                    <div class="flex items-center gap-2 col-span-2"><div class="w-6 h-6 status-marked-answered flex items-center justify-center text-white">0</div> Answered & Marked for Review</div>
-                </div>
-
-                <!-- Question Buttons -->
-                <div class="p-4 flex-1 overflow-y-auto">
-                    <h3 class="text-sm font-bold text-blue-900 mb-3 border-b border-blue-200 pb-1">Mathematics section</h3>
-                    <div id="palette-container" class="flex flex-wrap gap-3">
-                        <!-- Buttons injected via JS -->
-                    </div>
-                </div>
-
-                <!-- Submit Section -->
-                <div class="p-4 bg-gray-200 border-t border-gray-300">
-                    <button onclick="confirmSubmit()" class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded shadow transition duration-200">
-                        Submit Final Test
+                
+                <div class="p-4 bg-gray-200 border-t border-gray-300 text-center">
+                    <button onclick="submitExamConfirmation()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded shadow-md transition duration-200">
+                        Submit Exam
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Screen 3: Result Screen -->
-    <div id="result-screen" class="hidden absolute inset-0 z-50 bg-gray-100 flex items-center justify-center">
-        <div class="max-w-md w-full p-8 bg-white border border-gray-200 rounded-lg shadow-xl text-center">
-            <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-            </div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Exam Submitted</h1>
-            <p class="text-gray-600 mb-6">You have successfully completed the mock test. Note that you cannot re-attempt this exam.</p>
-            
-            <div class="bg-gray-50 border border-gray-200 rounded p-6 mb-6">
-                <div class="text-sm text-gray-500 uppercase tracking-wide font-bold mb-1">Your Score</div>
-                <div class="text-5xl font-black text-blue-600 mb-2"><span id="final-score">0</span><span class="text-2xl text-gray-400">/20</span></div>
-                <div class="text-sm font-medium text-gray-600" id="result-message">Good job!</div>
+    <!-- Result Screen -->
+    <div id="result-screen" class="hidden flex-1 overflow-y-auto bg-gray-100 p-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white p-8 rounded-xl shadow-lg mb-8 text-center border-t-8 border-blue-600">
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">Exam Successfully Submitted!</h1>
+                <p class="text-gray-600 text-lg mb-8">Candidate: <strong>Ayisha</strong></p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <div class="text-sm text-gray-500 font-bold uppercase">Total Score</div>
+                        <div id="res-score" class="text-3xl font-black text-blue-700 mt-1">0/20</div>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                        <div class="text-sm text-gray-500 font-bold uppercase">Accuracy</div>
+                        <div id="res-accuracy" class="text-3xl font-black text-green-700 mt-1">0%</div>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
+                        <div class="text-sm text-gray-500 font-bold uppercase">Time Taken</div>
+                        <div id="res-time" class="text-3xl font-black text-purple-700 mt-1">0m 0s</div>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <div class="text-sm text-gray-500 font-bold uppercase">Attempted</div>
+                        <div id="res-attempted" class="text-3xl font-black text-orange-700 mt-1">0</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="flex flex-col gap-3">
-                <button onclick="showReviewScreen()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-200">
-                    Review Answers
-                </button>
-                <button onclick="window.close();" class="text-sm text-gray-500 hover:text-gray-800 underline mt-2">Close Window</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Screen 4: Review Answers Screen -->
-    <div id="review-screen" class="hidden absolute inset-0 z-50 bg-gray-100 flex flex-col">
-        <header class="exam-header text-white shadow-md z-10 flex justify-between items-center px-6 py-4">
-            <h1 class="text-2xl font-bold">Review Your Answers</h1>
-            <button onclick="closeReview()" class="px-6 py-2 bg-white text-blue-900 rounded font-bold hover:bg-gray-100">Back to Results</button>
-        </header>
-        <div class="flex-1 overflow-y-auto p-8" id="review-container">
-            <!-- Review items injected here -->
-        </div>
-    </div>
-
-    <!-- Custom Modal for Alerts -->
-    <div id="custom-alert" class="hidden fixed inset-0 z-[60] bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white p-6 rounded shadow-xl max-w-sm w-full text-center">
-            <h3 class="text-lg font-bold text-gray-800 mb-4" id="alert-title">Notice</h3>
-            <p class="text-gray-600 mb-6" id="alert-message">Message goes here.</p>
-            <div class="flex justify-center gap-3" id="alert-buttons">
-                <button onclick="closeAlert()" class="px-4 py-2 bg-blue-600 text-white rounded">OK</button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Detailed Analysis & Solutions</h2>
+            <div id="solutions-container" class="space-y-6">
+                <!-- Solutions generated via JS -->
             </div>
         </div>
     </div>
 
     <script>
-        // Updated Questions Data - Similar concepts to the images but completely NEW questions and values
+        // --- 1. QUESTION DATA (Mixed MCQ & Text Input) ---
         const questions = [
-            { id: 1, text: "Which of the following is the number of zeros in the square of 700?", options: ["2", "3", "4", "5"], correctAnswer: 2 },
-            { id: 2, text: "Which of the following numbers is a perfect square?", options: ["225", "1028", "7923", "85000"], correctAnswer: 0 },
-            { id: 3, text: "Which of the following will have 9 at its unit's place?", options: ["12<sup>2</sup>", "14<sup>2</sup>", "17<sup>2</sup>", "15<sup>2</sup>"], correctAnswer: 2 },
-            { id: 4, text: "If 8439 is squared, what will be the digit at its unit's place?", options: ["1", "9", "3", "7"], correctAnswer: 0 },
-            { id: 5, text: "The square of an odd natural number is always ___________?", options: ["prime", "even", "odd", "a multiple of 3"], correctAnswer: 2 },
-            { id: 6, text: "The value of 21<sup>2</sup> - 1 is:", options: ["40", "41", "440", "441"], correctAnswer: 2 },
-            { id: 7, text: "The value of &radic;(0.09 &times; 0.49) is:", options: ["21", "2.1", "0.21", "0.0021"], correctAnswer: 2 },
-            { id: 8, text: "Which of the following is the sum of the first six odd natural numbers?", options: ["25", "36", "49", "64"], correctAnswer: 1 },
-            { id: 9, text: "Find the length of the side of a square field whose area is 784 m<sup>2</sup>.", options: ["22 m", "24 m", "26 m", "28 m"], correctAnswer: 3 },
-            { id: 10, text: "A perfect square can never end with which of the following number of zeros?", options: ["2", "4", "6", "3"], correctAnswer: 3 },
-            { id: 11, text: "Find the square root of 5184.", options: ["62", "72", "82", "92"], correctAnswer: 1 },
-            { id: 12, text: "Find the square root of 15625.", options: ["115", "125", "135", "145"], correctAnswer: 1 },
-            { id: 13, text: "Find the square root of 2401.", options: ["31", "39", "41", "49"], correctAnswer: 3 },
-            { id: 14, text: "Which of the following numbers CANNOT be a perfect square?", options: ["1024", "3136", "4057", "5041"], correctAnswer: 2 },
-            { id: 15, text: "Which one among 53<sup>2</sup>, 114<sup>2</sup>, 381<sup>2</sup>, 45<sup>2</sup> has its last digit as 6?", options: ["53<sup>2</sup>", "114<sup>2</sup>", "381<sup>2</sup>", "45<sup>2</sup>"], correctAnswer: 1 },
-            { id: 16, text: "Given 135<sup>2</sup> = 18225, what is the value of 136<sup>2</sup>?", options: ["18225 + 135", "18225 + 36<sup>2</sup>", "18225 + 271", "18225 + 136"], correctAnswer: 2 },
-            { id: 17, text: "The value of 35<sup>2</sup> - 34<sup>2</sup> is:", options: ["34", "35", "69", "1"], correctAnswer: 2 },
-            { id: 18, text: "Which of the following represents a Pythagorean triplet?", options: ["(2, 3, 4)", "(6, 8, 10)", "(5, 7, 9)", "(8, 9, 10)"], correctAnswer: 1 },
-            { id: 19, text: "Find the square root of 256/441.", options: ["14/21", "16/21", "16/19", "14/19"], correctAnswer: 1 },
-            { id: 20, text: "By which smallest natural number should 50 be multiplied to get a perfect square?", options: ["2", "3", "4", "5"], correctAnswer: 0 }
+            { id: 1, type: "normal", inputType: "mcq", q: "Given 125² = 15625, what is the value of 126²?", options: ["15625 + 126", "15625 + 26²", "15625 + 253", "15625 + 251"], ans: 3 },
+            { id: 2, type: "normal", inputType: "multi-text", q: "Find the smallest number by which 9408 must be multiplied so that the product is a perfect square. Find the square root of the product.", inputs: [{label: "Smallest number to multiply:", keyword: "3"}, {label: "Square root of the product:", keyword: "168"}], displayAns: "Multiply by 3, Square root is 168" },
+            { id: 3, type: "normal", inputType: "multi-text", q: "Find the length of the side of a square whose area is 441 m².", inputs: [{label: "Length of the side (in m):", keyword: "21"}], displayAns: "21 m" },
+            { id: 4, type: "normal", inputType: "mcq", q: "Is 500 a perfect cube?", options: ["Yes", "No", "It is a perfect square"], ans: 1 },
+            { id: 5, type: "normal", inputType: "multi-text", q: "Find the cube roots of these numbers respectively: 64, 512, and 729.", inputs: [{label: "Cube root of 64:", keyword: "4"}, {label: "Cube root of 512:", keyword: "8"}, {label: "Cube root of 729:", keyword: "9"}], displayAns: "4, 8, and 9" },
+            { id: 6, type: "normal", inputType: "multi-text", q: "Find the cube roots of 27000 and 10648 respectively.", inputs: [{label: "Cube root of 27000:", keyword: "30"}, {label: "Cube root of 10648:", keyword: "22"}], displayAns: "30 and 22" },
+            { id: 7, type: "normal", inputType: "mcq", q: "What smallest number will you multiply by 1323 to make it a perfect cube number?", options: ["3", "7", "9", "21"], ans: 1 },
+            { id: 8, type: "normal", inputType: "multi-text", q: "Find the smallest number by which 7442 must be divided so that it becomes a perfect square.", inputs: [{label: "Smallest number to divide by:", keyword: "2"}], displayAns: "Divide by 2" },
+            { id: 9, type: "normal", inputType: "multi-text", q: "What will be the unit digit of the square of the number 8437?", inputs: [{label: "Unit digit:", keyword: "9"}], displayAns: "9" },
+            { id: 10, type: "normal", inputType: "mcq", q: "Is 1458 a perfect square?", options: ["Yes", "No"], ans: 1 },
+            { id: 11, type: "normal", inputType: "multi-text", q: "Find the smallest multiple of 1458 that is a perfect square. Also, find the square root of the new number.", inputs: [{label: "Smallest multiple:", keyword: "2916"}, {label: "Square root of the new number:", keyword: "54"}], displayAns: "Multiple: 2916, Square root: 54" },
+            { id: 12, type: "normal", inputType: "multi-text", q: "The students of class 8 of a school donated ₹ 1296 to PM’s relief fund. Each student donated as many rupees as the number of students in the class. Find the number of students in the class.", inputs: [{label: "Number of students in the class:", keyword: "36"}], displayAns: "36 students" },
+            { id: 13, type: "normal", inputType: "multi-text", q: "Find the cube root of 5832 by the prime factorisation method.", inputs: [{label: "Cube root:", keyword: "18"}], displayAns: "18" },
+            { id: 14, type: "normal", inputType: "multi-text", q: "By which smallest number should we multiply 675 to make it a perfect cube? Also, find the cube root of the perfect cube so obtained.", inputs: [{label: "Smallest number to multiply:", keyword: "5"}, {label: "Cube root of the perfect cube:", keyword: "15"}], displayAns: "Multiply by 5, Cube root is 15" },
+            { id: 15, type: "normal", inputType: "multi-text", q: "Find the smallest number by which 135 must be divided to obtain a perfect cube. Also, find the cube root of the perfect cube so obtained.", inputs: [{label: "Smallest number to divide by:", keyword: "5"}, {label: "Cube root of the perfect cube:", keyword: "3"}], displayAns: "Divide by 5, Cube root is 3" },
+            { id: 16, type: "normal", inputType: "multi-text", q: "Find the side of a cubical box whose volume is 1728 cm³.", inputs: [{label: "Side of the cubical box (in cm):", keyword: "12"}], displayAns: "12 cm" },
+            
+            // Case Based Questions
+            { id: 17, type: "case", inputType: "mcq", caseText: "CASE STUDY 1: A school administration is planning an eco-friendly drive. They brought 2000 saplings to be planted in a square grid layout in the massive school ground, such that the number of rows equals the number of columns.", q: "How many minimum saplings are left out if they arrange them in a perfect square grid?", options: ["64", "36", "100", "24"], ans: 0 },
+            { id: 18, type: "case", inputType: "mcq", caseText: "CASE STUDY 1: A school administration is planning an eco-friendly drive. They brought 2000 saplings to be planted in a square grid layout in the massive school ground, such that the number of rows equals the number of columns.", q: "If the school decides to form the next possible larger perfect square grid, how many MORE saplings do they need to bring?", options: ["25", "36", "45", "64"], ans: 0 },
+            { id: 19, type: "case", inputType: "multi-text", caseText: "CASE STUDY 2: Ayisha is working on a math project. She is constructing a large solid cube using smaller identical wooden blocks. Each small wooden block has dimensions 2 cm × 2 cm × 2 cm.", q: "If the total volume of the large solid cube she built is 8000 cm³, what is the length of the edge of this large cube?", inputs: [{label: "Length of the edge (in cm):", keyword: "20"}], displayAns: "20 cm" },
+            { id: 20, type: "case", inputType: "mcq", caseText: "CASE STUDY 2: Ayisha is working on a math project. She is constructing a large solid cube using smaller identical wooden blocks. Each small wooden block has dimensions 2 cm × 2 cm × 2 cm.", q: "How many small wooden blocks did Ayisha use to construct the large cube of 8000 cm³?", options: ["100", "500", "1000", "2000"], ans: 2 }
         ];
 
-        // State Variables
-        let currentQuestionIndex = 0;
-        let selectedAnswers = new Array(questions.length).fill(null); // stores index of chosen option
-        let questionStatuses = new Array(questions.length).fill('not-visited'); // not-visited, not-answered, answered, marked, marked-answered
-        let timeRemaining = 20 * 60; // 20 minutes in seconds
-        let timerInterval;
-        let isExamActive = false; // Tracks if the user is currently taking the exam
-        const EXAM_KEY = 'cbse8MathExamAttempted_v3';
+        // --- 2. STATE MANAGEMENT ---
+        let currentQIndex = 0;
+        const totalQuestions = questions.length;
+        const examDuration = 30 * 60; // 30 minutes in seconds
+        let timeRemaining = examDuration;
+        let timerInterval = null;
+        let startTime = null;
 
-        // Initialize Application
-        window.onload = function() {
-            // Check if exam was already attempted
-            const previousScore = localStorage.getItem(EXAM_KEY);
-            if (previousScore !== null) {
-                // If taking from cache, populate answers from session if we saved them, but simple score display is fine
-                showResultScreen(parseInt(previousScore));
+        // Status: "not_visited", "not_answered", "answered", "marked"
+        let answers = questions.map(() => ({
+            status: "not_visited",
+            selectedOption: null,
+            textAnswers: []
+        }));
+
+        // --- 3. INITIALIZATION & ANTI-CHEAT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if already attempted
+            if (localStorage.getItem('ayisha_exam_completed') === 'true') {
+                document.getElementById('already-attempted-msg').classList.remove('hidden');
+                document.getElementById('start-btn').classList.add('hidden');
+                return;
             }
-        };
 
-        // Fullscreen Enforcement Logic
-        function enforceFullscreen() {
-            if (!isExamActive) return;
-
-            const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-            const blocker = document.getElementById('fullscreen-blocker');
-
-            if (!isFullscreen) {
-                blocker.classList.remove('hidden');
-            } else {
-                blocker.classList.add('hidden');
-            }
-        }
-
-        // Event listeners for exiting/entering fullscreen
-        document.addEventListener('fullscreenchange', enforceFullscreen);
-        document.addEventListener('webkitfullscreenchange', enforceFullscreen);
-        document.addEventListener('msfullscreenchange', enforceFullscreen);
-
-        // Helper to request fullscreen 
-        function requestFullscreenAndContinue() {
-            const elem = document.documentElement;
-            let promise;
-            if (elem.requestFullscreen) {
-                promise = elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Safari */
-                promise = elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE11 */
-                promise = elem.msRequestFullscreen();
-            }
+            // Anti-cheat Listeners
+            document.addEventListener('contextmenu', e => e.preventDefault()); // Block right click
             
-            if(promise !== undefined){
-                promise.catch(err => console.log(`Error attempting to enable fullscreen: ${err.message}`));
+            const handlePrintScreen = (e) => {
+                if (e.key === 'PrintScreen' || e.code === 'PrintScreen') {
+                    e.preventDefault();
+                    // Attempt to overwrite clipboard
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText('Screenshots are disabled during this examination.').catch(()=> {});
+                    }
+                    // Show blur warning immediately
+                    document.getElementById('blur-overlay').style.display = 'flex';
+                }
+            };
+
+            document.addEventListener('keydown', (e) => {
+                // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+                if (e.key === 'F12' || 
+                   (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || 
+                   (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                }
+                handlePrintScreen(e);
+            });
+            
+            // Also catch keyup for PrintScreen as OS behaves differently on different platforms
+            document.addEventListener('keyup', handlePrintScreen);
+
+            document.addEventListener('copy', e => {
+                // Allow copy inside textarea and text inputs
+                if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
+                    e.preventDefault();
+                }
+            });
+            
+            // Window focus tracking
+            window.addEventListener('blur', () => {
+                if(!document.getElementById('exam-screen').classList.contains('hidden') && 
+                   document.getElementById('result-screen').classList.contains('hidden')) {
+                    document.getElementById('blur-overlay').style.display = 'flex';
+                }
+            });
+
+            // Click overlay to return
+            document.getElementById('blur-overlay').addEventListener('click', () => {
+                document.getElementById('blur-overlay').style.display = 'none';
+                enterFullscreen(); // Ensure it stays fullscreen
+            });
+        });
+
+        function enterFullscreen() {
+            let elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => console.log("Fullscreen restriction:", err));
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
             }
         }
 
+        // --- 4. EXAM LOGIC ---
         function startExam() {
-            // Request Fullscreen
-            requestFullscreenAndContinue();
-
-            // Set exam to active
-            isExamActive = true;
-
-            document.getElementById('start-screen').classList.add('hidden');
+            enterFullscreen();
+            document.getElementById('intro-screen').classList.add('hidden');
             document.getElementById('exam-screen').classList.remove('hidden');
             
-            // Start timer
-            timerInterval = setInterval(updateTimer, 1000);
-            
-            // Initialize first question status
-            questionStatuses[0] = 'not-answered';
-            
-            renderPalette();
+            answers[0].status = "not_answered"; 
+            startTime = Date.now();
+            initPalette();
             loadQuestion(0);
+            
+            timerInterval = setInterval(updateTimer, 1000);
         }
 
         function updateTimer() {
-            // Only tick the timer if the blocker is not active
-            const blocker = document.getElementById('fullscreen-blocker');
-            if(!blocker.classList.contains('hidden')){
-                return; // Pause timer when fullscreen is exited
+            timeRemaining--;
+            let m = Math.floor(timeRemaining / 60);
+            let s = timeRemaining % 60;
+            document.getElementById('timer-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            
+            if(timeRemaining <= 300) { // last 5 minutes
+                document.getElementById('timer-display').parentElement.classList.replace('bg-red-600', 'bg-red-800');
+                document.getElementById('timer-display').parentElement.classList.add('animate-pulse');
             }
 
             if (timeRemaining <= 0) {
                 clearInterval(timerInterval);
-                autoSubmit();
-                return;
+                submitExam();
             }
-            timeRemaining--;
-            const minutes = Math.floor(timeRemaining / 60);
-            const seconds = timeRemaining % 60;
-            document.getElementById('timer').innerText = 
-                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function initPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            for(let i=0; i<totalQuestions; i++) {
+                let btn = document.createElement('div');
+                btn.className = `question-palette-btn btn-${answers[i].status.replace('_', '-')}`;
+                btn.innerText = i + 1;
+                btn.onclick = () => jumpToQuestion(i);
+                btn.id = `pal-btn-${i}`;
+                grid.appendChild(btn);
+            }
+        }
+
+        function updatePaletteUI() {
+            for(let i=0; i<totalQuestions; i++) {
+                let btn = document.getElementById(`pal-btn-${i}`);
+                btn.className = `question-palette-btn btn-${answers[i].status.replace('_', '-')}`;
+                if(i === currentQIndex) {
+                    btn.classList.add('ring-4', 'ring-blue-300', 'scale-110');
+                }
+            }
         }
 
         function loadQuestion(index) {
-            currentQuestionIndex = index;
+            currentQIndex = index;
             const q = questions[index];
             
-            // Update Header
-            document.getElementById('q-number-display').innerText = `Question No. ${index + 1}`;
+            if(answers[index].status === "not_visited") {
+                answers[index].status = "not_answered";
+            }
             
-            // Update Text
-            document.getElementById('q-text').innerHTML = `${index + 1}. ${q.text}`;
+            document.getElementById('q-no-header').innerText = `Question No. ${index + 1}`;
             
-            // Update Options
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
-            
-            q.options.forEach((opt, optIndex) => {
-                const isChecked = selectedAnswers[index] === optIndex ? 'checked' : '';
-                
-                const optionHtml = `
-                    <label class="option-label flex items-center p-4 border border-gray-200 rounded-md">
-                        <input type="radio" name="q_option" value="${optIndex}" class="option-input w-5 h-5 text-blue-600 focus:ring-blue-500" ${isChecked} onchange="selectOption(${optIndex})">
-                        <span class="option-text ml-3 text-gray-700 text-lg">${String.fromCharCode(65 + optIndex)}. ${opt}</span>
-                    </label>
-                `;
-                optionsContainer.insertAdjacentHTML('beforeend', optionHtml);
-            });
+            // Handle Case Study UI
+            const caseContainer = document.getElementById('case-study-container');
+            const caseText = document.getElementById('case-study-text');
+            if(q.type === "case") {
+                caseText.innerText = q.caseText;
+                caseContainer.classList.remove('hidden');
+            } else {
+                caseContainer.classList.add('hidden');
+            }
 
-            // Update palette styling to highlight current
-            renderPalette();
+            document.getElementById('question-text').innerText = q.q;
+
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+            
+            if (q.inputType === "mcq") {
+                // Generate Options
+                q.options.forEach((optText, optIndex) => {
+                    let row = document.createElement('label');
+                    row.className = `option-row ${answers[index].selectedOption === optIndex ? 'selected' : ''}`;
+                    
+                    let input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `q-${index}`;
+                    input.value = optIndex;
+                    input.checked = answers[index].selectedOption === optIndex;
+                    input.onchange = () => selectOption(optIndex);
+                    
+                    let span = document.createElement('span');
+                    span.innerText = optText;
+                    
+                    row.appendChild(input);
+                    row.appendChild(span);
+                    optsContainer.appendChild(row);
+                });
+            } else if (q.inputType === "multi-text") {
+                // Generate Multiple Text Input Spaces
+                let wrapper = document.createElement('div');
+                wrapper.className = 'mt-4 space-y-4';
+                
+                // Initialize array if empty
+                if (!answers[index].textAnswers) answers[index].textAnswers = [];
+
+                q.inputs.forEach((inputDef, idx) => {
+                    let inputGroup = document.createElement('div');
+                    inputGroup.className = 'flex flex-col space-y-2';
+                    
+                    let label = document.createElement('label');
+                    label.className = 'font-semibold text-gray-700';
+                    label.innerText = inputDef.label;
+                    
+                    let input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg shadow-inner';
+                    input.placeholder = 'Type your answer...';
+                    input.value = answers[index].textAnswers[idx] || '';
+                    
+                    input.oninput = (e) => {
+                        answers[index].textAnswers[idx] = e.target.value;
+                    };
+                    
+                    inputGroup.appendChild(label);
+                    inputGroup.appendChild(input);
+                    wrapper.appendChild(inputGroup);
+                });
+                
+                optsContainer.appendChild(wrapper);
+            }
+
+            document.getElementById('prev-btn').disabled = index === 0;
+            document.getElementById('next-btn').innerText = index === totalQuestions - 1 ? 'Save' : 'Save & Next';
+            
+            updatePaletteUI();
         }
 
         function selectOption(optIndex) {
-            selectedAnswers[currentQuestionIndex] = optIndex;
+            answers[currentQIndex].selectedOption = optIndex;
+            // Update UI dynamically
+            const rows = document.querySelectorAll('#options-container .option-row');
+            rows.forEach((row, i) => {
+                if(i === optIndex) row.classList.add('selected');
+                else row.classList.remove('selected');
+            });
         }
 
         function clearResponse() {
-            selectedAnswers[currentQuestionIndex] = null;
-            // Uncheck UI radios
-            const radios = document.getElementsByName('q_option');
-            radios.forEach(r => r.checked = false);
+            if (questions[currentQIndex].inputType === "mcq") {
+                answers[currentQIndex].selectedOption = null;
+            } else {
+                answers[currentQIndex].textAnswers = [];
+            }
+            answers[currentQIndex].status = "not_answered";
+            loadQuestion(currentQIndex);
+        }
+
+        function checkHasAnswer(index) {
+            let q = questions[index];
+            if (q.inputType === "mcq") {
+                return answers[index].selectedOption !== null;
+            } else {
+                let ansArr = answers[index].textAnswers;
+                // Check if the answers array exists and has the correct number of elements
+                if (!ansArr || ansArr.length < q.inputs.length) return false;
+                // Verify that every required input is not empty
+                return q.inputs.every((inp, idx) => {
+                    let val = ansArr[idx];
+                    return val !== undefined && val !== null && val.trim() !== "";
+                });
+            }
         }
 
         function saveAndNext() {
-            // Determine status based on if answer is selected
-            if (selectedAnswers[currentQuestionIndex] !== null) {
-                questionStatuses[currentQuestionIndex] = 'answered';
-            } else {
-                questionStatuses[currentQuestionIndex] = 'not-answered';
-            }
+            answers[currentQIndex].status = checkHasAnswer(currentQIndex) ? "answered" : "not_answered";
             
-            moveToNextQuestion();
+            if(currentQIndex < totalQuestions - 1) {
+                loadQuestion(currentQIndex + 1);
+            } else {
+                updatePaletteUI();
+            }
         }
 
         function markForReview() {
-            if (selectedAnswers[currentQuestionIndex] !== null) {
-                questionStatuses[currentQuestionIndex] = 'marked-answered';
+            answers[currentQIndex].status = "marked";
+            if(currentQIndex < totalQuestions - 1) {
+                loadQuestion(currentQIndex + 1);
             } else {
-                questionStatuses[currentQuestionIndex] = 'marked';
+                updatePaletteUI();
             }
-            
-            moveToNextQuestion();
         }
 
-        function moveToNextQuestion() {
-            if (currentQuestionIndex < questions.length - 1) {
-                const nextIndex = currentQuestionIndex + 1;
-                // If next was not visited, make it not-answered (visited)
-                if (questionStatuses[nextIndex] === 'not-visited') {
-                    questionStatuses[nextIndex] = 'not-answered';
-                }
-                loadQuestion(nextIndex);
-            } else {
-                // If on last question, just update palette to reflect saved state
-                renderPalette();
-                showAlert('End of Test', 'You have reached the last question. Please review your answers using the palette, or click "Submit Final Test".');
+        function prevQuestion() {
+            if(currentQIndex > 0) {
+                loadQuestion(currentQIndex - 1);
             }
         }
 
         function jumpToQuestion(index) {
-            if (questionStatuses[currentQuestionIndex] === 'not-visited') {
-                 questionStatuses[currentQuestionIndex] = 'not-answered';
-            }
-            if (questionStatuses[index] === 'not-visited') {
-                questionStatuses[index] = 'not-answered';
+            // Save current status before jumping if an option is selected but not saved
+            if(checkHasAnswer(currentQIndex) && answers[currentQIndex].status === "not_answered") {
+                answers[currentQIndex].status = "answered";
             }
             loadQuestion(index);
         }
 
-        function renderPalette() {
-            const container = document.getElementById('palette-container');
-            container.innerHTML = '';
-            
-            let counts = { answered: 0, 'not-answered': 0, 'not-visited': 0, marked: 0, 'marked-answered': 0 };
-
-            questions.forEach((q, index) => {
-                const status = questionStatuses[index];
-                counts[status]++;
-                
-                // Base classes
-                let classes = "q-btn w-10 h-10 flex items-center justify-center font-bold text-sm cursor-pointer ";
-                
-                // Status specific classes
-                if (status === 'answered') classes += "status-answered";
-                else if (status === 'not-answered') classes += "status-not-answered";
-                else if (status === 'not-visited') classes += "status-not-visited";
-                else if (status === 'marked') classes += "status-marked";
-                else if (status === 'marked-answered') classes += "status-marked-answered";
-
-                // Highlight current active question
-                if (index === currentQuestionIndex) {
-                    classes += " ring-4 ring-blue-300 ring-opacity-50 z-10";
-                }
-
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="${classes}" onclick="jumpToQuestion(${index})">
-                        ${index + 1}
-                    </div>
-                `);
-            });
-
-            // Update Legend Counters
-            const legendElements = document.querySelectorAll('.p-4.grid.grid-cols-2 .flex.items-center.gap-2 div');
-            legendElements[0].innerText = counts['answered'];
-            legendElements[1].innerText = counts['not-answered'];
-            legendElements[2].innerText = counts['not-visited'];
-            legendElements[3].innerText = counts['marked'];
-            legendElements[4].innerText = counts['marked-answered'];
+        // --- 5. SUBMISSION & RESULTS ---
+        function submitExamConfirmation() {
+            let unanswered = answers.filter((a, i) => !checkHasAnswer(i)).length;
+            let msg = `Are you sure you want to submit? You have ${unanswered} unanswered questions.`;
+            document.getElementById('confirm-msg').innerText = msg;
+            document.getElementById('confirm-modal').classList.remove('hidden');
         }
 
-        function confirmSubmit() {
-            let answeredCount = 0;
-            selectedAnswers.forEach(ans => { if (ans !== null) answeredCount++; });
-            
-            const msg = `You have answered ${answeredCount} out of ${questions.length} questions. Are you sure you want to submit?`;
-            
-            // Custom Confirm Dialog
-            const alertBox = document.getElementById('custom-alert');
-            document.getElementById('alert-title').innerText = "Confirm Submission";
-            document.getElementById('alert-message').innerText = msg;
-            
-            const btnContainer = document.getElementById('alert-buttons');
-            btnContainer.innerHTML = `
-                <button onclick="closeAlert()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded">Cancel</button>
-                <button onclick="calculateAndSubmit()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Submit</button>
-            `;
-            
-            alertBox.classList.remove('hidden');
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
         }
 
-        function autoSubmit() {
+        function proceedWithSubmit() {
+            closeConfirmModal();
+            submitExam();
+        }
+
+        function submitExam() {
             clearInterval(timerInterval);
-            showAlert('Time Up!', 'Your exam duration has ended. The test will now be automatically submitted.', calculateAndSubmit);
-        }
-
-        function calculateAndSubmit() {
-            closeAlert();
-            clearInterval(timerInterval);
-            
-            // Exam is no longer active
-            isExamActive = false;
-            
-            let score = 0;
-            questions.forEach((q, index) => {
-                if (selectedAnswers[index] === q.correctAnswer) {
-                    score++;
-                }
-            });
-
-            // Save to local storage to prevent re-attempts (Updated key for v3)
-            localStorage.setItem(EXAM_KEY, score.toString());
-            // Also save answers to session storage so we can review them right after
-            sessionStorage.setItem('cbse8MathExamAnswers', JSON.stringify(selectedAnswers));
-            
-            showResultScreen(score);
-        }
-
-        function showResultScreen(score) {
-            // Ensure no warning popups when forcing fullscreen exit
-            document.getElementById('fullscreen-blocker').classList.add('hidden');
-
-            // Exit Fullscreen
-            if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { /* Safari */
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { /* IE11 */
-                    document.msExitFullscreen();
-                }
-            }
-
-            document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('exam-screen').classList.add('hidden');
-            document.getElementById('review-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('blur-overlay').style.display = 'none';
             
-            document.getElementById('final-score').innerText = score;
-            
-            const messageEl = document.getElementById('result-message');
-            if (score >= 16) messageEl.innerText = "Excellent Work! Outstanding grasp of Squares and Square Roots.";
-            else if (score >= 10) messageEl.innerText = "Good effort! Review the concepts of perfect squares to score even higher.";
-            else messageEl.innerText = "Needs Improvement. Please revise the chapter on Squares and Square Roots.";
+            // Disable native fullscreen logic if needed, but let's just let user view results.
+            if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
 
-            // Load saved answers if coming from a previous session right after submit
-            const savedAns = sessionStorage.getItem('cbse8MathExamAnswers');
-            if (savedAns) {
-                selectedAnswers = JSON.parse(savedAns);
-            }
+            // Prevent re-taking
+            localStorage.setItem('ayisha_exam_completed', 'true');
+
+            calculateResults();
         }
 
-        function showReviewScreen() {
-            document.getElementById('result-screen').classList.add('hidden');
-            document.getElementById('review-screen').classList.remove('hidden');
+        function calculateResults() {
+            let score = 0;
+            let attempted = 0;
             
-            const container = document.getElementById('review-container');
-            container.innerHTML = '';
-            
-            questions.forEach((q, index) => {
-                const userAns = selectedAnswers[index];
-                const isCorrect = userAns === q.correctAnswer;
-                const isAttempted = userAns !== null;
+            let htmlSolutions = '';
+
+            questions.forEach((q, i) => {
+                let hasAttempted = checkHasAnswer(i);
+                let isCorrect = false;
+                let userAnsDisplay = '';
+                let correctAnsDisplay = '';
                 
-                let statusColor = isCorrect ? 'bg-green-50 border-green-200' : (isAttempted ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-gray-200');
-                let statusText = isCorrect ? '<span class="text-green-600 font-bold">Correct</span>' : (isAttempted ? '<span class="text-red-600 font-bold">Incorrect</span>' : '<span class="text-gray-500 font-bold">Not Attempted</span>');
-                
-                let optionsHtml = '';
-                q.options.forEach((opt, optIndex) => {
-                    let optClass = "p-3 border rounded-md mb-2 ";
+                if(hasAttempted) attempted++;
+
+                if (q.inputType === "mcq") {
+                    isCorrect = answers[i].selectedOption === q.ans;
+                    if (isCorrect) score++;
                     
-                    if (optIndex === q.correctAnswer) {
-                        optClass += "bg-green-200 border-green-500 font-bold"; // Always highlight correct
-                    } else if (optIndex === userAns) {
-                        optClass += "bg-red-200 border-red-500"; // User's incorrect choice
+                    userAnsDisplay = hasAttempted ? q.options[answers[i].selectedOption] : '<span class="text-gray-500 italic">Not Attempted</span>';
+                    correctAnsDisplay = q.options[q.ans];
+                } else {
+                    let userAnsArr = answers[i].textAnswers || [];
+                    // Check if all inputs contain the correct keyword
+                    isCorrect = hasAttempted && q.inputs.every((inp, idx) => {
+                        let userText = (userAnsArr[idx] || "").toLowerCase().trim();
+                        return userText.includes(inp.keyword.toLowerCase());
+                    });
+                    if (isCorrect) score++;
+
+                    if (hasAttempted) {
+                        userAnsDisplay = `<div class="mt-2 space-y-1">` + q.inputs.map((inp, idx) => `<div><span class="font-semibold text-gray-600">${inp.label}</span> ${userAnsArr[idx] || '<span class="text-gray-400 italic">Blank</span>'}</div>`).join('') + `</div>`;
                     } else {
-                        optClass += "bg-white border-gray-300";
+                        userAnsDisplay = '<span class="text-gray-500 italic">Not Attempted</span>';
                     }
-                    
-                    optionsHtml += `<div class="${optClass}">${String.fromCharCode(65 + optIndex)}. ${opt}</div>`;
-                });
-                
-                const html = `
-                    <div class="mb-6 p-6 border rounded-lg shadow-sm ${statusColor} max-w-4xl mx-auto">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-lg font-bold text-gray-800">Question ${index + 1}</h3>
-                            ${statusText}
-                        </div>
-                        <p class="text-gray-800 mb-4 font-medium text-lg">${q.text}</p>
-                        <div class="space-y-2">
-                            ${optionsHtml}
+                    correctAnsDisplay = q.displayAns;
+                }
+
+                let bgClass = isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
+                if(!hasAttempted) bgClass = 'bg-gray-50 border-gray-200';
+
+                htmlSolutions += `
+                    <div class="p-6 rounded-lg border ${bgClass} shadow-sm">
+                        <div class="font-bold text-gray-700 mb-2">Q${i+1}. ${q.q}</div>
+                        <div class="text-sm mt-3 space-y-1">
+                            <p><strong>Your Answer:</strong> ${userAnsDisplay}</p>
+                            <p><strong>Correct Answer:</strong> <span class="text-green-700 font-semibold">${correctAnsDisplay}</span></p>
                         </div>
                     </div>
                 `;
-                container.insertAdjacentHTML('beforeend', html);
             });
+
+            let timeUsedSec = examDuration - timeRemaining;
+            let m = Math.floor(timeUsedSec / 60);
+            let s = timeUsedSec % 60;
+            
+            let accuracy = attempted > 0 ? Math.round((score / attempted) * 100) : 0;
+
+            document.getElementById('res-score').innerText = `${score}/${totalQuestions}`;
+            document.getElementById('res-accuracy').innerText = `${accuracy}%`;
+            document.getElementById('res-time').innerText = `${m}m ${s}s`;
+            document.getElementById('res-attempted').innerText = `${attempted}`;
+            
+            document.getElementById('solutions-container').innerHTML = htmlSolutions;
         }
 
-        function closeReview() {
-            document.getElementById('review-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-        }
-
-        // Custom Alert Logic
-        function showAlert(title, message, callback = null) {
-            const alertBox = document.getElementById('custom-alert');
-            document.getElementById('alert-title').innerText = title;
-            document.getElementById('alert-message').innerText = message;
-            
-            const btnContainer = document.getElementById('alert-buttons');
-            btnContainer.innerHTML = `<button id="alert-ok-btn" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-bold">OK</button>`;
-            
-            document.getElementById('alert-ok-btn').onclick = function() {
-                closeAlert();
-                if(callback) callback();
-            };
-            
-            alertBox.classList.remove('hidden');
-        }
-
-        function closeAlert() {
-            document.getElementById('custom-alert').classList.add('hidden');
-        }
     </script>
 </body>
 </html>
