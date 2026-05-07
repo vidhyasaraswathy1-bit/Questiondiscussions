@@ -12,6 +12,7 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            -webkit-user-drag: none;
             background-color: #f3f4f6;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
@@ -44,11 +45,11 @@
             transition: all 0.2s;
         }
         
-        /* Blur Overlay */
+        /* Blur Overlay - Solid Black to ruin screenshots */
         #blur-overlay {
             display: none;
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.98); z-index: 9999;
+            background: #000000; z-index: 99999;
             flex-direction: column; align-items: center; justify-content: center;
             color: white; text-align: center;
         }
@@ -70,8 +71,8 @@
     <div id="blur-overlay">
         <svg class="w-24 h-24 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
         <h1 class="text-4xl font-bold mb-2">WARNING!</h1>
-        <p class="text-xl max-w-lg mb-4">Exam interrupted. Fullscreen mode exited, or window focus lost.</p>
-        <p class="text-md text-gray-300">Click anywhere on this screen to return to the exam in Fullscreen.</p>
+        <p class="text-xl max-w-lg mb-4">Exam interrupted. Please do not switch tabs, exit fullscreen, or leave the exam window.</p>
+        <p class="text-md text-gray-400">Click anywhere on this screen to return to the exam in Fullscreen.</p>
     </div>
 
     <!-- Custom Confirm Modal -->
@@ -276,6 +277,25 @@
             }
         }
 
+        // Force clipboard overwrite
+        function scrambleClipboard() {
+            try {
+                const tempInput = document.createElement("input");
+                tempInput.style.position = "absolute";
+                tempInput.style.left = "-1000px";
+                tempInput.style.top = "-1000px";
+                tempInput.value = "Screenshots and copying are disabled during the examination.";
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+            } catch (err) {}
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText('Screenshots and copying are disabled.').catch(()=> {});
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // Check if already attempted
             if (localStorage.getItem('ayisha_exam_completed') === 'true') {
@@ -288,43 +308,48 @@
             document.addEventListener('contextmenu', e => e.preventDefault()); // Block right click
             
             const handleKeyboardShortcuts = (e) => {
-                // Block PrintScreen specifically
-                if (e.key === 'PrintScreen' || e.code === 'PrintScreen') {
+                // Block PrintScreen specifically (various key codes for OS compatibility)
+                if (e.key === 'PrintScreen' || e.code === 'PrintScreen' || e.keyCode === 44 || e.key === 'Snapshot') {
                     e.preventDefault();
-                    if (navigator.clipboard) navigator.clipboard.writeText('Screenshots disabled.').catch(()=> {});
+                    scrambleClipboard();
                     showWarningOverlay();
                 }
 
-                // Block OS-Level snipping shortcuts (Win+Shift+S / Cmd+Shift+4 / Cmd+Shift+5)
+                // Block OS-Level snipping shortcuts (Win+Shift+S / Cmd+Shift+3 / Cmd+Shift+4 / Cmd+Shift+5)
                 // Meta key is Windows key or Mac Command key
-                if (e.metaKey && e.shiftKey && (e.key === 'S' || e.key === 's' || e.key === '4' || e.key === '5')) {
+                if (e.metaKey && e.shiftKey && (e.key === 'S' || e.key === 's' || e.key === '3' || e.key === '4' || e.key === '5')) {
                     e.preventDefault();
+                    scrambleClipboard();
                     showWarningOverlay();
                 }
 
                 // Block Developer Tools (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
-                if (e.key === 'F12' || 
-                   (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || 
-                   (e.ctrlKey && e.key === 'U')) {
+                if (e.key === 'F12' || e.keyCode === 123 ||
+                   (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) || 
+                   (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'P' || e.key === 'p'))) {
                     e.preventDefault();
                 }
             };
 
-            // Listen on both keydown and keyup
+            // Listen on both keydown and keyup for aggressive capture
             document.addEventListener('keydown', handleKeyboardShortcuts);
             document.addEventListener('keyup', handleKeyboardShortcuts);
 
-            // Disable Copying content except inputs
+            // Disable Copying content except inside inputs
             document.addEventListener('copy', e => {
                 if (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
                     e.preventDefault();
+                    scrambleClipboard();
                 }
             });
             
-            // Focus Tracking (Window blur / Tab switches)
+            // Focus Tracking (Window blur / Tab switches) -> Catches mobile screenshot overlays
             window.addEventListener('blur', showWarningOverlay);
+            window.addEventListener('pagehide', showWarningOverlay);
             document.addEventListener('visibilitychange', () => {
-                if (document.hidden) showWarningOverlay();
+                if (document.hidden || document.visibilityState === 'hidden') {
+                    showWarningOverlay();
+                }
             });
 
             // Fullscreen Exit Tracking (Fixes the Esc trick)
