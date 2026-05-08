@@ -299,9 +299,25 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Check if already attempted
             if (localStorage.getItem('ayisha_exam_completed') === 'true') {
-                document.getElementById('already-attempted-msg').classList.remove('hidden');
-                document.getElementById('start-btn').classList.add('hidden');
-                return;
+                const savedResultsStr = localStorage.getItem('ayisha_exam_results');
+                if (savedResultsStr) {
+                    // Load saved results and show result screen directly
+                    const savedResults = JSON.parse(savedResultsStr);
+                    document.getElementById('res-score').innerText = savedResults.scoreText;
+                    document.getElementById('res-accuracy').innerText = savedResults.accuracyText;
+                    document.getElementById('res-time').innerText = savedResults.timeText;
+                    document.getElementById('res-attempted').innerText = savedResults.attemptedText;
+                    document.getElementById('solutions-container').innerHTML = savedResults.solutionsHtml;
+                    
+                    document.getElementById('intro-screen').classList.add('hidden');
+                    document.getElementById('result-screen').classList.remove('hidden');
+                    return;
+                } else {
+                    // Fallback if data is missing
+                    document.getElementById('already-attempted-msg').classList.remove('hidden');
+                    document.getElementById('start-btn').classList.add('hidden');
+                    return;
+                }
             }
 
             // Anti-cheat Listeners
@@ -691,6 +707,16 @@
             document.getElementById('res-attempted').innerText = `${attempted}`;
             
             document.getElementById('solutions-container').innerHTML = htmlSolutions;
+
+            // Save results to local storage for future viewing
+            const resultData = {
+                scoreText: `${score}/${totalQuestions}`,
+                accuracyText: `${accuracy}%`,
+                timeText: `${m}m ${s}s`,
+                attemptedText: `${attempted}`,
+                solutionsHtml: htmlSolutions
+            };
+            localStorage.setItem('ayisha_exam_results', JSON.stringify(resultData));
         }
 
     </script>
