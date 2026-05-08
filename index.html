@@ -92,7 +92,7 @@
         <div class="max-w-2xl w-full p-8 bg-gray-50 rounded-xl shadow-lg border border-gray-200">
             <h1 class="text-3xl font-bold text-blue-700 mb-2 border-b pb-4">CBSE Grade 8 - Mathematics Assessment</h1>
             <div class="mt-4 space-y-4 text-gray-700">
-                <p><strong>Candidate Name:</strong> Ayisha</p>
+                <p><strong>Candidate Name:</strong> Ayisha (Set 2)</p>
                 <p><strong>Subject:</strong> Squares, Square Roots, Cubes, and Cube Roots</p>
                 <p><strong>Total Questions:</strong> 20</p>
                 <p><strong>Total Time:</strong> 30 Minutes</p>
@@ -122,7 +122,7 @@
         <div class="bg-blue-700 text-white px-6 py-3 flex justify-between items-center shadow-md">
             <div class="font-bold text-xl tracking-wide">CBSE ONLINE ASSESSMENT</div>
             <div class="flex items-center space-x-6">
-                <div class="bg-blue-800 px-4 py-1 rounded text-sm font-semibold">Candidate: Ayisha</div>
+                <div class="bg-blue-800 px-4 py-1 rounded text-sm font-semibold">Candidate: Ayisha (Set 2)</div>
                 <div class="flex items-center text-lg font-mono bg-red-600 px-4 py-1 rounded shadow-inner">
                     Time Left: <span id="timer-display" class="ml-2 font-bold">30:00</span>
                 </div>
@@ -197,7 +197,7 @@
         <div class="max-w-4xl mx-auto">
             <div class="bg-white p-8 rounded-xl shadow-lg mb-8 text-center border-t-8 border-blue-600">
                 <h1 class="text-4xl font-bold text-gray-800 mb-2">Exam Successfully Submitted!</h1>
-                <p class="text-gray-600 text-lg mb-8">Candidate: <strong>Ayisha</strong></p>
+                <p class="text-gray-600 text-lg mb-8">Candidate: <strong>Ayisha (Set 2)</strong></p>
                 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
@@ -227,30 +227,30 @@
     </div>
 
     <script>
-        // --- 1. QUESTION DATA (Mixed MCQ & Text Input) ---
+        // --- 1. NEW QUESTION DATA (Set 2) ---
         const questions = [
-            { id: 1, type: "normal", inputType: "mcq", q: "Given 125² = 15625, what is the value of 126²?", options: ["15625 + 126", "15625 + 26²", "15625 + 253", "15625 + 251"], ans: 3 },
-            { id: 2, type: "normal", inputType: "multi-text", q: "Find the smallest number by which 9408 must be multiplied so that the product is a perfect square. Find the square root of the product.", inputs: [{label: "Smallest number to multiply:", keyword: "3"}, {label: "Square root of the product:", keyword: "168"}], displayAns: "Multiply by 3, Square root is 168" },
-            { id: 3, type: "normal", inputType: "multi-text", q: "Find the length of the side of a square whose area is 441 m².", inputs: [{label: "Length of the side (in m):", keyword: "21"}], displayAns: "21 m" },
-            { id: 4, type: "normal", inputType: "mcq", q: "Is 500 a perfect cube?", options: ["Yes", "No", "It is a perfect square"], ans: 1 },
-            { id: 5, type: "normal", inputType: "multi-text", q: "Find the cube roots of these numbers respectively: 64, 512, and 729.", inputs: [{label: "Cube root of 64:", keyword: "4"}, {label: "Cube root of 512:", keyword: "8"}, {label: "Cube root of 729:", keyword: "9"}], displayAns: "4, 8, and 9" },
-            { id: 6, type: "normal", inputType: "multi-text", q: "Find the cube roots of 27000 and 10648 respectively.", inputs: [{label: "Cube root of 27000:", keyword: "30"}, {label: "Cube root of 10648:", keyword: "22"}], displayAns: "30 and 22" },
-            { id: 7, type: "normal", inputType: "mcq", q: "What smallest number will you multiply by 1323 to make it a perfect cube number?", options: ["3", "7", "9", "21"], ans: 1 },
-            { id: 8, type: "normal", inputType: "multi-text", q: "Find the smallest number by which 7442 must be divided so that it becomes a perfect square.", inputs: [{label: "Smallest number to divide by:", keyword: "2"}], displayAns: "Divide by 2" },
-            { id: 9, type: "normal", inputType: "multi-text", q: "What will be the unit digit of the square of the number 8437?", inputs: [{label: "Unit digit:", keyword: "9"}], displayAns: "9" },
-            { id: 10, type: "normal", inputType: "mcq", q: "Is 1458 a perfect square?", options: ["Yes", "No"], ans: 1 },
-            { id: 11, type: "normal", inputType: "multi-text", q: "Find the smallest multiple of 1458 that is a perfect square. Also, find the square root of the new number.", inputs: [{label: "Smallest multiple:", keyword: "2916"}, {label: "Square root of the new number:", keyword: "54"}], displayAns: "Multiple: 2916, Square root: 54" },
-            { id: 12, type: "normal", inputType: "multi-text", q: "The students of class 8 of a school donated ₹ 1296 to PM’s relief fund. Each student donated as many rupees as the number of students in the class. Find the number of students in the class.", inputs: [{label: "Number of students in the class:", keyword: "36"}], displayAns: "36 students" },
-            { id: 13, type: "normal", inputType: "multi-text", q: "Find the cube root of 5832 by the prime factorisation method.", inputs: [{label: "Cube root:", keyword: "18"}], displayAns: "18" },
-            { id: 14, type: "normal", inputType: "multi-text", q: "By which smallest number should we multiply 675 to make it a perfect cube? Also, find the cube root of the perfect cube so obtained.", inputs: [{label: "Smallest number to multiply:", keyword: "5"}, {label: "Cube root of the perfect cube:", keyword: "15"}], displayAns: "Multiply by 5, Cube root is 15" },
-            { id: 15, type: "normal", inputType: "multi-text", q: "Find the smallest number by which 135 must be divided to obtain a perfect cube. Also, find the cube root of the perfect cube so obtained.", inputs: [{label: "Smallest number to divide by:", keyword: "5"}, {label: "Cube root of the perfect cube:", keyword: "3"}], displayAns: "Divide by 5, Cube root is 3" },
-            { id: 16, type: "normal", inputType: "multi-text", q: "Find the side of a cubical box whose volume is 1728 cm³.", inputs: [{label: "Side of the cubical box (in cm):", keyword: "12"}], displayAns: "12 cm" },
+            { id: 1, type: "normal", inputType: "mcq", q: "Given 85² = 7225, what is the value of 86²?", options: ["7225 + 86", "7225 + 85²", "7225 + 171", "7225 + 170"], ans: 2 },
+            { id: 2, type: "normal", inputType: "multi-text", q: "Find the smallest number by which 2028 must be multiplied so that the product is a perfect square. Find the square root of the product.", inputs: [{label: "Smallest number to multiply:", keyword: "3"}, {label: "Square root of the product:", keyword: "78"}], displayAns: "Multiply by 3, Square root is 78" },
+            { id: 3, type: "normal", inputType: "multi-text", q: "Find the length of the side of a square whose area is 1024 m².", inputs: [{label: "Length of the side (in m):", keyword: "32"}], displayAns: "32 m" },
+            { id: 4, type: "normal", inputType: "mcq", q: "Is 9000 a perfect cube?", options: ["Yes", "No", "It is a perfect square"], ans: 1 },
+            { id: 5, type: "normal", inputType: "multi-text", q: "Find the cube roots of these numbers respectively: 125, 343, and 1331.", inputs: [{label: "Cube root of 125:", keyword: "5"}, {label: "Cube root of 343:", keyword: "7"}, {label: "Cube root of 1331:", keyword: "11"}], displayAns: "5, 7, and 11" },
+            { id: 6, type: "normal", inputType: "multi-text", q: "Find the cube roots of 8000 and 17576 respectively.", inputs: [{label: "Cube root of 8000:", keyword: "20"}, {label: "Cube root of 17576:", keyword: "26"}], displayAns: "20 and 26" },
+            { id: 7, type: "normal", inputType: "mcq", q: "What smallest number will you multiply by 3087 to make it a perfect cube number?", options: ["3", "7", "9", "21"], ans: 0 },
+            { id: 8, type: "normal", inputType: "multi-text", q: "Find the smallest number by which 2904 must be divided so that it becomes a perfect square.", inputs: [{label: "Smallest number to divide by:", keyword: "6"}], displayAns: "Divide by 6" },
+            { id: 9, type: "normal", inputType: "multi-text", q: "What will be the unit digit of the square of the number 5269?", inputs: [{label: "Unit digit:", keyword: "1"}], displayAns: "1" },
+            { id: 10, type: "normal", inputType: "mcq", q: "Is 1296 a perfect cube?", options: ["Yes", "No"], ans: 1 },
+            { id: 11, type: "normal", inputType: "multi-text", q: "Find the smallest multiple of 1152 that is a perfect square. Also, find the square root of the new number.", inputs: [{label: "Smallest multiple:", keyword: "2304"}, {label: "Square root of the new number:", keyword: "48"}], displayAns: "Multiple: 2304, Square root: 48" },
+            { id: 12, type: "normal", inputType: "multi-text", q: "The students of class 8 of a school donated ₹ 2304 to PM’s relief fund. Each student donated as many rupees as the number of students in the class. Find the number of students in the class.", inputs: [{label: "Number of students in the class:", keyword: "48"}], displayAns: "48 students" },
+            { id: 13, type: "normal", inputType: "multi-text", q: "Find the cube root of 9261 by the prime factorisation method.", inputs: [{label: "Cube root:", keyword: "21"}], displayAns: "21" },
+            { id: 14, type: "normal", inputType: "multi-text", q: "By which smallest number should we multiply 1080 to make it a perfect cube? Also, find the cube root of the perfect cube so obtained.", inputs: [{label: "Smallest number to multiply:", keyword: "25"}, {label: "Cube root of the perfect cube:", keyword: "30"}], displayAns: "Multiply by 25, Cube root is 30" },
+            { id: 15, type: "normal", inputType: "multi-text", q: "Find the smallest number by which 192 must be divided to obtain a perfect cube. Also, find the cube root of the perfect cube so obtained.", inputs: [{label: "Smallest number to divide by:", keyword: "3"}, {label: "Cube root of the perfect cube:", keyword: "4"}], displayAns: "Divide by 3, Cube root is 4" },
+            { id: 16, type: "normal", inputType: "multi-text", q: "Find the side of a cubical box whose volume is 2744 cm³.", inputs: [{label: "Side of the cubical box (in cm):", keyword: "14"}], displayAns: "14 cm" },
             
-            // Case Based Questions
-            { id: 17, type: "case", inputType: "mcq", caseText: "CASE STUDY 1: A school administration is planning an eco-friendly drive. They brought 2000 saplings to be planted in a square grid layout in the massive school ground, such that the number of rows equals the number of columns.", q: "How many minimum saplings are left out if they arrange them in a perfect square grid?", options: ["64", "36", "100", "24"], ans: 0 },
-            { id: 18, type: "case", inputType: "mcq", caseText: "CASE STUDY 1: A school administration is planning an eco-friendly drive. They brought 2000 saplings to be planted in a square grid layout in the massive school ground, such that the number of rows equals the number of columns.", q: "If the school decides to form the next possible larger perfect square grid, how many MORE saplings do they need to bring?", options: ["25", "36", "45", "64"], ans: 0 },
-            { id: 19, type: "case", inputType: "multi-text", caseText: "CASE STUDY 2: Ayisha is working on a math project. She is constructing a large solid cube using smaller identical wooden blocks. Each small wooden block has dimensions 2 cm × 2 cm × 2 cm.", q: "If the total volume of the large solid cube she built is 8000 cm³, what is the length of the edge of this large cube?", inputs: [{label: "Length of the edge (in cm):", keyword: "20"}], displayAns: "20 cm" },
-            { id: 20, type: "case", inputType: "mcq", caseText: "CASE STUDY 2: Ayisha is working on a math project. She is constructing a large solid cube using smaller identical wooden blocks. Each small wooden block has dimensions 2 cm × 2 cm × 2 cm.", q: "How many small wooden blocks did Ayisha use to construct the large cube of 8000 cm³?", options: ["100", "500", "1000", "2000"], ans: 2 }
+            // New Case Based Questions
+            { id: 17, type: "case", inputType: "mcq", caseText: "CASE STUDY 1: A school administration is planning an eco-friendly drive. They brought 1500 saplings to be planted in a square grid layout in the massive school ground, such that the number of rows equals the number of columns.", q: "How many minimum saplings are left out if they arrange them in a perfect square grid?", options: ["56", "36", "44", "100"], ans: 0 },
+            { id: 18, type: "case", inputType: "mcq", caseText: "CASE STUDY 1: A school administration is planning an eco-friendly drive. They brought 1500 saplings to be planted in a square grid layout in the massive school ground, such that the number of rows equals the number of columns.", q: "If the school decides to form the next possible larger perfect square grid, how many MORE saplings do they need to bring?", options: ["21", "25", "39", "44"], ans: 0 },
+            { id: 19, type: "case", inputType: "multi-text", caseText: "CASE STUDY 2: Ayisha is working on a math project. She is constructing a large solid cube using smaller identical wooden blocks. Each small wooden block has dimensions 2 cm × 2 cm × 2 cm.", q: "If the total volume of the large solid cube she built is 13824 cm³, what is the length of the edge of this large cube?", inputs: [{label: "Length of the edge (in cm):", keyword: "24"}], displayAns: "24 cm" },
+            { id: 20, type: "case", inputType: "mcq", caseText: "CASE STUDY 2: Ayisha is working on a math project. She is constructing a large solid cube using smaller identical wooden blocks. Each small wooden block has dimensions 2 cm × 2 cm × 2 cm.", q: "How many small wooden blocks did Ayisha use to construct the large cube of 13824 cm³?", options: ["1000", "1728", "512", "2744"], ans: 1 }
         ];
 
         // --- 2. STATE MANAGEMENT ---
@@ -297,9 +297,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Check if already attempted
-            if (localStorage.getItem('ayisha_exam_completed') === 'true') {
-                const savedResultsStr = localStorage.getItem('ayisha_exam_results');
+            // Check if already attempted (Using NEW Storage Keys for Attempt 2)
+            if (localStorage.getItem('ayisha_exam_2_completed') === 'true') {
+                const savedResultsStr = localStorage.getItem('ayisha_exam_2_results');
                 if (savedResultsStr) {
                     // Load saved results and show result screen directly
                     const savedResults = JSON.parse(savedResultsStr);
@@ -638,8 +638,8 @@
             // Disable native fullscreen logic if needed, but let's just let user view results.
             if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
 
-            // Prevent re-taking
-            localStorage.setItem('ayisha_exam_completed', 'true');
+            // Prevent re-taking with NEW key
+            localStorage.setItem('ayisha_exam_2_completed', 'true');
 
             calculateResults();
         }
@@ -716,7 +716,7 @@
                 attemptedText: `${attempted}`,
                 solutionsHtml: htmlSolutions
             };
-            localStorage.setItem('ayisha_exam_results', JSON.stringify(resultData));
+            localStorage.setItem('ayisha_exam_2_results', JSON.stringify(resultData));
         }
 
     </script>
